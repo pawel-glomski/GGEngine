@@ -7,12 +7,15 @@
 class Game
 {
 private:
-	Game() {};
+	Game();
 
 public:
 	static Game& instance();
 
+	void play();
+
 private:
+	sf::RenderWindow window;
 
 	World world;
 	InputHandler inputHandler;

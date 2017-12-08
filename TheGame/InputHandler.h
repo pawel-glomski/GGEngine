@@ -8,13 +8,14 @@ public:
 	{
 		unsigned int dirToMouseX;
 		unsigned int dirToMouseY;
-		Settings::InputKeyAction lastTwoActions[2];
+		Settings::InputKeyAction action;
 	};
 
-
 public:
-	GameplayInputResult handleGameplayInput(const wchar_t keyBindings[(unsigned int)Settings::InputKeyAction::InputsCount]);
-	void				handleClientInput();
+	void handleInputs(sf::RenderWindow & window, const wchar_t * keyBindings);
 
+private:
+	void handleGameplayInput(wchar_t key, const wchar_t * keyBindings);
+	void handleClientInput();
 };
 
