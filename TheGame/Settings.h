@@ -6,8 +6,15 @@ public:
 
 	struct GraphicsSettings
 	{
-		size_t resolutionX = 1000;
-		size_t resolutionY = 600;
+		enum class Resolution : uint8_t
+		{
+			R1280x720,
+			RCount
+		};
+
+		Resolution resolution;
+
+		static const sf::Vector2u resolutions[uint8_t(Resolution::RCount)];		// "resolution" variable can be used as an index in this array
 	};
 
 	struct AudioSettings
@@ -26,7 +33,6 @@ public:
 		InputsCount
 	};
 
-
 	class gameplaySettings
 	{
 		// camera settings, etc...
@@ -40,13 +46,16 @@ public:
 	void			saveSettings(const std::string & src);
 
 	const wchar_t * getKeyBindings() const;
+
 	void			bindKeyToAction(const InputKeyAction & action, wchar_t key);
 	InputKeyAction	isKeyInUse(wchar_t key);
 
-	GraphicsSettings	graphics;
-	AudioSettings		audio;
+public:
+	GraphicsSettings graphics;
+	AudioSettings	 audio;
 
 private:
-	wchar_t				keyBindings[(uint8_t)InputKeyAction::InputsCount];
+	wchar_t			 keyBindings[(uint8_t)InputKeyAction::InputsCount];
 };
+
 

@@ -4,18 +4,29 @@
 class InputHandler
 {
 public:
-	class GameplayInputResult
+	struct Input
 	{
-		unsigned int dirToMouseX;
-		unsigned int dirToMouseY;
-		Settings::InputKeyAction action;
+		static const uint8_t maxKeysDown = 6;
+
+		wchar_t keyCode[maxKeysDown];
+
+		bool ctrl;
+		bool alt;
+		bool shift;
+
+		uint16_t mousePosX;
+		uint16_t mousePosY;
 	};
 
 public:
-	void handleInputs(sf::RenderWindow & window, const wchar_t * keyBindings);
+	void handleInput(sf::RenderWindow & window, const wchar_t * keyBindings);
 
 private:
-	void handleGameplayInput(wchar_t key, const wchar_t * keyBindings);
-	void handleClientInput();
+	Input catchInputEvents(sf::RenderWindow & window);
+
+	void handleGameplayInputs(const Input & input);
+	void handleGuiInputs(const Input & input);
+
+private:
 };
 

@@ -3,6 +3,6 @@
 
 int main()
 {
-	Game::instance().play();
+	Client::instance().play();
 	return 0;
 }

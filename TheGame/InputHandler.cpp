@@ -1,20 +1,34 @@
 #include "pch.h"
 #include "InputHandler.h"
 
-void InputHandler::handleInputs(sf::RenderWindow & window, const wchar_t * keyBindings)
+void InputHandler::handleInput(sf::RenderWindow & window, const wchar_t * keyBindings)
+{
+	Input input = catchInputEvents(window);
+
+	handleGuiInputs(input);
+	handleGameplayInputs(input);
+}
+
+InputHandler::Input InputHandler::catchInputEvents(sf::RenderWindow & window)
 {
 	sf::Event event;
+	Input input;
 
 	while (window.pollEvent(event))
 	{
-		if (event.type == sf::Event::Closed)
-			window.close();
+		input.ctrl = event.key.control;
+		input.alt = event.key.alt;
+		input.shift = event.key.shift;
+		
 
-		handleGameplayInput(event.key.code, keyBindings);
 	}
 }
 
-void InputHandler::handleGameplayInput(wchar_t key, const wchar_t * keyBindings)
+void InputHandler::handleGameplayInputs(const Input & input)
 {
-	GameplayInputResult();
 }
+
+void InputHandler::handleGuiInputs(const Input & input)
+{
+}
+

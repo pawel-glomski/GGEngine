@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "Settings.h"
 
+const sf::Vector2u Settings::GraphicsSettings::resolutions[uint8_t(Resolution::RCount)] =
+{ 
+	{1280, 720}
+};
+
 
 Settings::Settings(const std::string & src)
 {
