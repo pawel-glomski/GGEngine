@@ -1,13 +1,18 @@
-#include "pch.h"
+#include "stdInclude.h"
 #include "Entity.h"
 
-
-
-Entity::Entity()
+void Entity::setPosition(const Vect2f & newPosition, bool sweep)
 {
+	if (!sweep)
+	{
+		position = newPosition;
+	}
 }
 
-
-Entity::~Entity()
+void Entity::move(const Vect2f & translationVector, bool sweep)
 {
+	if (!sweep)
+	{
+		position += translationVector;
+	}
 }

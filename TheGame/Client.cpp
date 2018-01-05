@@ -1,14 +1,15 @@
-#include "pch.h"
+#include "stdInclude.h"
 #include "Client.h"
 
 Client::Client()
 {
+	//... loading needed data
 	settings.loadSettings("data/settings.data");
-
-	window.create({settings.graphics.resolutionX, settings.graphics.resolutionY}, "TheGame");
+	
+	display.createWindow(settings.graphics);
 }
 
-Client & Client::instance()
+Client& Client::instance()
 {
 	static Client instance;
 	return instance;
@@ -16,8 +17,14 @@ Client & Client::instance()
 
 void Client::play()
 {
-	while (window.isOpen())
+	while (display.isWinOpen())
 	{
-		inputHandler.handleGameplayInputs(window, settings.getKeyBindings());
+		//... get data from server and apply it to "world" variable
+		input.handleInput(display.getWin(), settings.getKeyBindings());
+		//... send input data to server
+		display(world);
+
 	}
+
+	// managers destruction/deallocation in correct order
 }

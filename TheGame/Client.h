@@ -1,7 +1,10 @@
 #pragma once
-#include "Settings.h"
+#include "SettingsManager.h"
 #include "World.h"
-#include "InputHandler.h"
+#include "InputManager.h"
+#include "ResourceManager.h"
+#include "DisplayManager.h"
+#include "AudioManager.h"
 
 
 class Client
@@ -15,11 +18,11 @@ public:
 	void play();
 
 private:
-	sf::RenderWindow window;
 
-	World world;
-	InputHandler inputHandler;
-	// audio module
-	// graphics module - animations, effects
-	Settings settings;
+	ResourceManager	resources;
+	World			world;
+	DisplayManager	display;
+	AudioManager	audio;
+	InputManager	input;
+	SettingsManager	settings;
 };
