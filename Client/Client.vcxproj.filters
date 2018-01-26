@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="World">
+      <UniqueIdentifier>{e4b6a609-1eeb-4663-8144-db18e1d9eb9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{143b2370-35ec-4111-aff3-d9ad625c2fa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\MathUtilities">
+      <UniqueIdentifier>{cd4eba2d-50a2-416c-aa0d-4cc885884571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{f7d048ba-9904-4ae4-9346-a551b4bd890a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{cd59f823-abdc-4de0-a674-6759e9e51c9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\AudioManager">
+      <UniqueIdentifier>{23d9c951-9e1c-4e88-b727-7dc7d0bf84d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\DispalyManager">
+      <UniqueIdentifier>{cb015da1-286e-4d6f-bb93-3b9fb1db6032}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\InputManager">
+      <UniqueIdentifier>{8805dad8-849a-4941-a4e6-da3569e15524}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\MemoryManagement">
+      <UniqueIdentifier>{3e2ccdfe-c148-4dcf-98b3-90e39658bed8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\EntityManager">
+      <UniqueIdentifier>{bff358de-4567-44b4-92dc-7fc83392beb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\EntityManager\Entity">
+      <UniqueIdentifier>{78c7ec50-9199-4d61-a21d-7f1dfa6f2a89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\EntityManager\Entity\Entities">
+      <UniqueIdentifier>{7deb45df-f2bb-497a-952a-5bcd05093ca8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\EntityManager\Entity\Entities\Character">
+      <UniqueIdentifier>{2108ab77-3dc4-46d7-a6f9-be9c6204cf19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\EntityManager\Entity\Entities\Effects">
+      <UniqueIdentifier>{3a498ff4-0597-4830-a9fc-25417dda0a23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\EntityManager\Entity\Entities\Other">
+      <UniqueIdentifier>{a81a802d-a29b-4d91-934a-713029033320}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\InputManager\Controller">
+      <UniqueIdentifier>{9e43d1c3-8d89-40f6-b650-b06a33c9f0a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\InputManager\Controller\ActionCommand">
+      <UniqueIdentifier>{1262a3e2-a120-4e79-98d2-4c52f6cdd7cf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="World.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Managers\MemoryManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Managers\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayManager.h">
+      <Filter>Managers\DispalyManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>Managers\AudioManager</Filter>
+    </ClInclude>
+    <ClInclude Include="stdInclude.h" />
+    <ClInclude Include="Client.h" />
+    <ClInclude Include="Character.h">
+      <Filter>Managers\EntityManager\Entity\Entities\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="PoolAllocator.h">
+      <Filter>Managers\MemoryManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryManager.h">
+      <Filter>Managers\MemoryManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="StackAllocator.h">
+      <Filter>Managers\MemoryManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioEffect.h">
+      <Filter>Managers\EntityManager\Entity\Entities\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="VisualEffect.h">
+      <Filter>Managers\EntityManager\Entity\Entities\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Managers\EntityManager\Entity\Entities\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="CollidableEntity.h">
+      <Filter>Managers\EntityManager\Entity\Entities\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Managers\EntityManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Managers\EntityManager\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionShape.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionCommand.h">
+      <Filter>Managers\InputManager\Controller\ActionCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Managers\InputManager\Controller</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="World.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Managers\MemoryManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Managers\InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayManager.cpp">
+      <Filter>Managers\DispalyManager</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>Managers\AudioManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec2.h">
+      <Filter>Utilities\MathUtilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Character.cpp">
+      <Filter>Managers\EntityManager\Entity\Entities\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryManager.cpp">
+      <Filter>Managers\MemoryManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="StackAllocator.cpp">
+      <Filter>Managers\MemoryManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioEffect.cpp">
+      <Filter>Managers\EntityManager\Entity\Entities\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="VisualEffect.cpp">
+      <Filter>Managers\EntityManager\Entity\Entities\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="CollidableEntity.cpp">
+      <Filter>Managers\EntityManager\Entity\Entities\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Managers\EntityManager\Entity\Entities\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Managers\EntityManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Managers\EntityManager\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionShape.cpp">
+      <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionCommand.cpp">
+      <Filter>Managers\InputManager\Controller\ActionCommand</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Managers\InputManager\Controller</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Vec2.inl">
+      <Filter>Utilities\MathUtilities</Filter>
+    </None>
+  </ItemGroup>
+</Project>
