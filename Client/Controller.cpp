@@ -19,17 +19,33 @@ std::string Controller::getControllerID() const
 	return ID;
 }
 
-void Controller::activateControllerButton(const InputSettings::ControllerButton & controllerButton)
+void Controller::giveActionCommand(ActionCommand * actionCommand)
 {
 	// check if current executing orders make it possible to execute this new order
 	// if it is possible, execute this action
-	actionsExecuting.insert(actionsSet[controllerButton]);
-
+	ASSERT(actionCommand, "Tried to give nullptr command");
+	if (actionCommand)
+	{
+		if (actionsExecuting.count(actionCommand))
+			actionsExecuting[actionCommand].stopAction = true;
+		else
+			actionsExecuting.emplace(std::make_pair(actionCommand, ActionCommand::ExecutionData()));
+	}
 }
 
-void Controller::executeActions(Character & executor)
+void Controller::executeActionCommands(Character & executor, float_t deltaTime)
 {
-	for (auto& action : actionsExecuting)
-		action->execute(executor);
+	ActionCommand* finishedActions[6];
+	uint8_t finishedActionsCount = 0;
 
+	for (auto& action : actionsExecuting)
+	{
+		action.second.actionExecutingTime += deltaTime;
+		if (action.first->execute(executor, action.second, deltaTime))
+			finishedActions[finishedActionsCount++] = action.first;	// if finished execution
+	}
+
+
+	for (uint8_t i = 0; i < finishedActionsCount; i++)
+		actionsExecuting.erase(finishedActions[i]);
 }

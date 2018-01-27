@@ -1,6 +1,6 @@
 #pragma once
 #include "CollidableEntity.h"
-#include "CharacterController.h"
+#include "Controller.h"
 
 class Character : public CollidableEntity
 {
@@ -12,7 +12,7 @@ public:
 	virtual void display(sf::RenderWindow & window) const override;
 	virtual void update(float_t deltaTime) override;
 
-	Controller&		getController();
+	Controller&			getController();
 	const Controller&	getController() const;
 
 private:

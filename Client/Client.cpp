@@ -40,7 +40,7 @@ void Client::play()
 		deltaTime = std::chrono::duration_cast<std::chrono::nanoseconds>(diff).count() / (float)1000000000.0;
 
 		////... get data from server and apply it to "world" variable
-		inputManager.handleInput();
+		inputManager.handleGameplayInput();
 		////... send input data to server
 		world.update(deltaTime);
 
@@ -53,7 +53,6 @@ void Client::play()
 
 void Client::startUp()
 {
-	settingsManager.startUp("");
 	MemoryManager::instance().startUp();
 	displayManager.startUp();
 	inputManager.startUp(displayManager.getWin());
@@ -66,5 +65,4 @@ void Client::shoutDown()
 	inputManager.shoutDown();
 	displayManager.shoutDown();
 	MemoryManager::instance().shoutDown();
-	settingsManager.shoutDown();
 }

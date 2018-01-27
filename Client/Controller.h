@@ -6,7 +6,7 @@
 
 class Controller
 {
-	typedef std::unordered_set<ActionCommand*> ActionsExecuting;
+	typedef std::unordered_map<ActionCommand*, ActionCommand::ExecutionData> ActionsExecuting;
 
 public:
 	Controller();
@@ -14,8 +14,8 @@ public:
 	void setControllerID(std::string ID);
 	std::string getControllerID() const;
 
-	void activateControllerButton(const InputSettings::ControllerButton & controllerButton);
-	void executeActions(class Character& executor);
+	void giveActionCommand(ActionCommand * actionCommand);
+	void executeActionCommands(class Character& executor, float_t deltaTime);
 
 private:
 	std::string ID;

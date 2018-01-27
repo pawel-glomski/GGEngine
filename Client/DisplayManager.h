@@ -1,6 +1,5 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "SettingsManager.h"
 #include "World.h"
 #include "Singleton.h"
 

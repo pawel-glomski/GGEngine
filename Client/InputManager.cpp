@@ -3,6 +3,27 @@
 #include "DisplayManager.h"
 #include "Controller.h"
 
+void InputSettings::startUp()
+{
+	actionsSet[ControllerButton::MoveForward] = new WalkForwardCommand;
+	actionsSet[ControllerButton::MoveBackward] = new WalkBackwardCommand;
+	actionsSet[ControllerButton::MoveLeft] = new WalkLeftCommand;
+	actionsSet[ControllerButton::MoveRight] = new WalkRightCommand;
+	actionsSet[ControllerButton::FirstAbility] = new NoActionCommand;
+	actionsSet[ControllerButton::SecondAbility] = new NoActionCommand;
+	actionsSet[ControllerButton::ThridAbility] = new NoActionCommand;
+	actionsSet[ControllerButton::FourthAbility] = new NoActionCommand;
+	actionsSet[ControllerButton::PrimaryAttack] = new NoActionCommand;
+	actionsSet[ControllerButton::SecondaryAttack] = new NoActionCommand;
+}
+
+void InputSettings::shoutDown()
+{
+	for (auto & action : actionsSet)
+		delete action.second;
+}
+
+
 InputSettings::KeyBindings::KeyBindings()
 {
 	keyboardBindings.reserve((uint8_t)ControllerButton::Count);
@@ -27,11 +48,13 @@ InputSettings::KeyBindings::KeyBindings()
 
 void InputManager::startUp(const std::shared_ptr<sf::RenderWindow> & windowPtr)
 {
+	settings.startUp();
 	windowToManage = windowPtr;
 }
 
 void InputManager::shoutDown()
 {
+	settings.shoutDown();
 	windowToManage.reset();
 }
 
@@ -42,54 +65,44 @@ void InputManager::setInputTargetController(Controller * controller)
 		inputTargetController = controller;
 }
 
-void InputManager::bindKeyToControllerButton(const InputSettings::ControllerButton & action, uint8_t key, uint8_t type)
+void InputManager::bindKeyToControllerButton(const InputSettings::ControllerButton & action, RawKeyCode keyCode, InputDivice inputDivice)
 {
-	ASSERT(((type == sf::Event::EventType::KeyReleased) || (type == sf::Event::EventType::KeyReleased)),
-		"Wrong event type passed. Only KeyReleased or MouseButtonReleased are acceptable.");
-
-	if (type == sf::Event::EventType::KeyReleased)
-		settings.keyBindings.keyboardBindings[key] = action;
-	else if(type == sf::Event::EventType::MouseButtonReleased)
-		settings.keyBindings.mouseBindings[key] = action;
+	if (inputDivice == InputDivice::Keyboard)
+		settings.keyBindings.keyboardBindings[keyCode] = action;
+	else if (inputDivice == InputDivice::Mouse)
+		settings.keyBindings.mouseBindings[keyCode] = action;
 }
 
-InputManager::ControllerButtonsVector InputManager::handleInput()
+InputManager::ActionCommands InputManager::handleGameplayInput()
 {
-	RawInputPack inputToTranslate = catchInputEvents();
-	ControllerButtonsVector controllerButtonInputForm;
+	RawInputPack		inputToTranslate = std::move(catchInputEvents());
+	ControllerButtons	controllerButtonsInput = rawInputToControllerButtonsInput(inputToTranslate);
+	ActionCommands		actionCommands;
+	for (const auto & button : controllerButtonsInput)
+		if(settings.actionsSet.count(button))
+			actionCommands.push_back(settings.actionsSet[button]);
 
-	for (const auto & key : inputToTranslate.rawKeys)
-	{
-		if (key.second == sf::Event::EventType::KeyReleased || key.second == sf::Event::EventType::KeyPressed)
-		{
-			if(settings.keyBindings.keyboardBindings.count(key.first))
-				controllerButtonInputForm.push_back(settings.keyBindings.keyboardBindings.at(key.first));
-			
-		}
-		else if (key.second == sf::Event::EventType::MouseButtonReleased)
-		{
-			if (settings.keyBindings.mouseBindings.count(key.first))
-				controllerButtonInputForm.push_back(settings.keyBindings.mouseBindings.at(key.first));
-		}
-	}
+	for (const auto & action : actionCommands)
+		inputTargetController->giveActionCommand(action);
 
-	return controllerButtonInputForm;
+	return std::move(actionCommands);
 }
 
 InputManager::RawInputPack InputManager::catchInputEvents()
 {
 	sf::Event event;
 	RawInputPack input;
-
+	InputDivice divice = InputDivice::None;
 	while (windowToManage->pollEvent(event))
 	{
-		if (event.type == sf::Event::EventType::KeyReleased || event.type == sf::Event::EventType::MouseButtonReleased || event.type == sf::Event::EventType::KeyPressed)
+		if (event.type == sf::Event::EventType::KeyReleased || event.type == sf::Event::EventType::KeyPressed)
+			divice = InputDivice::Keyboard;
+		else if(event.type == sf::Event::EventType::MouseButtonPressed || event.type == sf::Event::EventType::MouseButtonReleased)
+			divice = InputDivice::Mouse;
+		// catch input on key pressed and released, ActionCommands settings will handle by itself when should it be activated (on key pressed or released)
+		if (divice != InputDivice::None)
 		{
-			input.rawKeys.push_back({ event.key.code, event.type });
-
-			input.ctrl = event.key.control;
-			input.alt = event.key.alt;
-			input.shift = event.key.shift;
+			input.rawKeys.push_back({ (RawKeyCode)event.key.code, divice });
 			input.mousePos = sf::Mouse::getPosition(*windowToManage);
 		}
 		// for test purpose (deallocation), delete later on
@@ -97,6 +110,26 @@ InputManager::RawInputPack InputManager::catchInputEvents()
 			windowToManage->close();
 		///////////////////////////////////////////////////////////////////////////
 	}
-
 	return std::move(input);
 }
+
+InputManager::ControllerButtons InputManager::rawInputToControllerButtonsInput(const RawInputPack & inputToTranslate)
+{
+	ControllerButtons controllerButtonsPressed;
+
+	for (const auto & key : inputToTranslate.rawKeys)
+	{
+		if (key.inputDivice == InputDivice::Keyboard)
+		{
+			if (settings.keyBindings.keyboardBindings.count(key.keyCode))
+				controllerButtonsPressed.push_back(settings.keyBindings.keyboardBindings[key.keyCode]);
+		}
+		else if (key.inputDivice == InputDivice::Mouse)
+		{
+			if (settings.keyBindings.mouseBindings.count(key.keyCode))
+				controllerButtonsPressed.push_back(settings.keyBindings.mouseBindings[key.keyCode]);
+		}
+	}
+	return std::move(controllerButtonsPressed);
+}
+

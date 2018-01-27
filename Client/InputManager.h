@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <memory>
 #include <unordered_map>
+#include <memory>
 #include "Vec2.h"
 #include "Singleton.h"
 #include "ActionCommand.h"
@@ -11,6 +11,7 @@ class Controller;
 struct InputSettings
 {
 public:
+
 	enum class ControllerButton : uint8_t
 	{
 		MoveForward, MoveBackward, MoveLeft, MoveRight,
@@ -19,9 +20,13 @@ public:
 		Count
 	};
 
+	typedef std::unordered_map<ControllerButton, ActionCommand*> ActionsSet;
+
 	struct KeyBindings
 	{
+		
 		typedef int8_t RawKeyCode;
+		
 		typedef std::unordered_map<RawKeyCode, ControllerButton> ControllerButtonsBindings;
 
 		// default keyBindings
@@ -31,7 +36,9 @@ public:
 		ControllerButtonsBindings mouseBindings;
 	};
 
-	typedef std::unordered_map<ControllerButton, ActionCommand*> ActionsSet;
+public:
+	void startUp();
+	void shoutDown();
 
 public:
 
@@ -42,20 +49,23 @@ public:
 // Gathers input and ControllerButton it to ActionOrders and then to ActionCommands using KeyBindings
 class InputManager
 {
-	typedef std::vector<InputSettings::ControllerButton> ControllerButtonsVector;
+	typedef std::vector<InputSettings::ControllerButton> ControllerButtons;
+	typedef std::vector<ActionCommand*> ActionCommands;
+	typedef InputSettings::KeyBindings::RawKeyCode RawKeyCode;
 
 public:
+	enum class InputDivice : uint8_t { None, Keyboard, Mouse };
+
 	struct RawInputPack
 	{
-		typedef InputSettings::KeyBindings::RawKeyCode RawKeyCode, RawKeyType;
-		typedef std::vector<std::pair<RawKeyCode, RawKeyType>> RawKeysVector;
-
-		RawKeysVector rawKeys = RawKeysVector(6);
-
-		bool ctrl = false;
-		bool alt = false;
-		bool shift = false;
-		
+		struct RawKey
+		{
+			RawKeyCode keyCode = sf::Keyboard::Key::Unknown;
+			InputDivice inputDivice = InputDivice::None;
+			RawKey() = default;
+			RawKey(RawKeyCode keyCode, InputDivice inputDivice) : keyCode(keyCode), inputDivice(inputDivice) {};
+		};
+		std::vector<RawKey> rawKeys = std::vector<RawKey>(6);
 		Vect2u mousePos;
 	};
 
@@ -65,16 +75,17 @@ public:
 
 	void setInputTargetController(Controller * controller);
 
-	ControllerButtonsVector handleInput();
+	ActionCommands handleGameplayInput();
 
-	void bindKeyToControllerButton(const InputSettings::ControllerButton & action, uint8_t key, uint8_t type);
+	void bindKeyToControllerButton(const InputSettings::ControllerButton & action, RawKeyCode key, InputDivice inputDivice);
 private:
-	RawInputPack catchInputEvents();
+	RawInputPack		catchInputEvents();
+	ControllerButtons	rawInputToControllerButtonsInput(const RawInputPack & inputToTranslate);
 
 private:
 	InputSettings settings;
-
-	std::shared_ptr<sf::RenderWindow> windowToManage;
 	Controller* inputTargetController;
+	std::shared_ptr<sf::RenderWindow> windowToManage;
+
 };
 
