@@ -1,5 +1,4 @@
 #pragma once
-#include "Singleton.h"
 #include "PoolAllocator.h"
 #include "StackAllocator.h"
 #include "Character.h"
@@ -8,12 +7,21 @@
 #include "CollisionShape.h"
 #include "Projectile.h"
 
-class MemoryManager : public Singleton<MemoryManager>
+class MemoryManager
 {
+private:
 	template<class T, class Allocator = std::allocator<T>>
-	class PoolAllocator : public Singleton<Pool<T, Allocator>>{};
+	class PoolAllocator : public Pool<T, Allocator>
+	{
+	public:
+		static PoolAllocator & instance();
+	private:
+		PoolAllocator() = default;;
+	};
 
 public:
+	static MemoryManager & instance();
+
 	void startUp();
 	void shoutDown();
 
@@ -25,6 +33,9 @@ public:
 
 public:
 	StackAllocator stack;
+
+private:
+	MemoryManager() = default;;
 };
 
 template<class T>
@@ -37,4 +48,11 @@ template<class T>
 inline void MemoryManager::freeToPool(T * ptr)
 {
 	PoolAllocator<T>::instance().free(ptr);
+}
+
+template<class T, class Allocator>
+inline MemoryManager::PoolAllocator<T, Allocator>& MemoryManager::PoolAllocator<T, Allocator>::instance()
+{
+	static MemoryManager::PoolAllocator<T, Allocator> inst;
+	return inst;
 }

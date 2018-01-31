@@ -1,6 +1,12 @@
 #include "MemoryManager.h"
 #include "stdInclude.h"
 
+MemoryManager & MemoryManager::instance()
+{
+	static MemoryManager inst;
+	return inst;
+}
+
 void MemoryManager::startUp()
 {
 	PoolAllocator<Character>::instance().init(200);
@@ -8,7 +14,7 @@ void MemoryManager::startUp()
 	PoolAllocator<Projectile>::instance().init(200);
 	PoolAllocator<VisualEffect>::instance().init(200);
 	PoolAllocator<AudioEffect>::instance().init(200);
-	stack.init(2048);
+	stack.init((sizeof(Character) + alignof(Character)) * 10 );
 }
 
 void MemoryManager::shoutDown()

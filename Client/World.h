@@ -1,5 +1,4 @@
 #pragma once
-#include "Singleton.h"
 #include "Character.h"
 #include "EntityManager.h"
 
@@ -9,7 +8,7 @@ public:
 
 	void display(sf::RenderWindow& window) const;
 	void update(float_t deltaTime);
-	void startUp(class InputManager& inputManager);
+	void startUp(ControllerManager& controllerManager);
 	void shoutDown();
 
 private:

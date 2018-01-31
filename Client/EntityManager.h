@@ -1,6 +1,5 @@
 #pragma once
 #include <unordered_set>
-#include "Singleton.h"
 #include "Character.h"
 #include "Projectile.h"
 #include "AudioEffect.h"
@@ -20,15 +19,16 @@ public:
 	template<class T>
 	T* spawnTempEntity();
 
-	void destroyTempEntity(Entity* & ptr);
+	void destroyTempEntity(Entity * ptr);
 
 	// cannot destroy/free those
 	template<class T>
 	T* spawnPermEntity();
 
 private:
-	std::vector<Entity*> permEntities;
+	std::vector<Entity*>		permEntities;
 	std::unordered_set<Entity*> tempEntities;
+	std::vector<Entity*>		destroyPendingTempEntities;
 };
 
 template<class T>

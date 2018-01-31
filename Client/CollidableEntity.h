@@ -15,8 +15,6 @@ public:
 	virtual void display(sf::RenderWindow & window) const override {}
 	virtual void update(float_t deltaTime) override {}
 
-
-
 private:
 	
 	CollisionShape collisionShape;

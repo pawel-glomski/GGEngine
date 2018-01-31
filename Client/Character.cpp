@@ -26,7 +26,7 @@ void Character::display(sf::RenderWindow & window) const
 
 void Character::update(float_t deltaTime)
 {
-	controller.executeActionCommands(*this, deltaTime);
+	controller.controlCharacter(*this, deltaTime);
 }
 
 Controller & Character::getController()

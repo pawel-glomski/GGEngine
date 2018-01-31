@@ -32,6 +32,8 @@ public:
 	void freeToUnaligned(T* marker);
 	template<class T>
 	void freeToAligned(T* marker);
+	template<class T>
+	void freeToConstructed(T* marker);
 
 	// sets stack's top marker to bottom
 	void clear();
@@ -51,6 +53,7 @@ inline T * StackAllocator::allocConstructed()
 	T* ptr = (T*)allocAligned(sizeof(T), alignof(T));
 	if (ptr)
 		new (ptr) T;
+	ASSERT(ptr, "No memory was allocated to construct object, returned nullptr");
 	return ptr;
 }
 
@@ -76,6 +79,16 @@ inline void StackAllocator::freeToAligned(T * marker)
 	{
 		uintptr_t mark = (uintptr_t)marker;
 		uint8_t adjustment = *((uint8_t*)(mark - 1));
-		freeToMarkerUnaligned(mark - adjustment);
+		freeToUnaligned((T*)(mark - adjustment));
+	}
+}
+
+template<class T>
+inline void StackAllocator::freeToConstructed(T * marker)
+{
+	if (marker)
+	{
+		marker->~T();
+		freeToAligned(marker);
 	}
 }

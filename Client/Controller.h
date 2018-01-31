@@ -1,24 +1,59 @@
 #pragma once
 #include <unordered_map>
-#include <unordered_set>
-#include "InputManager.h"
+#include <array>
 #include "ActionCommand.h"
+#include "InputManager.h"
+#include "Array.h"
 
 class Controller
 {
-	typedef std::unordered_map<ActionCommand*, ActionCommand::ExecutionData> ActionsExecuting;
+public:
+	enum class Button : uint8_t
+	{
+		Unknown, MoveForward, MoveBackward, MoveLeft, MoveRight,
+		PrimaryAttack, SecondaryAttack,
+		FirstAbility, SecondAbility, ThridAbility, FourthAbility,
+		Count
+	};
+
+private:
+	typedef std::unordered_map<ActionCommand::ID, ActionCommand::ExecutionData> ActionsExecuting;
 
 public:
 	Controller();
 
-	void setControllerID(std::string ID);
-	std::string getControllerID() const;
-
-	void giveActionCommand(ActionCommand * actionCommand);
-	void executeActionCommands(class Character& executor, float_t deltaTime);
+	// returns ActionCommand that is assigned to given button and tries to execute that command
+	ActionCommand::ID pressButton(Controller::Button button);
+	void giveActionCommand(ActionCommand::ID actionID);
+	void controlCharacter(class Character& executor, float_t deltaTime);
 
 private:
-	std::string ID;
 	ActionsExecuting actionsExecuting;
 };
 
+class ControllerManager
+{
+	typedef Array<Controller::Button, RawInputPack::maxInput> ControllerButtons;
+	typedef Array<ActionCommand::ID, RawInputPack::maxInput> ActionCommands;
+
+public:
+	void startUp();
+	void shoutDown();
+	
+	ActionCommands useController(const RawInputPack & rawInput);
+	
+	void setCharacterToControl(Controller* mainCharacterController);
+
+	static ActionCommand::ID getActionIDByButton(Controller::Button button);
+
+private:
+	void fromRawInputToControllerButtons(ControllerButtons & buffer, const RawInputPack & inputToTranslate);
+
+private:
+	Controller* mainCharacterController;
+
+	std::unordered_map<RawKeyCode, Controller::Button> keyboardBindings;
+	std::unordered_map<RawKeyCode, Controller::Button> mouseBindings;
+
+	static Array<ActionCommand::ID, (uint8_t)Controller::Button::Count> actionIDByButton;
+};

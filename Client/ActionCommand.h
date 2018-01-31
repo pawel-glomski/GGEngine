@@ -1,12 +1,35 @@
 #pragma once
 #include <cstdint>
 #include <corecrt_math.h>
+#include <array>
 #include <vector>
 #include <iostream>
-#include "Singleton.h"
 
 class ActionCommand
 {
+public:
+	// for server package 
+	enum class ID : uint16_t
+	{
+		NoActionCommand, WalkForwardCommand, WalkBackwardCommand, WalkLeftCommand, WalkRightCommand, Count
+	};
+
+protected:
+	template<class T>
+	class Singleton
+	{
+	public:
+		static T & instance()
+		{
+			static T inst;
+			return inst;
+		}
+	protected:
+		Singleton() = default;
+	private:
+		T & operator=(const Singleton& right) = delete;
+		Singleton(const Singleton& right) = delete;
+	};
 public:
 	struct ExecutionData
 	{
@@ -14,57 +37,66 @@ public:
 		uint8_t timelineBreakPoint = 0;		// current BreakPoint
 		float_t chargingTime = 0;			// for charging actions
 		float_t chargedValue = 0;
-		bool stopAction = false;			// stopping action (or only part "charging" part of it)
+		bool endAction = false;				// if true, ControllerButton was released
 	};
 
 public:
-	// return true if finished executing (false if it is repeatable action), may modify "ExecutionData" if it is repeatable action
-	virtual bool execute(class Character& executor, ExecutionData & data, float_t deltaTime) = 0;
+	static ActionCommand* getActionByID(ActionCommand::ID id);
+
+	// return true if finished executing (false if it is repeatable action), may modify "ExecutionData" if it is repeatable command
+	virtual bool execute(class Character& executor, ExecutionData & data, float_t deltaTime) const = 0;
+
+	ActionCommand::ID getID() const;
 
 protected:
+	ActionCommand() = default;
 
+protected:
+	static std::array<ActionCommand*, (uint8_t)ID::Count> actionByID;	// indices 
+
+	ID id = ID::NoActionCommand;
 	bool repeatable = false;					// after finishing execution, restart whole process and keep executing (modify ExecutionData passed to "execute" member function)
-	bool chargeable = false;					// if it has charging part in its timeline
-	bool playerStopable = false;				// if player can stop this action (or only in some part of it (stop charging, etc.))
+	bool playerStopable = false;				// if player can stop this action (or only some part of it (stop charging, etc.))
 	float_t executionTime = 0;					// time needed to execute whole action
 	std::vector<float_t> timelineBreakPoints;	// points in time, that behaviour of action changes
 };
 
-class NoActionCommand : public ActionCommand, public Singleton<NoActionCommand>
+class NoActionCommand : public ActionCommand, public ActionCommand::Singleton<NoActionCommand>
 {
+	friend class ActionCommand::Singleton<NoActionCommand>;
+	NoActionCommand();
 public:
-	// return true if finished executing
-	virtual bool execute(class Character& executor, ExecutionData & data, float_t deltaTime) override
-	{
-		std::cout << "Do Nothing" << std::endl;
-		return true;
-	}
+	virtual bool execute(class Character& executor, ExecutionData & data, float_t deltaTime) const override;
 };
 
-class WalkForwardCommand : public ActionCommand, public Singleton<WalkForwardCommand>
+class WalkForwardCommand : public ActionCommand, public ActionCommand::Singleton<WalkForwardCommand>
 {
-public:
+	friend class ActionCommand::Singleton<WalkForwardCommand>;
 	WalkForwardCommand();
-	virtual bool execute(class Character& executor, ExecutionData & data, float_t deltaTime) override;
+public:
+	virtual bool execute(class Character& executor, ExecutionData & data, float_t deltaTime) const override;
 };
 
-class WalkBackwardCommand : public ActionCommand, public Singleton<WalkForwardCommand>
+class WalkBackwardCommand : public ActionCommand, public ActionCommand::Singleton<WalkBackwardCommand>
 {
-public:
+	friend class ActionCommand::Singleton<WalkBackwardCommand>;
 	WalkBackwardCommand();
-	virtual bool execute(class Character& executor, ExecutionData & data, float_t deltaTime) override;
+public:
+	virtual bool execute(class Character& executor, ExecutionData & data, float_t deltaTime) const override;
 };
 
-class WalkLeftCommand : public ActionCommand, public Singleton<WalkForwardCommand>
+class WalkLeftCommand : public ActionCommand, public ActionCommand::Singleton<WalkLeftCommand>
 {
-public:
+	friend class ActionCommand::Singleton<WalkLeftCommand>;
 	WalkLeftCommand();
-	virtual bool execute(class Character& executor, ExecutionData & data, float_t deltaTime) override;
+public:
+	virtual bool execute(class Character& executor, ExecutionData & data, float_t deltaTime) const override;
 };
 
-class WalkRightCommand : public ActionCommand, public Singleton<WalkForwardCommand>
+class WalkRightCommand : public ActionCommand, public ActionCommand::Singleton<WalkRightCommand>
 {
-public:
+	friend class ActionCommand::Singleton<WalkRightCommand>;
 	WalkRightCommand();
-	virtual bool execute(class Character& executor, ExecutionData & data, float_t deltaTime) override;
+public:
+	virtual bool execute(class Character& executor, ExecutionData & data, float_t deltaTime) const override;
 };

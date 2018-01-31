@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActionCommand.h" />
+    <ClInclude Include="Array.h" />
     <ClInclude Include="AudioEffect.h" />
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="CollidableEntity.h" />
@@ -56,7 +57,6 @@
     <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="PoolAllocator.h" />
     <ClInclude Include="Projectile.h" />
-    <ClInclude Include="Singleton.h" />
     <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="stdInclude.h" />
     <ClInclude Include="ResourceManager.h" />

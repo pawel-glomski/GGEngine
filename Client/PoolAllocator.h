@@ -32,6 +32,7 @@ public:
 	size_t size() const;
 
 public:
+	Allocator	allocator;
 	size_t		poolSize =	 0;
 	size_t		inUseCount = 0;
 	ptrdiff_t	freeIndex =	 -1;
@@ -52,12 +53,11 @@ inline void Pool<T, Allocator>::init(size_t size)
 	ASSERT(size, "Tried to initialise PoolAllocator with size == 0, init failed");
 	if (!objects && size)
 	{
-		Allocator allocator;
 		poolSize = size;
-		objects = allocator.allocate(poolSize);
+		objects = allocator.allocate(size);
 		for (size_t i = 0; i < size; i++)
 			allocator.construct(&objects[i]);
-		freeList = new void*[poolSize];
+		freeList = new void*[size];
 		clear();
 	}
 }
@@ -81,7 +81,9 @@ inline void Pool<T, Allocator>::reset()
 {
 	ASSERT(objects, "Empty PoolAllocator destruction/reset. Ok if its shown on game's end  (probably reset was called before shoutdown)");
 	delete[] freeList;
-	Allocator().deallocate(objects, poolSize);
+	for (size_t i = 0; i < poolSize; i++)
+		allocator.destroy(&objects[i]);
+	allocator.deallocate(objects, poolSize);
 
 	poolSize = 0;
 	inUseCount = 0;
@@ -111,7 +113,7 @@ template<class T, class Allocator>
 inline void Pool<T, Allocator>::free(size_t index)
 {
 	ASSERT((index < poolSize), "Tried to free object that does not belong to pool");
-	if (index < poolSize)
+	if (objects && index < poolSize)
 		free(&objects[index]);
 }
 
@@ -121,7 +123,7 @@ inline void Pool<T, Allocator>::free(T * object)
 	ASSERT(objects, "PoolAllocator use before its initialisation");
 	ASSERT(((object >= objects) && (object < &objects[poolSize])), "Tried to free object that does not belong to pool");
 
-	if ((object >= objects) && (object < &objects[poolSize]))
+	if (objects && (object >= objects) && (object < &objects[poolSize]))
 	{
 		ptrdiff_t newIndex = object - objects;
 		freeList[newIndex] = freeIndex >= 0 ? &freeList[freeIndex] : nullptr;

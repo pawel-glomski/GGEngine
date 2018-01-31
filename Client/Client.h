@@ -19,9 +19,12 @@ private:
 private:
 
 	ResourceManager resourceManager;
+
 	AudioManager	audioManager;
-	InputManager	inputManager;
 	DisplayManager	displayManager;
+
+	RawInputReceiver inputManager;
+	ControllerManager controllerManager;
 
 	World			world;
 };

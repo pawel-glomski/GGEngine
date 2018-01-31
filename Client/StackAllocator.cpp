@@ -20,7 +20,8 @@ void StackAllocator::init(size_t sizeInBytes)
 
 void * StackAllocator::allocUnaligned(size_t sizeInBytes)
 {
-	if (topMarker + sizeInBytes < bottomMarker + this->sizeInBytes)
+	ASSERT(bottomMarker, "Stack allocator use before its initialisation");
+	if (bottomMarker && topMarker + sizeInBytes - 1 < bottomMarker + this->sizeInBytes)
 	{
 		topMarker += sizeInBytes;
 		return (void*)(topMarker - sizeInBytes);
@@ -55,7 +56,7 @@ StackAllocator::Marker StackAllocator::getMarker() const
 
 void StackAllocator::clear()
 {
-	ASSERT(bottomMarker, "Tried to free stack to bottom when there is no memory allocated by pool");
+	ASSERT(bottomMarker, "Tried to free stack to bottom when there is no memory allocated by stack");
 	topMarker = bottomMarker;
 }
 

@@ -1,12 +1,12 @@
 #include "stdInclude.h"
 #include "World.h"
 
-void World::startUp(class InputManager& inputManager)
+void World::startUp(ControllerManager& controllerManager)
 {
 	entityManager.startUp();
 	
 	mainCharacter = entityManager.spawnPermEntity<Character>();
-	inputManager.setInputTargetController(&mainCharacter->getController());
+	controllerManager.setCharacterToControl(&mainCharacter->getController());
 }
 
 void World::shoutDown()

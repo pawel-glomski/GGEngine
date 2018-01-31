@@ -1,7 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "World.h"
-#include "Singleton.h"
 
 struct GraphicsSettings
 {

@@ -5,7 +5,7 @@
 
 Entity::Entity()
 {
-	attached.reserve(16);
+	attached.reserve(6);
 }
 
 Entity::~Entity()
@@ -40,21 +40,18 @@ void Entity::attachTo(Entity * newParent)
 	{
 		ASSERT(!this->parent, "Attaching to entity while already being attached to one");
 		unattach();
-		newParent->attached.push_back(this);
+		newParent->attached.insert(this);
 	}
 }
 
 void Entity::unattach()
 {
 	if (parent)
-	{
-		auto ptrPos = std::find(parent->attached.begin(), parent->attached.end(), this);
-		if (ptrPos != parent->attached.end())
+		if (parent->attached.count(this))
 		{
-			parent->attached.erase(ptrPos);
+			parent->attached.erase(this);
 			parent = nullptr;
 		}
-	}
 }
 
 void Entity::setRelativePosition(const Vect2f & newPosition, bool sweep)
@@ -109,7 +106,7 @@ void Entity::moveInGlobal(const Vect2f & translationVector, bool sweep)
 void Entity::moveInLocal(const Vect2f & translationVector, bool sweep)
 {
 	// rotation based move
-
+	ASSERT(false, "MoveInLocal is not implemented yet");
 }
 
 std::string Entity::getName()
