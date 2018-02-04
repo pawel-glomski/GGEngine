@@ -37,4 +37,15 @@ typedef Vect2<int32_t>	Vect2i;
 typedef Vect2<float_t>	Vect2f;
 typedef Vect2<double_t> Vect2d;
 
+// utilities
+
+template<class T>
+float_t	dotProduct(const Vect2<T> & vec1, const Vect2<T> & vec2);
+
+template<class T>
+float_t crossProduct(const Vect2<T> & vec1, const Vect2<T> & vec2);
+
+template<class T>
+float_t	angleBetweenVectors(Vect2<T> vec1, Vect2<T> vec2);
+
 #include "Vec2.inl"

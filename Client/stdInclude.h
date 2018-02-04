@@ -7,7 +7,7 @@
 #ifdef _DEBUG
 
 #define debugBreak() asm { int 3 }
-// check the expression and print Message if it is false 
+// checks the expression and prints Message if it's false 
 #define ASSERT(expr, failMessage) \
  if (!expr) \
  {\

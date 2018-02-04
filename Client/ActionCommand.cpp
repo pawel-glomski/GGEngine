@@ -1,11 +1,23 @@
 #include "ActionCommand.h"
 #include "Character.h"
+#include "MathUtilities.h"
 
 std::array<ActionCommand*, (uint16_t)ActionCommand::ID::Count> ActionCommand::actionByID;
+
+ActionCommand::ActionCommand(ActionCommand::ID id)
+{
+	this->id = id;
+	actionByID[(uint8_t)id] = this;
+}
 
 ActionCommand * ActionCommand::getActionByID(ActionCommand::ID id)
 {
 	return actionByID[(uint8_t)id];
+}
+
+bool ActionCommand::isFinished(const ExecutionData & data) const
+{
+	return 	(data.executingTime >= executionTime) && (!repeatable || data.stage == ExecutionStage::Ending);
 }
 
 ActionCommand::ID ActionCommand::getID() const
@@ -15,12 +27,11 @@ ActionCommand::ID ActionCommand::getID() const
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-NoActionCommand::NoActionCommand()
+NoActionCommand::NoActionCommand() : ActionCommand(ActionCommand::ID::NoActionCommand)
 {
 	//////////////////////////////
 	// must have
-	id = ID::NoActionCommand;
-	actionByID[(uint8_t)id] = this;
+
 	// must have
 	//////////////////////////////
 }
@@ -28,103 +39,126 @@ NoActionCommand::NoActionCommand()
 bool NoActionCommand::execute(Character & executor, ExecutionData & data, float_t deltaTime) const
 {
 	std::cout << "Do Nothing" << std::endl;
+	data.stage = ExecutionStage::Ending;
 	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-WalkForwardCommand::WalkForwardCommand()
+WalkForwardCommand::WalkForwardCommand() : ActionCommand(ActionCommand::ID::WalkForwardCommand)
 {	
-	//////////////////////////////
-	// must have
-	id = ID::WalkForwardCommand;
-	actionByID[(uint8_t)id] = this;
-	// must have
-	//////////////////////////////
 	repeatable = true;
-	playerStopable = true;
 }
 
 bool WalkForwardCommand::execute(Character & executor, ExecutionData & data, float_t deltaTime) const
 {
-	data.actionExecutingTime += deltaTime;
-	executor.moveInGlobal({ 0,-100 * deltaTime });
-	if (playerStopable && data.endAction)
-		return true;
-
-	return !repeatable;
+	if (data.stage != ExecutionStage::Ending)
+	{
+		data.stage = ExecutionStage::MidWay;
+		data.executingTime += deltaTime;
+		executor.moveForward({ 500 * deltaTime });
+	}
+	return isFinished(data);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-WalkBackwardCommand::WalkBackwardCommand()
+WalkBackwardCommand::WalkBackwardCommand() : ActionCommand(ActionCommand::ID::WalkBackwardCommand)
 {
-	//////////////////////////////
-	// must have
-	id = ID::WalkBackwardCommand;
-	actionByID[(uint8_t)id] = this;
-	// must have
-	//////////////////////////////
 	repeatable = true;
-	playerStopable = true;
 }
 
 bool WalkBackwardCommand::execute(Character & executor, ExecutionData & data, float_t deltaTime) const
 {
-	data.actionExecutingTime += deltaTime;
-	executor.moveInGlobal({ 0,100 * deltaTime });
-	if (playerStopable && data.endAction)
-		return true;
-
-	return !repeatable;
+	if (data.stage != ExecutionStage::Ending)
+	{
+		data.stage = ExecutionStage::MidWay;
+		data.executingTime += deltaTime;
+		executor.moveForward({ -500 * deltaTime });
+	}
+	return isFinished(data);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-WalkLeftCommand::WalkLeftCommand()
+WalkLeftCommand::WalkLeftCommand() : ActionCommand(ActionCommand::ID::WalkLeftCommand)
 {
-	//////////////////////////////
-	// must have
-	id = ID::WalkLeftCommand;
-	actionByID[(uint8_t)id] = this;
-	// must have
-	//////////////////////////////
 	repeatable = true;
-	playerStopable = true;
 }
 
 bool WalkLeftCommand::execute(Character & executor, ExecutionData & data, float_t deltaTime) const
 {
-	data.actionExecutingTime += deltaTime;
-	executor.moveInGlobal({ -100 * deltaTime,0 });
-	if (playerStopable && data.endAction)
-		return true;
-
-	return !repeatable;
+	if (data.stage != ExecutionStage::Ending)
+	{
+		data.stage = ExecutionStage::MidWay;
+		data.executingTime += deltaTime;
+		executor.moveRight({ -500 * deltaTime });
+	}
+	return isFinished(data);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-WalkRightCommand::WalkRightCommand()
+WalkRightCommand::WalkRightCommand() : ActionCommand(ActionCommand::ID::WalkRightCommand)
 {
-	//////////////////////////////
-	// must have
-	id = ID::WalkRightCommand;
-	actionByID[(uint8_t)id] = this;
-	// must have
-	//////////////////////////////
 	repeatable = true;
-	playerStopable = true;
 }
 
 bool WalkRightCommand::execute(Character & executor, ExecutionData & data, float_t deltaTime) const
 {
-	data.actionExecutingTime += deltaTime;
-	executor.moveInGlobal({ 100 * deltaTime,0 });
-	if (playerStopable && data.endAction)
-		return true;
-
-	return !repeatable;
+	if (data.stage != ExecutionStage::Ending)
+	{
+		data.stage = ExecutionStage::MidWay;
+		data.executingTime += deltaTime;
+		executor.moveRight({ 500 * 0.016 });
+	}
+	return isFinished(data);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DashCommand::DashCommand() : ActionCommand(ActionCommand::ID::DashCommand)
+{
+	executionTime = 5.2f;
+}
+
+bool DashCommand::execute(Character & executor, ExecutionData & data, float_t deltaTime) const
+{
+	if (data.stage == ExecutionStage::Beginning)
+	{
+		data.activationMousePosition = RawInputReceiver::instance().getCurrentInput().mousePos;
+		data.stage = ExecutionStage::Ending;
+	}
+	auto delta = data.activationMousePosition - executor.getGlobalPosition();
+
+	data.executingTime += deltaTime;
+	float_t distance = 1000 * deltaTime;
+
+	clamp(distance, 0.f, delta.length());
+	executor.moveForward(distance);
+	std::cout << distance << std::endl;
+	if (distance < 0.5)
+		data.executingTime = executionTime;
+
+	return isFinished(data);
+}
+
+RotateCommand::RotateCommand() : ActionCommand(ID::RotateCommand)
+{
+	repeatable = true;
+}
+
+bool RotateCommand::execute(Character & executor, ExecutionData & data, float_t deltaTime) const
+{
+	float_t delta = angleBetweenVectors(executor.getForwardVector(), (Vect2f)RawInputReceiver::instance().getCurrentInput().mousePos - executor.getGlobalPosition());
+	if (delta != 0)
+	{
+		float_t rotationSpeed = 2.f*PI_F / 0.35f * deltaTime;	// speed: can rotate 360 degrees in 0.3 of a second
+		rotationSpeed = clamp(rotationSpeed, 0.f, abs(delta));
+		rotationSpeed *= sign(delta);
+
+		executor.rotate(rotationSpeed);
+	}
+	// never ends
+	return false;
+}

@@ -16,12 +16,6 @@
     <Filter Include="Managers">
       <UniqueIdentifier>{cd59f823-abdc-4de0-a674-6759e9e51c9b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Managers\AudioManager">
-      <UniqueIdentifier>{23d9c951-9e1c-4e88-b727-7dc7d0bf84d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Managers\DispalyManager">
-      <UniqueIdentifier>{cb015da1-286e-4d6f-bb93-3b9fb1db6032}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Managers\InputManager">
       <UniqueIdentifier>{8805dad8-849a-4941-a4e6-da3569e15524}</UniqueIdentifier>
     </Filter>
@@ -49,7 +43,13 @@
     <Filter Include="Managers\InputManager\Controller">
       <UniqueIdentifier>{9e43d1c3-8d89-40f6-b650-b06a33c9f0a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Managers\InputManager\Controller\ActionCommand">
+    <Filter Include="Managers\AudioManager">
+      <UniqueIdentifier>{23d9c951-9e1c-4e88-b727-7dc7d0bf84d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\DispalyManager">
+      <UniqueIdentifier>{cb015da1-286e-4d6f-bb93-3b9fb1db6032}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ActionCommand">
       <UniqueIdentifier>{1262a3e2-a120-4e79-98d2-4c52f6cdd7cf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -95,9 +95,6 @@
     <ClInclude Include="CollidableEntity.h">
       <Filter>Managers\EntityManager\Entity\Entities\Other</Filter>
     </ClInclude>
-    <ClInclude Include="EntityManager.h">
-      <Filter>Managers\EntityManager</Filter>
-    </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>Managers\EntityManager\Entity</Filter>
     </ClInclude>
@@ -105,13 +102,28 @@
       <Filter>Collision</Filter>
     </ClInclude>
     <ClInclude Include="ActionCommand.h">
-      <Filter>Managers\InputManager\Controller\ActionCommand</Filter>
+      <Filter>ActionCommand</Filter>
     </ClInclude>
     <ClInclude Include="Controller.h">
       <Filter>Managers\InputManager\Controller</Filter>
     </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
     <ClInclude Include="Array.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
       <Filter>Utilities\MathUtilities</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Managers\EntityManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtilities.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Transformation.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -166,10 +178,16 @@
       <Filter>Collision</Filter>
     </ClCompile>
     <ClCompile Include="ActionCommand.cpp">
-      <Filter>Managers\InputManager\Controller\ActionCommand</Filter>
+      <Filter>ActionCommand</Filter>
     </ClCompile>
     <ClCompile Include="Controller.cpp">
       <Filter>Managers\InputManager\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>Utilities\MathUtilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Transformation.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -3,34 +3,14 @@
 #include "MemoryManager.h"
 #include "EntityManager.h"
 
-Entity::Entity()
+EntityID Entity::getID()
 {
-	attached.reserve(6);
+	return id;
 }
 
-Entity::~Entity()
+void Entity::destroy()
 {
-}
-
-void Entity::setName(std::string newName)
-{
-	ASSERT(!newName.empty(), "Name was set to empty string");
-	name = std::move(newName);
-}
-
-void Entity::selfDestroy()
-{
-	selfDestroyed = true;
-}
-
-void Entity::onDestroy()
-{
-	parent = nullptr;
-	attached.clear();
-}
-
-void Entity::constructComplexEntity(EntityManager & entityManager)
-{
+	destroyed = true;
 }
 
 void Entity::attachTo(Entity * newParent)
@@ -41,10 +21,11 @@ void Entity::attachTo(Entity * newParent)
 		ASSERT(!this->parent, "Attaching to entity while already being attached to one");
 		unattach();
 		newParent->attached.insert(this);
+		parent = newParent;
 	}
 }
 
-void Entity::unattach()
+void Entity::unattach() noexcept
 {
 	if (parent)
 		if (parent->attached.count(this))
@@ -54,79 +35,100 @@ void Entity::unattach()
 		}
 }
 
-void Entity::setRelativePosition(const Vect2f & newPosition, bool sweep)
+void Entity::setRelativeRotation(float_t rotation)
 {
-	if (sweep)
-	{	
-		//sweep process ...
-	}
-
-	relativePosition = newPosition;
-	updateGlobalPosition();
+	relativeTransform.setRotation(rotation);
 }
 
-void Entity::setGlobalPosition(const Vect2f & newPosition, bool sweep)
+void Entity::setGlobalRotation(float_t rotation)
 {
-	if (sweep)
-	{
-		//sweep process ...
-	}
-
-	globalPosition = newPosition;
-	updateRelativelPosition();
+	if(parent)
+		relativeTransform.setRotation(parent->getGlobalRotation() + rotation);
+	else 
+		relativeTransform.setRotation(rotation);
 }
 
-void Entity::updateRelativelPosition()
+void Entity::rotate(float_t deltaRotation)
+{
+	relativeTransform.rotate(deltaRotation);
+}
+
+void Entity::setRelativePosition(const Vect2f & newPosition )
+{
+	relativeTransform.setPosition(newPosition);
+}
+
+void Entity::setGlobalPosition(const Vect2f & newPosition )
 {
 	if (parent)
-		relativePosition = globalPosition - parent->getGlobalPosition();
+		setRelativePosition(newPosition - parent->getGlobalPosition());
 	else
-		relativePosition = globalPosition;
-
-	for (auto& child : attached)
-		child->updateGlobalPosition();
+		setRelativePosition(newPosition);
 }
 
-void Entity::updateGlobalPosition()
+void Entity::moveInGlobal(const Vect2f & translationVector )
+{
+	relativeTransform.moveGlobal(translationVector);
+}
+
+void Entity::moveInLocal(const Vect2f & translationVector )
+{
+	relativeTransform.moveLocal(translationVector);
+}
+
+void Entity::moveForward(float_t distance)
+{
+	relativeTransform.moveForward(distance);
+}
+
+void Entity::moveRight(float_t distance)
+{
+	relativeTransform.moveRight(distance);
+}
+
+float_t Entity::getRelativeRotation() const
+{
+	return relativeTransform.getRotation();
+}
+
+float_t Entity::getGlobalRotation() const
 {
 	if (parent)
-		globalPosition = parent->getGlobalPosition() + relativePosition;
-	else
-		globalPosition = relativePosition;
-
-	for (auto& child : attached)
-		child->updateGlobalPosition();
-}
-
-void Entity::moveInGlobal(const Vect2f & translationVector, bool sweep)
-{
-	setGlobalPosition(globalPosition + translationVector);
-}
-
-void Entity::moveInLocal(const Vect2f & translationVector, bool sweep)
-{
-	// rotation based move
-	ASSERT(false, "MoveInLocal is not implemented yet");
-}
-
-std::string Entity::getName()
-{
-	ASSERT(!name.empty(), "Returned empty string");
-	return name;
+		return parent->getGlobalRotation() + relativeTransform.getRotation();
+	return relativeTransform.getRotation();
 }
 
 Vect2f Entity::getRelativePosition() const
 {
-	return relativePosition;
+	return relativeTransform.getPosition();
 }
 
 Vect2f Entity::getGlobalPosition() const
 {
-	return globalPosition;
+	if(parent)
+		return parent->getGlobalPosition() + relativeTransform.getPosition();
+	return relativeTransform.getPosition();	 
+}
+
+Vect2f Entity::getForwardVector() const
+{
+	if (parent)
+		return forwardVectorFromRotation(getGlobalRotation());
+	return relativeTransform.getForwardVector();
+}
+
+Vect2f Entity::getRightVector() const
+{
+	if (parent)
+		return rightVectorFromRotation(getGlobalRotation());
+	return relativeTransform.getRightVector();
+}
+
+const Transformation & Entity::getRelativeTransform() const
+{
+	return relativeTransform;
 }
 
 void Entity::update(float deltaTIme)
 {
-	// update itself
-
 }

@@ -62,13 +62,18 @@ void StackAllocator::clear()
 
 void StackAllocator::reset()
 {
-	ASSERT(bottomMarker, "Empty StackAllocator destruction/reset. Ok if its shown on game's end (probably reset was called on shoutdown)");
-	if (bottomMarker)
-		operator delete ((void*)(bottomMarker), sizeInBytes);
+	if (!bottomMarker) // already reseted
+		return;
 
+	operator delete ((void*)(bottomMarker), sizeInBytes);
 	bottomMarker = 0;
 	topMarker = 0;
 	sizeInBytes = 0;
+}
+
+bool StackAllocator::isValid(void * ptr) const
+{
+	return ((uintptr_t)ptr >= bottomMarker && (uintptr_t)ptr < topMarker);
 }
 
 StackAllocator::~StackAllocator()

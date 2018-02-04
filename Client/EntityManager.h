@@ -6,6 +6,7 @@
 #include "VisualEffect.h"
 #include "MemoryManager.h"
 
+
 class EntityManager
 {
 public:
@@ -16,45 +17,58 @@ public:
 
 	void display(sf::RenderWindow & window) const;
 
+	// pass id, to create entity with given id, pass nothing to use any free id
+	// returns nullptr if there already exists entity with given id
 	template<class T>
-	T* spawnTempEntity();
+	T* spawnTempEntity(EntityID id = -1);
 
-	void destroyTempEntity(Entity * ptr);
+	void destroyTempEntity(const EntityID & id);
 
-	// cannot destroy/free those
+	// pass id, to create entity with given id, pass nothing to use any free id
+	// returns nullptr if there already exists entity with given id
+	// cannot destroy/free those in runtime
 	template<class T>
-	T* spawnPermEntity();
+	T* spawnPermEntity(EntityID id = -1);
 
 private:
-	std::vector<Entity*>		permEntities;
-	std::unordered_set<Entity*> tempEntities;
-	std::vector<Entity*>		destroyPendingTempEntities;
+	// use as unordered_map::erase member function
+	std::unordered_map<EntityID, Entity*>::iterator destroyTempByIterator(const std::unordered_map<EntityID, Entity*>::iterator it);
+
+private:
+	std::unordered_map<EntityID, Entity*> permEntities;
+	std::unordered_map<EntityID, Entity*> tempEntities;
 };
 
 template<class T>
-inline T * EntityManager::spawnTempEntity()
+inline T * EntityManager::spawnTempEntity(EntityID id)
 {
+	ASSERT(!tempEntities.count(id), "Tried to spawn entity with id of other spawned entity! Spawned nothing, returned nulltpr");
+	if (tempEntities.count(id))
+		return nullptr;
+
 	auto ptr = MemoryManager::instance().allocFromPool<T>();
 	ASSERT(ptr, "Cannot spawn entity, no memory was allocated for it, returned nullptr");
 	if (ptr)
 	{
-		tempEntities.insert(ptr);
-		ptr->constructComplexEntity(*this);
-		ptr->onSpawn();
+		tempEntities[id] = ptr;
+		ptr->id = id;
 	}
 	return ptr;
 }
 
 template<class T>
-inline T * EntityManager::spawnPermEntity()
+inline T * EntityManager::spawnPermEntity(EntityID id)
 {
+	ASSERT(!permEntities.count(id), "Tried to spawn entity with id of already spawned entity! Spawned nothing, returned nulltpr");
+	if (permEntities.count(id))
+		return nullptr;
+
 	auto ptr = MemoryManager::instance().stack.allocConstructed<T>();
 	ASSERT(ptr, "Cannot spawn entity, no memory was allocated for it, returned nullptr");
 	if (ptr)
 	{
-		permEntities.push_back(ptr);
-		ptr->constructComplexEntity(*this);
-		ptr->onSpawn();
+		permEntities[id] = ptr;
+		ptr->id = id;
 	}
 	return ptr;
 }

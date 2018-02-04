@@ -21,8 +21,8 @@ public:
 	//  "alignment" must be a power of 2
 	void* allocAligned(size_t sizeInBytes, uint8_t alignment);
 
-	// allocate aligned memory and calls default constructor of given type using placement new, to free to this address, call freeToMarkerAligned 
-	
+	// allocates aligned memory and calls default constructor of given type using placement new, must be freed by freeToConstructed, 
+	// or call destructor by yourself when you dont need this object anymore and stack's data fragmentation is not a problem
 	template<class T>
 	T* allocConstructed();
 
@@ -32,6 +32,8 @@ public:
 	void freeToUnaligned(T* marker);
 	template<class T>
 	void freeToAligned(T* marker);
+
+	// sets stack top to marker and calls destructor on given object
 	template<class T>
 	void freeToConstructed(T* marker);
 
@@ -40,6 +42,8 @@ public:
 	
 	// resets stack size to 0, deletes allocated memory
 	void reset();
+
+	bool isValid(void* ptr) const;
 
 private:
 	Marker topMarker = 0;

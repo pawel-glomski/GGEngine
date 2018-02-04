@@ -8,39 +8,52 @@
 
 Controller::Controller()
 {
-	actionsExecuting.reserve(5);
+	actionsExecuting.reserve(10);
 }
 
 ActionCommand::ID Controller::pressButton(Controller::Button button)
 {
-	// if action is already being executed - endAction will notify action, that controller button was released
-	ActionCommand::ID actionID = ActionCommand::ID::NoActionCommand;
-	actionID = ControllerManager::getActionIDByButton(button);
-
-	giveActionCommand(actionID);
+	ActionCommand::ID actionID = ControllerManager::getActionIDByButton(button);
+	if (!actionsExecuting.count(actionID))
+		actionsExecuting.emplace(std::make_pair(actionID, ActionCommand::ExecutionData()));
+	else if (actionsExecuting[actionID].stage != ActionCommand::ExecutionStage::Ending)
+	{
+		// if button is already pressed, and stage of execution is not "ending" (as it should always be, after key release), 
+		// this means, that event of button release was not catched, and if action is repeatable, it can't end
+		// we must set its stage as ending and check if this action is finished (we stimulate key release) 
+		// and if it is, reset its execution data (so it can start executing again)
+		actionsExecuting[actionID].stage = ActionCommand::ExecutionStage::Ending;
+		if (ActionCommand::getActionByID(actionID)->isFinished(actionsExecuting[actionID]))
+			actionsExecuting[actionID] = ActionCommand::ExecutionData();
+	}
+	else 
+		// return correct id only when this function acually changes something (make it return true value only once)
+		return ActionCommand::ID::NoActionCommand;
 
 	return actionID;
 }
 
-void Controller::giveActionCommand(ActionCommand::ID actionID)
+ActionCommand::ID Controller::releaseButton(Controller::Button button)
 {
-	if (actionsExecuting.count(actionID))
-		actionsExecuting[actionID].endAction = true;
-	else
-		actionsExecuting.emplace(std::make_pair(actionID, ActionCommand::ExecutionData()));
+	ActionCommand::ID actionID = ControllerManager::getActionIDByButton(button);
+	if (actionsExecuting.count(actionID) && actionsExecuting[actionID].stage != ActionCommand::ExecutionStage::Ending)
+		actionsExecuting[actionID].stage = ActionCommand::ExecutionStage::Ending;
+	else 
+		// return correct id only when this function acually changes something (make it return true value only once)
+		return ActionCommand::ID::NoActionCommand;
+	return actionID;
 }
 
 void Controller::controlCharacter(Character & executor, float_t deltaTime)
 {
-	ActionCommand::ID finishedActions[6];
-	uint8_t finishedActionsCount = 0;
 
-	for (auto& action : actionsExecuting)
-		if (ActionCommand::getActionByID(action.first)->execute(executor, action.second, deltaTime))
-			finishedActions[finishedActionsCount++] = action.first;	// if finished execution
+	ASSERT((actionsExecuting.size() <= RawInputPack::maxInput), "There are to many actions executing at the same time!");
 
-	for (uint8_t i = 0; i < finishedActionsCount; i++)
-		actionsExecuting.erase(finishedActions[i]);
+	for (auto it = actionsExecuting.begin(); it != actionsExecuting.end();)
+		if (ActionCommand::getActionByID(it->first)->execute(executor, it->second, deltaTime))
+			it = actionsExecuting.erase(it);	// if finished execution
+		else 
+			it++;
 }
 
 // Controller
@@ -55,23 +68,7 @@ Array<ActionCommand::ID, (uint8_t)Controller::Button::Count>  ControllerManager:
 void ControllerManager::startUp()
 {
 	keyboardBindings.reserve((uint8_t)Controller::Button::Count);
-	mouseBindings.reserve(sf::Mouse::Button::ButtonCount);
-
-	// order here is important!
-	actionIDByButton[(uint8_t)Controller::Button::Unknown] = NoActionCommand::instance().getID();
-	actionIDByButton[(uint8_t)Controller::Button::MoveForward] = WalkForwardCommand::instance().getID();
-	actionIDByButton[(uint8_t)Controller::Button::MoveBackward] = WalkBackwardCommand::instance().getID();
-	actionIDByButton[(uint8_t)Controller::Button::MoveLeft] = WalkLeftCommand::instance().getID();
-	actionIDByButton[(uint8_t)Controller::Button::MoveRight] = WalkRightCommand::instance().getID();
-
-	actionIDByButton[(uint8_t)Controller::Button::FirstAbility] = NoActionCommand::instance().getID();
-	actionIDByButton[(uint8_t)Controller::Button::SecondAbility] = NoActionCommand::instance().getID();
-	actionIDByButton[(uint8_t)Controller::Button::ThridAbility] = NoActionCommand::instance().getID();
-	actionIDByButton[(uint8_t)Controller::Button::FourthAbility] = NoActionCommand::instance().getID();
-	actionIDByButton[(uint8_t)Controller::Button::PrimaryAttack] = NoActionCommand::instance().getID();
-	actionIDByButton[(uint8_t)Controller::Button::SecondaryAttack] = NoActionCommand::instance().getID();
-
-	ASSERT((actionIDByButton.currentSize() == (uint8_t)Controller::Button::Count), "There is controller button, that is not assigned to any action");
+	mouseBindings.reserve((uint8_t)sf::Mouse::Button::ButtonCount);
 
 	keyboardBindings[sf::Keyboard::Key::W] = Controller::Button::MoveForward;
 	keyboardBindings[sf::Keyboard::Key::S] = Controller::Button::MoveBackward;
@@ -84,48 +81,86 @@ void ControllerManager::startUp()
 
 	mouseBindings[sf::Mouse::Button::Left] = Controller::Button::PrimaryAttack;
 	mouseBindings[sf::Mouse::Button::Right] = Controller::Button::SecondaryAttack;
+
+	// every controller button must be assigned to any action, so for safety reasons, at first, assign all buttons to no action
+	for (uint8_t i = 0; i < (uint8_t)Controller::Button::Count; i++)
+		actionIDByButton[i] = NoActionCommand::instance().getID();
+
+	actionIDByButton[(uint8_t)Controller::Button::Rotate] = RotateCommand::instance().getID();
+	actionIDByButton[(uint8_t)Controller::Button::MoveForward] = WalkForwardCommand::instance().getID();
+	actionIDByButton[(uint8_t)Controller::Button::MoveBackward] = WalkBackwardCommand::instance().getID();
+	actionIDByButton[(uint8_t)Controller::Button::MoveLeft] = WalkLeftCommand::instance().getID();
+	actionIDByButton[(uint8_t)Controller::Button::MoveRight] = WalkRightCommand::instance().getID();
+	actionIDByButton[(uint8_t)Controller::Button::FirstAbility] = DashCommand::instance().getID();
 }
 
 void ControllerManager::shoutDown()
 {
-	// this class will be usefull also in launcher, so deallocation is not needed
+	mainCharacterController = nullptr;
+	keyboardBindings.reserve(0);
+	mouseBindings.reserve(0);
 }
 
-ControllerManager::ActionCommands ControllerManager::useController(const RawInputPack & rawInput)
+ControllerManager::ActionCommands ControllerManager::useController()
 {
-	ControllerButtons buttonPressed;
+	ASSERT(mainCharacterController, "There is no mainCharacterController set to use input on");
+	if (!mainCharacterController)
+		return ActionCommands();
+
+	return getCurrentActionsToCommand();
+}
+
+ControllerManager::ActionCommands ControllerManager::getCurrentActionsToCommand()
+{
 	ActionCommands actionsToCommand;
-	fromRawInputToControllerButtons(buttonPressed, rawInput);
-	for (const auto & button : buttonPressed)
-		actionsToCommand.push_back(actionIDByButton[(uint8_t)button]);
+	for (const auto & button : getTranslatedCurrentRawInput())
+	{
+		ActionCommand::ID actionID;
+		ActionCommand::ExecutionStage stage;
 
-	for (const auto & action : actionsToCommand)
-		mainCharacterController->giveActionCommand(action);
-
+		if (button.second == KeyState::Pressed)
+		{
+			actionID = mainCharacterController->pressButton(button.first);
+			stage = ActionCommand::ExecutionStage::Beginning;
+		}
+		else
+		{
+			actionID = mainCharacterController->releaseButton(button.first);
+			stage = ActionCommand::ExecutionStage::Ending;
+		}
+		if (actionID != ActionCommand::ID::NoActionCommand)
+			actionsToCommand.push_back({ actionID, stage });
+	}
 	return actionsToCommand;
 }
 
-void ControllerManager::fromRawInputToControllerButtons(ControllerButtons & buffer, const RawInputPack & inputToTranslate)
+ControllerManager::ControllerButtons ControllerManager::getTranslatedCurrentRawInput()
 {
+	ControllerButtons buffer;
+	const RawInputPack & inputToTranslate = RawInputReceiver::instance().getCurrentInput();
+
 	for (const auto & key : inputToTranslate.rawKeys)
-		if (key.inputDivice == InputDivice::Keyboard && keyboardBindings.count(key.code))
-			buffer.push_back(keyboardBindings[key.code]);
-		else if (key.inputDivice == InputDivice::Mouse && mouseBindings.count(key.code))
-			buffer.push_back(mouseBindings[key.code]);
+		if (key.divice == InputDivice::Keyboard && keyboardBindings.count(key.code))
+			buffer.push_back({ keyboardBindings[key.code], key.state });
+		else if (key.divice == InputDivice::Mouse && mouseBindings.count(key.code))
+			buffer.push_back({ mouseBindings[key.code], key.state });
+	return buffer;
 }
 
 void ControllerManager::setCharacterToControl(Controller * mainCharacterController)
 {
 	this->mainCharacterController = mainCharacterController;
+	mainCharacterController->pressButton(Controller::Button::Rotate);	// this should always be pressed
 }
 
 // static:
 
 ActionCommand::ID ControllerManager::getActionIDByButton(Controller::Button button)
 {
-	return actionIDByButton[(uint8_t)button];
+	if(button < Controller::Button::Count)
+		return actionIDByButton[(uint8_t)button];
+	return ActionCommand::ID::NoActionCommand;
 }
-
 
 // ControllerManager
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

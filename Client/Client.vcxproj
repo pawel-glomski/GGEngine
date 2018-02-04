@@ -32,10 +32,12 @@
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MemoryManager.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="StackAllocator.cpp" />
+    <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="Vec2.h" />
     <ClCompile Include="VisualEffect.cpp" />
     <ClCompile Include="World.cpp" />
@@ -54,12 +56,16 @@
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="MathUtilities.h" />
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="PoolAllocator.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="stdInclude.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Transformation.h" />
     <ClInclude Include="VisualEffect.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

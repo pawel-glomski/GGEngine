@@ -15,31 +15,45 @@ void RawInputReceiver::shoutDown()
 	windowToManage.reset();
 }
 
-RawInputPack RawInputReceiver::catchRawInput()
+const RawInputPack & RawInputReceiver::catchInput()
 {
+	currentInput = RawInputPack();
+	currentInput.mousePos = sf::Mouse::getPosition(*windowToManage);
+	RawInputPack::RawKey key;
 	sf::Event event;
-	RawInputPack input;
-	InputDivice divice;
 
 	// catch input on key pressed and released, ActionCommands will handle by themselfs when should they be activated (on key pressed or released)
 	while (windowToManage->pollEvent(event))
 	{
-		divice = InputDivice::None;
-		if (event.type == sf::Event::EventType::KeyReleased || event.type == sf::Event::EventType::KeyPressed)
-			divice = InputDivice::Keyboard;
+		key.divice = InputDivice::None;
+
+
+		if (event.type == sf::Event::EventType::KeyPressed || event.type == sf::Event::EventType::KeyReleased)
+			key.divice = InputDivice::Keyboard;
 		else if(event.type == sf::Event::EventType::MouseButtonPressed || event.type == sf::Event::EventType::MouseButtonReleased)
-			divice = InputDivice::Mouse;
-		if (divice != InputDivice::None)
+			key.divice = InputDivice::Mouse;
+
+		if (key.divice != InputDivice::None)
 		{
-			//std::cout << " " << event.key.code << std::endl;
-			input.rawKeys.push_back({ (RawKeyCode)event.key.code, divice });
-			input.mousePos = sf::Mouse::getPosition(*windowToManage);
+			if (event.type == sf::Event::EventType::KeyPressed || event.type == sf::Event::EventType::MouseButtonPressed)
+				key.state = KeyState::Pressed;
+			else if (event.type == sf::Event::EventType::KeyReleased || event.type == sf::Event::EventType::MouseButtonReleased)
+				key.state = KeyState::Released;
+			key.code = (RawKeyCode)event.key.code;
+
+			currentInput.rawKeys.push_back(key);
 		}
 		// for test purpose (deallocation), delete later on (those kind of events should be handled by gui manager)
 		else if (event.type == sf::Event::EventType::Closed)
 			windowToManage->close();
 		///////////////////////////////////////////////////////////////////////////
 	}
-	//std::cout << input.rawKeys.currentSize() << std::endl;
-	return input;
+	
+
+	return currentInput;
+}
+
+const RawInputPack & RawInputReceiver::getCurrentInput() const
+{
+	return currentInput;
 }

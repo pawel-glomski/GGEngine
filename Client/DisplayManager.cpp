@@ -39,9 +39,9 @@ const std::shared_ptr<sf::RenderWindow>& DisplayManager::getWin() const
 	return window;
 }
 
-void DisplayManager::display(const World & world)
+void DisplayManager::displayWorld()
 {
 	window->clear();
-	world.display(*window);
+	World::instance().display(*window);
 	window->display();
 }

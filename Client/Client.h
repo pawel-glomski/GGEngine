@@ -1,4 +1,5 @@
 #pragma once
+#include <chrono>
 #include "World.h"
 #include "InputManager.h"
 #include "MemoryManager.h"
@@ -17,14 +18,12 @@ private:
 	virtual void shoutDown();
 
 private:
+	float calcDeltaTime(std::chrono::high_resolution_clock::time_point & now, std::chrono::high_resolution_clock::time_point& last);
+
+private:
 
 	ResourceManager resourceManager;
-
 	AudioManager	audioManager;
 	DisplayManager	displayManager;
-
-	RawInputReceiver inputManager;
 	ControllerManager controllerManager;
-
-	World			world;
 };

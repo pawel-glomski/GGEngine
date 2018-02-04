@@ -27,7 +27,7 @@ public:
 	const std::shared_ptr<sf::RenderWindow> & createWindow(const GraphicsSettings& settings = GraphicsSettings()) const;
 	const std::shared_ptr<sf::RenderWindow> & getWin() const;
 
-	void display(const World & world);
+	void displayWorld();
 
 private:
 	std::shared_ptr<sf::RenderWindow> window;

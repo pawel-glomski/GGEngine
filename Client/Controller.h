@@ -5,12 +5,15 @@
 #include "InputManager.h"
 #include "Array.h"
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Controller
+
 class Controller
 {
 public:
 	enum class Button : uint8_t
 	{
-		Unknown, MoveForward, MoveBackward, MoveLeft, MoveRight,
+		Rotate, MoveForward, MoveBackward, MoveLeft, MoveRight,
 		PrimaryAttack, SecondaryAttack,
 		FirstAbility, SecondAbility, ThridAbility, FourthAbility,
 		Count
@@ -22,32 +25,41 @@ private:
 public:
 	Controller();
 
-	// returns ActionCommand that is assigned to given button and tries to execute that command
+	// returns ActionCommand that is assigned to given button but only if it is possible for this action to execute
 	ActionCommand::ID pressButton(Controller::Button button);
-	void giveActionCommand(ActionCommand::ID actionID);
+	// returns ActionCommand that is assigned to given button but only if this action isn't already ending
+	ActionCommand::ID releaseButton(Controller::Button button);
+
 	void controlCharacter(class Character& executor, float_t deltaTime);
 
 private:
 	ActionsExecuting actionsExecuting;
 };
 
+// Controller
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ControllerManager
+
 class ControllerManager
 {
-	typedef Array<Controller::Button, RawInputPack::maxInput> ControllerButtons;
-	typedef Array<ActionCommand::ID, RawInputPack::maxInput> ActionCommands;
+	typedef Array<std::pair<Controller::Button, KeyState>, RawInputPack::maxInput> ControllerButtons;
+	typedef Array<std::pair<ActionCommand::ID, ActionCommand::ExecutionStage>, RawInputPack::maxInput> ActionCommands;
 
 public:
 	void startUp();
 	void shoutDown();
 	
-	ActionCommands useController(const RawInputPack & rawInput);
+	ActionCommands useController();
 	
 	void setCharacterToControl(Controller* mainCharacterController);
 
 	static ActionCommand::ID getActionIDByButton(Controller::Button button);
 
 private:
-	void fromRawInputToControllerButtons(ControllerButtons & buffer, const RawInputPack & inputToTranslate);
+	ActionCommands		getCurrentActionsToCommand();
+	ControllerButtons	getTranslatedCurrentRawInput();
 
 private:
 	Controller* mainCharacterController;
@@ -57,3 +69,6 @@ private:
 
 	static Array<ActionCommand::ID, (uint8_t)Controller::Button::Count> actionIDByButton;
 };
+
+// ControllerManager
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

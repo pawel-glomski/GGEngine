@@ -6,22 +6,22 @@
 #include "AudioEffect.h"
 #include "CollisionShape.h"
 #include "Projectile.h"
+#include "Singleton.h"
 
-class MemoryManager
+class MemoryManager : public Singleton<MemoryManager>
 {
+	friend class Singleton<MemoryManager>;
 private:
+
 	template<class T, class Allocator = std::allocator<T>>
-	class PoolAllocator : public Pool<T, Allocator>
+	class PoolAllocator : public Pool<T, Allocator>, public Singleton<PoolAllocator<T, Allocator>>
 	{
-	public:
-		static PoolAllocator & instance();
+		friend class Singleton<PoolAllocator<T, Allocator>>;
 	private:
 		PoolAllocator() = default;;
 	};
 
 public:
-	static MemoryManager & instance();
-
 	void startUp();
 	void shoutDown();
 
@@ -48,11 +48,4 @@ template<class T>
 inline void MemoryManager::freeToPool(T * ptr)
 {
 	PoolAllocator<T>::instance().free(ptr);
-}
-
-template<class T, class Allocator>
-inline MemoryManager::PoolAllocator<T, Allocator>& MemoryManager::PoolAllocator<T, Allocator>::instance()
-{
-	static MemoryManager::PoolAllocator<T, Allocator> inst;
-	return inst;
 }

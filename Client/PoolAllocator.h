@@ -19,8 +19,12 @@ public:
 	void init(size_t size);
 	void reset();
 
+	// returns ptr to free to use object (object may contain data from previous uses)
 	T* alloc();
+
+	// sets given object as free, but does not call destructor
 	void free(T* object);
+	// sets given object as free, but does not call destructor
 	void free(size_t index);
 	// sets all objects as free
 	void clear();
@@ -31,7 +35,9 @@ public:
 	size_t freeCount() const;
 	size_t size() const;
 
-public:
+	bool isValid(T* ptr) const;
+
+private:
 	Allocator	allocator;
 	size_t		poolSize =	 0;
 	size_t		inUseCount = 0;
@@ -77,35 +83,20 @@ inline void Pool<T, Allocator>::clear()
 }
 
 template<class T, class Allocator>
-inline void Pool<T, Allocator>::reset()
-{
-	ASSERT(objects, "Empty PoolAllocator destruction/reset. Ok if its shown on game's end  (probably reset was called before shoutdown)");
-	delete[] freeList;
-	for (size_t i = 0; i < poolSize; i++)
-		allocator.destroy(&objects[i]);
-	allocator.deallocate(objects, poolSize);
-
-	poolSize = 0;
-	inUseCount = 0;
-	freeIndex = -1;
-	objects = nullptr;
-	freeList = nullptr;
-}
-
-template<class T, class Allocator>
 inline T * Pool<T, Allocator>::alloc()
 {
 	ASSERT(objects, "PoolAllocator use before its initialisation");
-	ASSERT((freeIndex >= 0), "Tried to allocate from pool while there is no free memory");
+	ASSERT((freeIndex >= 0), "Tried to allocate from pool with no free memory");
 
 	if (!objects || freeIndex < 0)
 		return nullptr;
 
 	T* allocObject = &objects[freeIndex];
 	ptrdiff_t currIndex = freeIndex;
-	freeIndex = ((ptrdiff_t)((uintptr_t*)freeList[freeIndex] - (uintptr_t*)freeList));
+	freeIndex = (ptrdiff_t)((uintptr_t*)freeList[freeIndex] - (uintptr_t*)freeList);
 	freeList[currIndex] = nullptr;
 	inUseCount++;
+	
 	return allocObject;
 }
 
@@ -156,6 +147,31 @@ template<class T, class Allocator>
 inline size_t Pool<T, Allocator>::size() const
 {
 	return poolSize;
+}
+
+template<class T, class Allocator>
+inline bool Pool<T, Allocator>::isValid(T * ptr) const
+{
+	ptrdiff_t index = (ptrdiff_t)(ptr - objects);
+	// object is valid (not free) when address in "freeList" with the same index as object's index in "objects" array is set to nullptr and its not the last free object in a pool
+	return (freeList[index] == nullptr && freeIndex != index);
+}
+
+template<class T, class Allocator>
+inline void Pool<T, Allocator>::reset()
+{
+	if (!objects) // pool already reseted
+		return;
+	delete[] freeList;
+	for (size_t i = 0; i < poolSize; i++)
+		allocator.destroy(&objects[i]);
+	allocator.deallocate(objects, poolSize);
+
+	poolSize = 0;
+	inUseCount = 0;
+	freeIndex = -1;
+	objects = nullptr;
+	freeList = nullptr;
 }
 
 template<class T, class Allocator>
