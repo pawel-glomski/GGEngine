@@ -76,9 +76,9 @@ Matrix operator*(const Matrix & left, const Matrix& right)
 	return product;
 }
 
-Vec2f operator*(const Vec2f & left, const Matrix & right)
+Vect2f operator*(const Vect2f & left, const Matrix & right)
 {
-	return Vec2f(	right.m[0][0] * left.x + right.m[1][0] * left.y + right.m[2][0],
+	return Vect2f(	right.m[0][0] * left.x + right.m[1][0] * left.y + right.m[2][0],
 					right.m[0][1] * left.x + right.m[1][1] * left.y + right.m[2][1]);
 }
 
