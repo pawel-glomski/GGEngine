@@ -1,52 +1,35 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <memory>
-#include "Camera.h"
-#include "EntityManager.h"
+#include "World.h"
 
-struct DisplaySettings
+struct GraphicsSettings
 {
-	enum class WindowSize : uint8_t
+	enum class Resolution : uint8_t
 	{
-		S1280x720, S1920x1080,
-		SCount
+		R1280x720,
+		RCount
 	};
 
-
-	WindowSize	windowSize = WindowSize::S1280x720;
-
-	uint32_t	windowType = sf::Style::Close;
-
+	Resolution	resolution = Resolution(0);
+	uint32_t	windowType = 7U;
 	uint32_t	antialiasting = 0U;
 
-
-	static const sf::Vector2u windowSizes[uint8_t(WindowSize::SCount)]; // "resolution" variable can be used as an index in this array
-
-	static const Vec2f ViewResolution;
-
-	static const float_t WorldToWindowRatio;
+	static const sf::Vector2u resolutions[uint8_t(Resolution::RCount)]; // "resolution" variable can be used as an index in this array
 };
 
 class DisplayManager
 {
 public:
 
-	void startUp(const DisplaySettings & settings = DisplaySettings());
-
+	void startUp(const GraphicsSettings & settings = GraphicsSettings());
 	void shoutDown();
 
-
-	const std::shared_ptr<sf::RenderWindow> & createWindow(const DisplaySettings& settings = DisplaySettings());
-
+	const std::shared_ptr<sf::RenderWindow> & createWindow(const GraphicsSettings& settings = GraphicsSettings()) const;
 	const std::shared_ptr<sf::RenderWindow> & getWin() const;
 
-
-	void display(const std::shared_ptr<class DisplaySystem> system);
-
+	void displayWorld();
 
 private:
-
-	DisplaySettings settings;
-
 	std::shared_ptr<sf::RenderWindow> window;
 };
+

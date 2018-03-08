@@ -1,94 +1,181 @@
 #pragma once
-#include <stdint.h>
 #include "stdInclude.h"
-#include "StackAllocator.h"
+#include <vector>
 
+
+template<class T, class Allocator = std::allocator<T>>
 class Pool
 {
 public:
-	explicit Pool(size_t size, size_t typeSize, uint8_t alignment);
-
+	explicit Pool(size_t size);
 	Pool() = default;
-
 	Pool(const Pool & lref) = delete;
-
-	Pool& operator=(const Pool & right) = delete;
-
-	Pool(Pool&& rref);
-
-	Pool& operator=(Pool && right);
+	Pool(Pool&& rref) = delete;
+	Pool<T>& operator=(const Pool & right) = delete;
+	Pool<T>& operator=(Pool && right) = delete;
 
 	~Pool();
 
-	void init(size_t size, size_t typeSize, uint8_t alignment);
-
-	// deletes all allocated memory
+	void init(size_t size);
 	void reset();
 
+	// returns ptr to free to use object (object may contain data from previous uses)
+	T* alloc();
 
-	// Returned object may contain data from previous uses. 
-	// Use placement new to initialize a new object on given memory (if needed) and if you do, remember to call destructor if object is not needed anymore and then free it as raw
-	// or just free it with Pool::freeObject and then destructor will be called there
-	void* allocRaw();
-
-	// returned object is initizalized with given arguments; 
-	// should be destroyed with Pool::freeWithDestructor, or call object's destructor by yourself and then free it as raw
-	template<class T, class ... Args>
-	T* allocObject(Args&&... args);
-
-	// sets given memory as free, but does not call destructor;
-	void freeRaw(void* object);
-
-	// calls destructor and sets memory as free
-	template<class T>
-	void freeObject(T* object);
-
-	// sets all memory as free
+	// sets given object as free, but does not call destructor
+	void free(T* object);
+	// sets given object as free, but does not call destructor
+	void free(size_t index);
+	// sets all objects as free
 	void clear();
 
+	T* getArray();
+	const T* getArray() const;
 
 	size_t freeCount() const;
-
 	size_t size() const;
 
-
-	bool contains(void* ptr) const;
+	bool isValid(T* ptr) const;
 
 private:
-
-	size_t		elemNum = 0;
-
-	size_t		typeSize = 0;
-
+	Allocator	allocator;
+	size_t		poolSize =	 0;
 	size_t		inUseCount = 0;
-
-	uintptr_t	freeIndex = std::numeric_limits<uintptr_t>::max();
-
-	uintptr_t	memory = 0;
-
-	StackAllocator allocator;
+	ptrdiff_t	freeIndex =	 -1;
+	T*			objects =	 nullptr;
+	void**		freeList =	 nullptr;
 };
 
-template<class T, class ...Args>
-inline T * Pool::allocObject(Args&&... args)
+template<class T, class Allocator>
+inline Pool<T, Allocator>::Pool(size_t size)
 {
-	ASSERT((sizeof(T) <= typeSize), "Tried to allocate object of a type, that size is greater from pool's set type size! Allocated nothing, returned nullptr");
-	if (sizeof(T) <= typeSize)
-	{
-		void* allocatedObject = allocRaw();
-		if (allocatedObject)
-			return new(allocatedObject) T(std::forward<Args>(args)...);
-	}
-	return nullptr;
+	init(size);
 }
 
-template<class T>
-inline void Pool::freeObject(T * object)
+template<class T, class Allocator>
+inline void Pool<T, Allocator>::init(size_t size)
 {
-	ASSERT((contains(object)), "Tried to free object that does not belong to pool");
-	if (contains(object))
+	ASSERT(!objects, "PoolAllocator second initialisation is not possible before reset function");
+	ASSERT(size, "Tried to initialise PoolAllocator with size == 0, init failed");
+	if (!objects && size)
 	{
-		object->~T();
-		freeRaw(object);
+		poolSize = size;
+		objects = allocator.allocate(size);
+		for (size_t i = 0; i < size; i++)
+			allocator.construct(&objects[i]);
+		freeList = new void*[size];
+		clear();
 	}
+}
+
+template<class T, class Allocator>
+inline void Pool<T, Allocator>::clear()
+{
+	ASSERT(freeList, "Tried to set as free all allocated objects before initialisation (there is nothing to set as free)");
+	if (freeList)
+	{
+		for (size_t i = 0; i < poolSize - 1; i++)
+			freeList[i] = (&freeList[i + 1]);
+		freeList[poolSize - 1] = nullptr;
+		inUseCount = 0;
+		freeIndex = 0;
+	}
+}
+
+template<class T, class Allocator>
+inline T * Pool<T, Allocator>::alloc()
+{
+	ASSERT(objects, "PoolAllocator use before its initialisation");
+	ASSERT((freeIndex >= 0), "Tried to allocate from pool with no free memory");
+
+	if (!objects || freeIndex < 0)
+		return nullptr;
+
+	T* allocObject = &objects[freeIndex];
+	ptrdiff_t currIndex = freeIndex;
+	freeIndex = (ptrdiff_t)((uintptr_t*)freeList[freeIndex] - (uintptr_t*)freeList);
+	freeList[currIndex] = nullptr;
+	inUseCount++;
+	
+	return allocObject;
+}
+
+template<class T, class Allocator>
+inline void Pool<T, Allocator>::free(size_t index)
+{
+	ASSERT((index < poolSize), "Tried to free object that does not belong to pool");
+	if (objects && index < poolSize)
+		free(&objects[index]);
+}
+
+template<class T, class Allocator>
+inline void Pool<T, Allocator>::free(T * object)
+{
+	ASSERT(objects, "PoolAllocator use before its initialisation");
+	ASSERT(((object >= objects) && (object < &objects[poolSize])), "Tried to free object that does not belong to pool");
+
+	if (objects && (object >= objects) && (object < &objects[poolSize]))
+	{
+		ptrdiff_t newIndex = object - objects;
+		freeList[newIndex] = freeIndex >= 0 ? &freeList[freeIndex] : nullptr;
+		freeIndex = newIndex;
+		inUseCount--;
+	}
+}
+
+template<class T, class Allocator>
+inline T * Pool<T, Allocator>::getArray()
+{
+	ASSERT(objects, "Tried to get array before pool initialisation, returned nullptr");
+	return objects;
+}
+
+template<class T, class Allocator>
+inline const T * Pool<T, Allocator>::getArray() const
+{
+	ASSERT(objects, "Tried to get array before pool initialisation, returned nullptr");
+	return objects;
+}
+
+template<class T, class Allocator>
+inline size_t Pool<T, Allocator>::freeCount() const
+{
+	return poolSize - inUseCount;
+}
+
+template<class T, class Allocator>
+inline size_t Pool<T, Allocator>::size() const
+{
+	return poolSize;
+}
+
+template<class T, class Allocator>
+inline bool Pool<T, Allocator>::isValid(T * ptr) const
+{
+	ptrdiff_t index = (ptrdiff_t)(ptr - objects);
+	// object is valid (not free) when address in "freeList" with the same index as object's index in "objects" array is set to nullptr and its not the last free object in a pool
+	return (freeList[index] == nullptr && freeIndex != index);
+}
+
+template<class T, class Allocator>
+inline void Pool<T, Allocator>::reset()
+{
+	if (!objects) // pool already reseted
+		return;
+	delete[] freeList;
+	for (size_t i = 0; i < poolSize; i++)
+		allocator.destroy(&objects[i]);
+	allocator.deallocate(objects, poolSize);
+
+	poolSize = 0;
+	inUseCount = 0;
+	freeIndex = -1;
+	objects = nullptr;
+	freeList = nullptr;
+}
+
+template<class T, class Allocator>
+inline Pool<T, Allocator>::~Pool()
+{
+	reset();
 }

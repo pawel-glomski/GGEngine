@@ -9,34 +9,21 @@ template<class T, size_t size>
 class Array
 {
 public:
-
 	std::_Array_iterator<T, size> begin();
-
 	std::_Array_iterator<T, size> end();
-
 	std::_Array_const_iterator<T, size> begin() const;
-
 	std::_Array_const_iterator<T, size> end() const;
 
-
 	void push_back(const T& object);
-
 	void push_back(T&& object);
-
-
 	size_t currentSize() const;
-
 	size_t maxSize() const;
 
-
 	T& operator[](size_t pos);
-
 	const T& operator[](size_t pos) const;
 
 private:
-
 	T elems[size];
-
 	size_t count = 0;
 };
 
