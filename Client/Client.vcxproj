@@ -19,55 +19,69 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ActionCommand.cpp" />
-    <ClCompile Include="AudioEffect.cpp" />
-    <ClCompile Include="AudioManager.cpp" />
-    <ClCompile Include="CollidableEntity.cpp" />
-    <ClCompile Include="CollisionShape.cpp" />
-    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="Ability.cpp" />
+    <ClCompile Include="AbilityComponent.cpp" />
+    <ClCompile Include="AbilitySystem.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Character.cpp" />
+    <ClCompile Include="ClientNetwork.cpp" />
+    <ClCompile Include="ControllerComponent.cpp" />
+    <ClCompile Include="DisplayComponent.cpp" />
+    <ClCompile Include="DisplayLayer.cpp" />
+    <ClCompile Include="EntityUpdateSystem.cpp" />
+    <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="Packets.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="DisplayManager.cpp" />
+    <ClCompile Include="DisplaySystem.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Client.cpp" />
-    <ClCompile Include="EntityManager.cpp" />
-    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="LifetimeComponent.cpp" />
+    <ClCompile Include="LifetimeSystem.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Character.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MemoryManager.cpp" />
-    <ClCompile Include="Projectile.cpp" />
-    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="PoolAllocator.cpp" />
+    <ClCompile Include="RawInputReceiver.cpp" />
+    <ClCompile Include="RelationComponent.cpp" />
     <ClCompile Include="StackAllocator.cpp" />
-    <ClCompile Include="Transformation.cpp" />
+    <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="Vec2.h" />
-    <ClCompile Include="VisualEffect.cpp" />
-    <ClCompile Include="World.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ActionCommand.h" />
+    <ClInclude Include="Ability.h" />
+    <ClInclude Include="AbilityComponent.h" />
+    <ClInclude Include="AbilitySystem.h" />
     <ClInclude Include="Array.h" />
-    <ClInclude Include="AudioEffect.h" />
-    <ClInclude Include="AudioManager.h" />
-    <ClInclude Include="CollidableEntity.h" />
-    <ClInclude Include="CollisionShape.h" />
-    <ClInclude Include="Controller.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Character.h" />
+    <ClInclude Include="ClientNetwork.h" />
+    <ClInclude Include="ClientOnly\stdInclude.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ControllerComponent.h" />
+    <ClInclude Include="DisplayLayer.h" />
+    <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="Packets.h" />
+    <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="DisplayComponent.h" />
     <ClInclude Include="DisplayManager.h" />
+    <ClInclude Include="DisplaySystem.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Client.h" />
-    <ClInclude Include="EntityManager.h" />
-    <ClInclude Include="InputManager.h" />
-    <ClInclude Include="Character.h" />
+    <ClInclude Include="LifetimeComponent.h" />
+    <ClInclude Include="LifetimeSystem.h" />
     <ClInclude Include="MathUtilities.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="PoolAllocator.h" />
-    <ClInclude Include="Projectile.h" />
+    <ClInclude Include="RawInputReceiver.h" />
+    <ClInclude Include="RelationComponent.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="StackAllocator.h" />
-    <ClInclude Include="stdInclude.h" />
-    <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="Transformation.h" />
-    <ClInclude Include="VisualEffect.h" />
-    <ClInclude Include="World.h" />
+    <ClInclude Include="EntityUpdateSystem.h" />
+    <ClInclude Include="TransformComponent.h" />
+    <ClInclude Include="EntityManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Vec2.inl" />
@@ -143,7 +157,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>A:\Biblioteki\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>A:\Biblioteki\includes;A:\AProjekty\TheGame\Client\ClientOnly;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -174,7 +188,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>A:\Biblioteki\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>A:\Biblioteki\includes;A:\AProjekty\TheGame\Client\ClientOnly;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>

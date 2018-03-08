@@ -1,11 +1,11 @@
 #pragma once
 #include "Matrix.h"
 #include "Vec2.h"
-#include "Transformation.h"
 
+#define PI_F 3.14159265358979323846f
 
 template<class T>
-T maxValue(const T & value1, const T & value2)
+inline T maxValue(const T & value1, const T & value2)
 {
 	if (value1 > value2)
 		return value1;
@@ -13,7 +13,7 @@ T maxValue(const T & value1, const T & value2)
 }
 
 template<class T>
-T minValue(const T & value1, const T & value2)
+inline T minValue(const T & value1, const T & value2)
 {
 	if (value1 < value2)
 		return value1;
@@ -21,7 +21,7 @@ T minValue(const T & value1, const T & value2)
 }
 
 template<class T>
-T& clamp(T& value, const T& min, const T& max)
+inline T& clamp(T& value, const T& min, const T& max)
 {
 	value = minValue(maxValue(value, min), max);
 	return value;
@@ -29,10 +29,26 @@ T& clamp(T& value, const T& min, const T& max)
 
 // returns 1 for values >= 0; resturns -1 for < 0
 template<class T>
-T sign(const T& signedValue)
+inline T sign(const T& signValue)
 {
-	if (signedValue >= 0)
+	if (signValue >= 0)
 		return T(1);
 	else
 		return T(-1);
+}
+
+template<class T>
+inline Vec2<T> sign(const Vec2<T>& vec)
+{
+	return Vec2<T>(sign(vec.x), sign(vec.y));
+}
+
+inline float_t toRadians(float_t degrees)
+{
+	return PI_F / 180.f * degrees;
+}
+
+inline float_t toDegrees(float_t radians)
+{
+	return 180.f * radians / PI_F ;
 }

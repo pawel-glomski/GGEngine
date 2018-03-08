@@ -89,7 +89,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>A:\Biblioteki\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>A:\AProjekty\TheGame\Server;A:\Biblioteki\includes;A:\AProjekty\TheGame\Client;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
     </ClCompile>
@@ -122,7 +122,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>A:\Biblioteki\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>A:\AProjekty\TheGame\Server;A:\Biblioteki\includes;A:\AProjekty\TheGame\Client;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
     </ClCompile>
@@ -153,7 +153,70 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Client\Ability.cpp" />
+    <ClCompile Include="..\Client\AbilityComponent.cpp" />
+    <ClCompile Include="..\Client\AbilitySystem.cpp" />
+    <ClCompile Include="..\Client\Camera.cpp" />
+    <ClCompile Include="..\Client\Character.cpp" />
+    <ClCompile Include="..\Client\ControllerComponent.cpp" />
+    <ClCompile Include="..\Client\DisplayComponent.cpp" />
+    <ClCompile Include="..\Client\DisplayManager.cpp" />
+    <ClCompile Include="..\Client\DisplaySystem.cpp" />
+    <ClCompile Include="..\Client\Entity.cpp" />
+    <ClCompile Include="..\Client\EntityManager.cpp" />
+    <ClCompile Include="..\Client\EntityUpdateSystem.cpp" />
+    <ClCompile Include="..\Client\LifetimeComponent.cpp" />
+    <ClCompile Include="..\Client\LifetimeSystem.cpp" />
+    <ClCompile Include="..\Client\Matrix.cpp" />
+    <ClCompile Include="..\Client\MemoryManager.cpp" />
+    <ClCompile Include="..\Client\Obstacle.cpp" />
+    <ClCompile Include="..\Client\Packets.cpp" />
+    <ClCompile Include="..\Client\PlayerController.cpp" />
+    <ClCompile Include="..\Client\PoolAllocator.cpp" />
+    <ClCompile Include="..\Client\RawInputReceiver.cpp" />
+    <ClCompile Include="..\Client\RelationComponent.cpp" />
+    <ClCompile Include="..\Client\StackAllocator.cpp" />
+    <ClCompile Include="..\Client\TransformComponent.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="ServerNetwork.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Client\Ability.h" />
+    <ClInclude Include="..\Client\AbilityComponent.h" />
+    <ClInclude Include="..\Client\AbilitySystem.h" />
+    <ClInclude Include="..\Client\Array.h" />
+    <ClInclude Include="..\Client\Camera.h" />
+    <ClInclude Include="..\Client\Character.h" />
+    <ClInclude Include="..\Client\Component.h" />
+    <ClInclude Include="..\Client\ControllerComponent.h" />
+    <ClInclude Include="..\Client\DisplayComponent.h" />
+    <ClInclude Include="..\Client\DisplayManager.h" />
+    <ClInclude Include="..\Client\DisplaySystem.h" />
+    <ClInclude Include="..\Client\Entity.h" />
+    <ClInclude Include="..\Client\EntityManager.h" />
+    <ClInclude Include="..\Client\EntityUpdateSystem.h" />
+    <ClInclude Include="..\Client\LifetimeComponent.h" />
+    <ClInclude Include="..\Client\LifetimeSystem.h" />
+    <ClInclude Include="..\Client\MathUtilities.h" />
+    <ClInclude Include="..\Client\Matrix.h" />
+    <ClInclude Include="..\Client\MemoryManager.h" />
+    <ClInclude Include="..\Client\Obstacle.h" />
+    <ClInclude Include="..\Client\Packets.h" />
+    <ClInclude Include="..\Client\PlayerController.h" />
+    <ClInclude Include="..\Client\PoolAllocator.h" />
+    <ClInclude Include="..\Client\RawInputReceiver.h" />
+    <ClInclude Include="..\Client\RelationComponent.h" />
+    <ClInclude Include="..\Client\Singleton.h" />
+    <ClCompile Include="..\Client\Vec2.h" />
+    <ClInclude Include="..\Client\StackAllocator.h" />
+    <ClInclude Include="..\Client\TransformComponent.h" />
+    <ClInclude Include="Server.h" />
+    <ClInclude Include="ServerNetwork.h" />
+    <ClInclude Include="stdInclude.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Client\Vec2.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,20 +1,33 @@
 #include "MemoryManager.h"
 #include "stdInclude.h"
+#include "Character.h"
+#include "Obstacle.h"
+#include "Camera.h"
 
+StackAllocator MemoryManager::stack;
+std::unordered_map<std::type_index, Pool> MemoryManager::pools;
+
+
+	
 void MemoryManager::startUp()
 {
-	PoolAllocator<CollidableEntity>::instance().init(5000);
-	PoolAllocator<Projectile>::instance().init(5000);
-	PoolAllocator<VisualEffect>::instance().init(5000);
-	PoolAllocator<AudioEffect>::instance().init(200);
-	stack.init((sizeof(Character) + alignof(Character)) * 20 );
+	initNewPool<Character>(10000);
+	initNewPool<Obstacle>(10000);
+	initNewPool<Camera>(10);
+
+	stack.init(1024000);
+
 }
 
 void MemoryManager::shoutDown()
 {
-	PoolAllocator<CollidableEntity>::instance().reset();
-	PoolAllocator<Projectile>::instance().reset();
-	PoolAllocator<VisualEffect>::instance().reset();
-	PoolAllocator<AudioEffect>::instance().reset();
+	pools[std::type_index(typeid(Character))].reset();
+
 	stack.reset();
+}
+
+void MemoryManager::clearPools()
+{
+	for (auto & pool : pools)
+		pool.second.clear();
 }

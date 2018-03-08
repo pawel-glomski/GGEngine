@@ -1,2 +1,0 @@
-#include "VisualEffect.h"
-
