@@ -1,74 +1,113 @@
 #pragma once
+#include <memory>
 #include <unordered_set>
-#include "Character.h"
-#include "Projectile.h"
-#include "AudioEffect.h"
-#include "VisualEffect.h"
 #include "MemoryManager.h"
+#include "Character.h"
 
+class EntityUpdateSystem;
 
 class EntityManager
 {
+	friend class LifetimeSystem;
 public:
-	virtual void startUp();
-	virtual void shoutDown();
 
-	void updateEntities(float_t deltaTime);
+	using EntityDeleter = MemoryManager::PoolDeleter<Entity> ;
 
-	void display(sf::RenderWindow & window) const;
+	using EntityPtr = std::shared_ptr<Entity>;
 
-	// pass id, to create entity with given id, pass nothing to use any free id
-	// returns nullptr if there already exists entity with given id
-	template<class T>
-	T* spawnTempEntity(EntityID id = -1);
+	using EntityContainer = std::unordered_map<Entity::ID, EntityPtr>;
 
-	void destroyTempEntity(const EntityID & id);
+	using PendingEntityContainer = std::vector<EntityPtr>;
 
-	// pass id, to create entity with given id, pass nothing to use any free id
-	// returns nullptr if there already exists entity with given id
-	// cannot destroy/free those in runtime
-	template<class T>
-	T* spawnPermEntity(EntityID id = -1);
+
+	static EntityPtr unidentifiedEntityPtr;	// just an empty ptr, that reference to it is returned when we cant get wanted object
+
+
+public:
+
+	void startUp();
+
+	void shoutDown();
+
+
+	// runs added systems to update entities
+	void update(float_t dt);
+
+	
+	// order in which systems will be added will be order in which systems will update entities
+	void addSystem(const std::shared_ptr<EntityUpdateSystem> & system);
+
+
+	// spawned entity will be added to update loop with next update call
+	// returned pointer shouldn't be saved as shared, so when entity is destroyed, only entity manager owns a pointer to that entity
+	template<class T, class ... Args>
+	const EntityPtr & spawnEntity(Entity::Scope scope, Lifetime lifetime, Args&&...args);
+
+	// returned pointer shouldn't be saved as shared, so when entity is destroyed, only entity manager owns a pointer to that entity
+	const EntityPtr & getEntity(Entity::ID id);
 
 private:
-	// use as unordered_map::erase member function
-	std::unordered_map<EntityID, Entity*>::iterator destroyTempByIterator(const std::unordered_map<EntityID, Entity*>::iterator it);
+
+	void addSpawnedEntities();
+
+	void deleteDeadEntities();
+
+	void destroyTempEntity(Entity::ID id);
+
+	template<class T, class ... Args>
+	const EntityPtr & allocEntity(Lifetime lifetime, Entity::ID id, Args&&... args);
 
 private:
-	std::unordered_map<EntityID, Entity*> permEntities;
-	std::unordered_map<EntityID, Entity*> tempEntities;
+
+	Entity::ID globalEntityIDCounter = Entity::unidentifiedID + 1; // 0 is unidentified id
+
+	Entity::ID localEntityIDCounter = std::numeric_limits<Entity::ID>::max() / 2;
+
+
+	std::shared_ptr<EntityContainer> entities;
+
+	PendingEntityContainer spawnedEntities;
+
+	PendingEntityContainer deadEntities;
+
+
+	std::vector<std::shared_ptr<EntityUpdateSystem>> systems;
+
 };
 
-template<class T>
-inline T * EntityManager::spawnTempEntity(EntityID id)
-{
-	ASSERT(!tempEntities.count(id), "Tried to spawn entity with id of other spawned entity! Spawned nothing, returned nulltpr");
-	if (tempEntities.count(id))
-		return nullptr;
 
-	auto ptr = MemoryManager::instance().allocFromPool<T>();
-	ASSERT(ptr, "Cannot spawn entity, no memory was allocated for it, returned nullptr");
-	if (ptr)
+
+
+template<class T, class ...Args>
+inline const EntityManager::EntityPtr & EntityManager::spawnEntity(Entity::Scope scope, Lifetime lifetime, Args&&... args)
+{
+	if (scope == Entity::Scope::Global)
 	{
-		tempEntities[id] = ptr;
-		ptr->id = id;
-	}
-	return ptr;
+		if (globalEntityIDCounter + 1 < std::numeric_limits<Entity::ID>::max() / 2)
+			return allocEntity<T>(lifetime, globalEntityIDCounter++, std::forward<Args>(args)...);
+	} 
+	else if (localEntityIDCounter + 1 < std::numeric_limits<Entity::ID>::max())
+		return allocEntity<T>(lifetime, localEntityIDCounter++, std::forward<Args>(args)...);
+
+	ASSERT(false, "Out of entity ids, returns reference to empty ptr");
+	return unidentifiedEntityPtr;
 }
 
-template<class T>
-inline T * EntityManager::spawnPermEntity(EntityID id)
+template<class T, class ...Args>
+inline const EntityManager::EntityPtr & EntityManager::allocEntity(Lifetime lifetime, Entity::ID id, Args&&... args)
 {
-	ASSERT(!permEntities.count(id), "Tried to spawn entity with id of already spawned entity! Spawned nothing, returned nulltpr");
-	if (permEntities.count(id))
-		return nullptr;
+	EntityPtr newEntity = EntityPtr(MemoryManager::allocFromPool<T>(std::forward<Args>(args)...), EntityDeleter());
+	if (newEntity)
+	{		
+		spawnedEntities.push_back(newEntity);
+		(*entities)[id] = newEntity;
+		newEntity->setID(id);
+		// to get component, first construct entity
+		newEntity->construct(*this);
+		newEntity->getComponent<LifetimeComponent>()->setLifetime(lifetime);
 
-	auto ptr = MemoryManager::instance().stack.allocConstructed<T>();
-	ASSERT(ptr, "Cannot spawn entity, no memory was allocated for it, returned nullptr");
-	if (ptr)
-	{
-		permEntities[id] = ptr;
-		ptr->id = id;
+		return (*entities)[id];
 	}
-	return ptr;
+	ASSERT(false, "No memory was allocated for entity, returns reference to empty ptr");
+	return unidentifiedEntityPtr;
 }

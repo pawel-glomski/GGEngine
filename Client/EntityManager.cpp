@@ -1,62 +1,90 @@
 #include "EntityManager.h"
-#include "MemoryManager.h"
+#include "EntityUpdateSystem.h"
+
+EntityManager::EntityPtr EntityManager::unidentifiedEntityPtr; 
 
 void EntityManager::startUp()
 {
-	permEntities.reserve(1000);
-	tempEntities.reserve(1000);
+	entities = std::shared_ptr<EntityContainer>(MemoryManager::stack.allocObject<EntityContainer>(), MemoryManager::StackDeleter<EntityContainer>());
 }
 
 void EntityManager::shoutDown()
 {
-	// destroy stack-constructed perm objects
-	for (auto & entity : permEntities)
-		MemoryManager::instance().stack.freeToConstructed(entity.second);
-	permEntities.reserve(0);
-	tempEntities.reserve(0);
+	for (auto & system : systems)
+		system->reset();
+	systems.clear();
+
+	for (auto & entity : *entities)
+		entity.second->removeAllComponents();
+	entities.reset();
 }
 
-void EntityManager::updateEntities(float_t deltaTime)
+void EntityManager::update(float_t dt)
 {
-	for (auto & entity : permEntities)
-		entity.second->update(deltaTime);
+	addSpawnedEntities();
+	deleteDeadEntities();
 
-	for (auto it = tempEntities.begin(); it != tempEntities.end();)
-		if (it->second->destroyed)	// The order of the elements that are not erased is preserved (this makes it possible to erase individual elements while iterating through the container)
-			it = destroyTempByIterator(it);
-		else
-		{
-			it->second->update(deltaTime);
-			it++;
-		}
+	for (auto & system : systems)
+		system->update(*this, dt);
 }
 
-void EntityManager::display(sf::RenderWindow & window) const
+void EntityManager::addSpawnedEntities()
 {
-	for (auto & entity : permEntities)
-		entity.second->display(window);
-	for (auto & entity : tempEntities)
-		entity.second->display(window);
+	for (auto & system : systems)
+		for (auto & entity : spawnedEntities)
+			system->addEntity(entity, entities);
+	spawnedEntities.clear();
 }
 
-void EntityManager::destroyTempEntity(const EntityID & id)
+void EntityManager::deleteDeadEntities()
 {
-	ASSERT(tempEntities.count(id), "Tried to destroy entity that was not created in EntityManager or is already destroyed");
-	if (tempEntities.count(id))
-		destroyTempByIterator(tempEntities.find(id));
-}
-
-std::unordered_map<EntityID, Entity*>::iterator EntityManager::destroyTempByIterator(const std::unordered_map<EntityID, Entity*>::iterator it)
-{
-	Entity * ptr = it->second;
-	if (ptr->parent)
+	for (auto & entity : deadEntities)
 	{
-		ptr->parent->attached.erase(ptr);
-		ptr->parent = nullptr;
+		entities->erase(entity->getID());
+		for (auto & system : systems)
+			system->removeEntity(entity->getID());
+
+		entity->removeAllComponents(); // removes all components => releases relations
+		ASSERT(entity.unique(), "Deleting entity that is referenced outside of EntityManager! That reference is uselss now, this entity will no longer be updated");
 	}
-	for (auto& child : ptr->attached)
-		destroyTempEntity(child->id);
-	ptr->attached.clear();
-	MemoryManager::instance().freeToPool(ptr);
-	return tempEntities.erase(it);
+	deadEntities.clear();
+}
+
+void EntityManager::addSystem(const std::shared_ptr<EntityUpdateSystem>& system)
+{
+	ASSERT(system, "Tried to add nullptr system!");
+	ASSERT(!entities->size(), "Added system, when there are already spawned entities! System was added after client's startup, or entity was spawned before startup");
+	if (system)
+	{
+		std::type_index typeIndex(typeid(*system));
+
+		for(auto & system : systems)
+			if (std::type_index(typeid(*system)) == typeIndex)
+			{
+				ASSERT(false, std::string("Tried to add multiple systems of the same type (only one system of a type can be managed by EntityManager) ") + typeIndex.name());
+				return;
+			}
+		systems.push_back(system);
+	}
+}
+
+const EntityManager::EntityPtr & EntityManager::getEntity(Entity::ID id)
+{
+	if (entities->count(id))
+		return (*entities)[id];
+
+	ASSERT(false, "Tried to get entity with unidentified id");
+	return unidentifiedEntityPtr;
+}
+
+void EntityManager::destroyTempEntity(Entity::ID id)
+{
+	ASSERT(entities->count(id), "Tried to destroy entity with unidentified temp id");
+	if (entities->count(id))
+	{
+		auto & entity = (*entities)[id];
+		ASSERT(entity->getComponent<LifetimeComponent>()->isDying(), "Tried to destroy alive entity (this means that destroyTempEntity was not called by LifetimeSystem)");
+		if (entity && entity->getComponent<LifetimeComponent>()->isDying())
+			deadEntities.push_back(entity);
+	}
 }

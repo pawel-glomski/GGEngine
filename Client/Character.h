@@ -1,22 +1,15 @@
 #pragma once
-#include "CollidableEntity.h"
-#include "Controller.h"
+#include "Entity.h"
+#include "ControllerComponent.h"
+#include "AbilityComponent.h"
+#include "DisplayComponent.h"
+#include "TransformComponent.h"
+#include "RelationComponent.h"
+#include "LifetimeComponent.h"
 
-class Character : public CollidableEntity
+class Character : public Entity
 {
 public:
-	Character();
-	~Character();
 
-	virtual void display(sf::RenderWindow & window) const override;
-	virtual void update(float_t deltaTime) override;
-
-	Controller&			getController();
-	const Controller&	getController() const;
-
-private:
-	Controller controller;
-	
-	sf::CircleShape displayShape;
+	virtual void construct(class EntityManager & entityManager) override;
 };
-
