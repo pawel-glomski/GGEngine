@@ -5,11 +5,11 @@
 
 RelationComponent::~RelationComponent()
 {
-	if(parent)
-		unattachSelf();
-	// remove all references from attached entities, to this entity
-	for (auto &entityPtr : attached)
-		entityPtr.second->getComponent<RelationComponent>()->removeReferencesToParent();
+//	if(parent)
+//		unattachSelf();
+//	// remove all references from attached entities, to this entity
+//	for (auto &entityPtr : attached)
+//		entityPtr.second->getComponent<RelationComponent>()->removeReferencesToParent();
 }
 
 void RelationComponent::setOwningEntity(const std::shared_ptr<Entity>& owner)
@@ -21,32 +21,32 @@ void RelationComponent::setOwningEntity(const std::shared_ptr<Entity>& owner)
 
 void RelationComponent::attachTo(const std::shared_ptr<Entity>& parent)
 {
-	ASSERT(parent, "Tried to attach entity to nullptr");
-	ASSERT(!this->parent, "Tried to attach already attached entity. To reattach entity to other, unattach it first");
-	ASSERT((parent != owner), "Tried to attach entity to itself");
-	if (parent && !this->parent && parent != owner)
-	{
-		this->parent = parent;
-		parent->getComponent<RelationComponent>()->attached[owner->getID()] = owner;
-		owner->getComponent<TransformComponent>()->setParentTransform(parent->getComponent<TransformComponent>());
-	}
+	//ASSERT(parent, "Tried to attach entity to nullptr");
+	//ASSERT(!this->parent, "Tried to attach already attached entity. To reattach entity to other, unattach it first");
+	//ASSERT((parent != owner), "Tried to attach entity to itself");
+	//if (parent && !this->parent && parent != owner)
+	//{
+	//	this->parent = parent;
+	//	parent->getComponent<RelationComponent>()->attached[owner->getID()] = owner;
+	//	owner->getComponent<TransformComponent>()->setParentTransform(parent->getComponent<TransformComponent>());
+	//}
 }
 
 void RelationComponent::unattachSelf()
 {
-	ASSERT(parent, "Tried to unattach unattached entity");
-	if (parent)
-	{
-		auto parentRelationComp = parent->getComponent<RelationComponent>();
-		Entity::ID id = owner->getID();
+	//ASSERT(parent, "Tried to unattach unattached entity");
+	//if (parent)
+	//{
+	//	auto parentRelationComp = parent->getComponent<RelationComponent>();
+	//	Entity::ID id = owner->getID();
 
-		ASSERT(parentRelationComp->attached.count(id), "Tried to unattach entity from parent, that it is not attached to");
-		if (parentRelationComp->attached.count(id))
-		{
-			parentRelationComp->attached.erase(id);
-			removeReferencesToParent();
-		}
-	}
+	//	ASSERT(parentRelationComp->attached.count(id), "Tried to unattach entity from parent, that it is not attached to");
+	//	if (parentRelationComp->attached.count(id))
+	//	{
+	//		parentRelationComp->attached.erase(id);
+	//		removeReferencesToParent();
+	//	}
+	//}
 }
 
 const std::shared_ptr<Entity>& RelationComponent::getParent()
@@ -61,7 +61,7 @@ const std::unordered_map<std::size_t, std::shared_ptr<Entity>>& RelationComponen
 
 void RelationComponent::removeReferencesToParent()
 {
-	owner->getComponent<TransformComponent>()->resetParentTransform();
+	//owner->getComponent<TransformComponent>()->resetParentTransform();
 	parent.reset();
 }
 

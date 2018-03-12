@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include <cstdint>
 
 #ifdef _DEBUG
 

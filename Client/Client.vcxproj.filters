@@ -2,235 +2,98 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Utilities">
-      <UniqueIdentifier>{143b2370-35ec-4111-aff3-d9ad625c2fa3}</UniqueIdentifier>
+      <UniqueIdentifier>{6b30adae-6dde-4d0e-81a6-1a3ec130b521}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utilities\MathUtilities">
-      <UniqueIdentifier>{cd4eba2d-50a2-416c-aa0d-4cc885884571}</UniqueIdentifier>
+    <Filter Include="Utilities\Math">
+      <UniqueIdentifier>{68890774-9b4b-45c4-825f-7fd27fe01d62}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ability">
-      <UniqueIdentifier>{dd02a00d-f6d1-4212-8e1e-9cbd20705205}</UniqueIdentifier>
+    <Filter Include="Utilities\Tuple">
+      <UniqueIdentifier>{5cbfb975-a0e6-483d-ad57-6b5211d7a815}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules">
-      <UniqueIdentifier>{ca7e9eb5-1edb-4632-9922-9a69b09d2779}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\Display">
-      <UniqueIdentifier>{e5fffdac-d998-46cd-9de3-dbeb5355aaf4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\Entities">
-      <UniqueIdentifier>{78c7ec50-9199-4d61-a21d-7f1dfa6f2a89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\Entities\Entity">
+    <Filter Include="EntityModule">
       <UniqueIdentifier>{ec992a17-b7c6-4856-8a0a-19e081798c2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\Entities\Entity\Entities">
-      <UniqueIdentifier>{59a43901-e640-4ced-9628-5c216b470d1d}</UniqueIdentifier>
+    <Filter Include="EntityModule\Component">
+      <UniqueIdentifier>{4d219eb8-a1bd-478c-8e89-d295efaccc4a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\Input">
-      <UniqueIdentifier>{98be23c5-f165-49df-9d24-8950af7cf959}</UniqueIdentifier>
+    <Filter Include="EntityModule\Entity">
+      <UniqueIdentifier>{76bd8aa0-fe2e-4332-94d7-b2806c1cc797}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\Memory">
-      <UniqueIdentifier>{3e2ccdfe-c148-4dcf-98b3-90e39658bed8}</UniqueIdentifier>
+    <Filter Include="EntityModule\SystemManager">
+      <UniqueIdentifier>{71dc8142-5a0e-4ff0-9443-18752772b803}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\Network">
-      <UniqueIdentifier>{d4b11086-5792-4252-b400-928f126c9673}</UniqueIdentifier>
+    <Filter Include="EntityModule\SystemManager\System">
+      <UniqueIdentifier>{99a37b19-f220-40f7-8710-3399d6938874}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\Entities\EntityUpdateSystem">
-      <UniqueIdentifier>{10d109d5-7727-4555-9243-d7bf8636fba9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\Entities\EntityUpdateSystem\Systems">
-      <UniqueIdentifier>{cdc56600-c913-4132-92c9-01dbdccb137c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\Entities\Component">
-      <UniqueIdentifier>{38fea781-4aec-4f30-9fa3-064536cba628}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\Entities\Component\Components">
-      <UniqueIdentifier>{705a6be2-aae6-408f-b14c-fc7e72cb1f3a}</UniqueIdentifier>
+    <Filter Include="EntityModule\SystemManager\System\Systems">
+      <UniqueIdentifier>{7cf497e4-af22-48b2-b535-b88ca68f65cf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Client.h" />
-    <ClInclude Include="PoolAllocator.h">
-      <Filter>Modules\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="MemoryManager.h">
-      <Filter>Modules\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="StackAllocator.h">
-      <Filter>Modules\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Singleton.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Array.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix.h">
-      <Filter>Utilities\MathUtilities</Filter>
-    </ClInclude>
-    <ClInclude Include="MathUtilities.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="Component.h">
-      <Filter>Modules\Entities\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Modules\Entities\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Character.h">
-      <Filter>Modules\Entities\Entity\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="RawInputReceiver.h">
-      <Filter>Modules\Input</Filter>
+      <Filter>EntityModule\Component</Filter>
     </ClInclude>
     <ClInclude Include="TransformComponent.h">
-      <Filter>Modules\Entities\Component\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="ControllerComponent.h">
-      <Filter>Modules\Entities\Component\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="DisplayComponent.h">
-      <Filter>Modules\Entities\Component\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityManager.h">
-      <Filter>Modules\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="RelationComponent.h">
-      <Filter>Modules\Entities\Component\Components</Filter>
+      <Filter>EntityModule\Component</Filter>
     </ClInclude>
     <ClInclude Include="LifetimeComponent.h">
-      <Filter>Modules\Entities\Component\Components</Filter>
+      <Filter>EntityModule\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Ability.h">
-      <Filter>Ability</Filter>
+    <ClInclude Include="MathUtilities.h">
+      <Filter>Utilities\Math</Filter>
     </ClInclude>
-    <ClInclude Include="AbilityComponent.h">
-      <Filter>Modules\Entities\Component\Components</Filter>
+    <ClInclude Include="Matrix.h">
+      <Filter>Utilities\Math</Filter>
     </ClInclude>
-    <ClInclude Include="EntityUpdateSystem.h">
-      <Filter>Modules\Entities\EntityUpdateSystem</Filter>
+    <ClInclude Include="Vec2.h">
+      <Filter>Utilities\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Modules\Entities\Entity\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="DisplayManager.h">
-      <Filter>Modules\Display</Filter>
-    </ClInclude>
-    <ClInclude Include="Obstacle.h">
-      <Filter>Modules\Entities\Entity\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerController.h">
-      <Filter>Modules\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="LifetimeSystem.h">
-      <Filter>Modules\Entities\EntityUpdateSystem\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="AbilitySystem.h">
-      <Filter>Modules\Entities\EntityUpdateSystem\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="DisplaySystem.h">
-      <Filter>Modules\Entities\EntityUpdateSystem\Systems</Filter>
+    <ClInclude Include="TuplePlus.h">
+      <Filter>Utilities\Tuple</Filter>
     </ClInclude>
     <ClInclude Include="ClientOnly\stdInclude.h">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Packets.h">
-      <Filter>Modules\Network</Filter>
+    <ClInclude Include="Entity.h">
+      <Filter>EntityModule\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="ClientNetwork.h">
-      <Filter>Modules\Network</Filter>
+    <ClInclude Include="SystemsManager.h">
+      <Filter>EntityModule\SystemManager</Filter>
     </ClInclude>
-    <ClInclude Include="DisplayLayer.h">
-      <Filter>Modules\Display</Filter>
+    <ClInclude Include="System.h">
+      <Filter>EntityModule\SystemManager\System</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityModule.h">
+      <Filter>EntityModule</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Vec2.h">
-      <Filter>Utilities\MathUtilities</Filter>
-    </ClCompile>
-    <ClCompile Include="Client.cpp" />
-    <ClCompile Include="MemoryManager.cpp">
-      <Filter>Modules\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="StackAllocator.cpp">
-      <Filter>Modules\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="Matrix.cpp">
-      <Filter>Utilities\MathUtilities</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Modules\Entities\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Character.cpp">
-      <Filter>Modules\Entities\Entity\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="RawInputReceiver.cpp">
-      <Filter>Modules\Input</Filter>
+    <ClCompile Include="LifetimeComponent.cpp">
+      <Filter>EntityModule\Component</Filter>
     </ClCompile>
     <ClCompile Include="TransformComponent.cpp">
-      <Filter>Modules\Entities\Component\Components</Filter>
+      <Filter>EntityModule\Component</Filter>
     </ClCompile>
-    <ClCompile Include="PoolAllocator.cpp">
-      <Filter>Modules\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityManager.cpp">
-      <Filter>Modules\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="RelationComponent.cpp">
-      <Filter>Modules\Entities\Component\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="LifetimeComponent.cpp">
-      <Filter>Modules\Entities\Component\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Ability.cpp">
-      <Filter>Ability</Filter>
-    </ClCompile>
-    <ClCompile Include="AbilityComponent.cpp">
-      <Filter>Modules\Entities\Component\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Modules\Entities\Entity\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="DisplayManager.cpp">
-      <Filter>Modules\Display</Filter>
-    </ClCompile>
-    <ClCompile Include="ControllerComponent.cpp">
-      <Filter>Modules\Entities\Component\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Obstacle.cpp">
-      <Filter>Modules\Entities\Entity\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerController.cpp">
-      <Filter>Modules\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="AbilitySystem.cpp">
-      <Filter>Modules\Entities\EntityUpdateSystem\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="DisplaySystem.cpp">
-      <Filter>Modules\Entities\EntityUpdateSystem\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="LifetimeSystem.cpp">
-      <Filter>Modules\Entities\EntityUpdateSystem\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityUpdateSystem.cpp">
-      <Filter>Modules\Entities\EntityUpdateSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="DisplayComponent.cpp">
-      <Filter>Modules\Entities\Component\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Packets.cpp">
-      <Filter>Modules\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="ClientNetwork.cpp">
-      <Filter>Modules\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="DisplayLayer.cpp">
-      <Filter>Modules\Display</Filter>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>Utilities\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Vec2.inl">
-      <Filter>Utilities\MathUtilities</Filter>
+      <Filter>Utilities\Math</Filter>
+    </None>
+    <None Include="TuplePlus.inl">
+      <Filter>Utilities\Tuple</Filter>
+    </None>
+    <None Include="Entity.inl">
+      <Filter>EntityModule\Entity</Filter>
+    </None>
+    <None Include="System.inl">
+      <Filter>EntityModule\SystemManager\System</Filter>
+    </None>
+    <None Include="EntityModule.inl">
+      <Filter>EntityModule</Filter>
     </None>
   </ItemGroup>
 </Project>

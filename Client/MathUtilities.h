@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 #include "Matrix.h"
 #include "Vec2.h"
 

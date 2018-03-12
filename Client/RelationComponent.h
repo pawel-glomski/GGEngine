@@ -2,8 +2,7 @@
 #include <memory>
 #include <unordered_map>
 #include "Component.h"
-
-class Entity;
+#include "Entity.h"
 
 // handles parent-child entities' relations with transform binding, that resets relations on destroyment
 class RelationComponent :

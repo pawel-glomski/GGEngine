@@ -1,4 +1,5 @@
 #pragma once
+#include "MathUtilities.h"
 #include "Component.h"
 
 enum class Lifetime : uint8_t { None, Temp, Perm };

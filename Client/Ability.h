@@ -7,7 +7,6 @@
 #include "MathUtilities.h"
 
 class EntityManager;
-class Entity;
 
 class Ability
 {

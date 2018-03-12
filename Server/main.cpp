@@ -1,9 +1,14 @@
 #include <iostream>
-#include "Server.h"
+#include "ServerNetwork.h"
 
 int main()
 {
-	Server server;
-	server.play();
+	ServerNetwork server;
+	sf::Clock clock;
+	while (true)
+	{
+		server.run(clock.restart().asSeconds());
+	}
+
 	return 0;
 }
