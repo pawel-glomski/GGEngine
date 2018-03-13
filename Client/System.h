@@ -2,11 +2,14 @@
 #include <unordered_map>
 #include "stdInclude.h"
 #include "Entity.h"
-#include <string>
+	
+
 
 template<class ...CTypes>
 class System
 {
+	static_assert(sizeof...(CTypes), "Cannot create System with empty parameter pack");
+
 public:
 
 	template<class T>
@@ -18,6 +21,7 @@ public:
 
 public:
 
+
 	template<class ...Dependencies>
 	void init(const TuplePlus<Dependencies...> & dep);
 
@@ -27,12 +31,12 @@ public:
 
 	// does nothing
 	template<class ...EntityCTypes>
-	typename std::enable_if< !TuplePlus<EntityCTypes...>::template areUsed<CTypes...>, void>::type
+	typename std::enable_if< !TuplePlus<EntityCTypes...>::template AreUsed<CTypes...>::value, void>::type
 		addEntity(EntityId, const TuplePlus<CPtr_t<EntityCTypes>...> &) {} 
 
 	// adds components of entity
 	template<class ...EntityCTypes>
-	typename std::enable_if< TuplePlus<EntityCTypes...>::template areUsed<CTypes...>, void>::type
+	typename std::enable_if< TuplePlus<EntityCTypes...>::template AreUsed<CTypes...>::value, void>::type
 		addEntity(EntityId id, const TuplePlus<CPtr_t<EntityCTypes>...> & componentsHolder);
 
 

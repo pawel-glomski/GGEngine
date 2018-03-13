@@ -1,5 +1,6 @@
 #pragma once
 #include <tuple>
+#include "stdInclude.h"
 
 template<class T, class ...Pack>
 inline constexpr bool isTypeInPack()
@@ -21,25 +22,48 @@ struct TuplePlus : public std::tuple<Types...>
 	TuplePlus(const Base_t& rhs) : Base_t(rhs) {}
 
 
+	template<class U>
+	U& get();
 
-	template<class T>
-	static constexpr bool containsType();
-
-
-	template<class ...SearchedTypes>
-	static constexpr bool containsTypes();
+	template<class U>
+	const U& get() const;
 
 
-	template<>
-	static constexpr bool containsTypes<>();
-
+	template<class ...OtherTypes>
+	TuplePlus<OtherTypes...> asTuple();
 
 	template<class ...OtherTypes>
 	TuplePlus<OtherTypes...> asTuple() const;
 
+	template<class ...OtherTypes>
+	TuplePlus<OtherTypes&...> asRefTuple();
 
 	template<class ...OtherTypes>
-	static constexpr bool areUsed = containsTypes<OtherTypes...>();
+	TuplePlus<const OtherTypes&...> asRefTuple() const;
+
+
+	template<class T>
+	static constexpr bool containsType()
+	{
+		return isTypeInPack<T, Types...>();
+	}
+
+
+	template<class ...SearchedTypes>
+	static constexpr bool containsTypes()
+	{
+		return (containsType<SearchedTypes>() && ...);
+	}
+
+	template<>
+	static constexpr bool containsTypes<>()
+	{
+		return false;
+	}
+
+
+	template<class ...OtherTypes>
+	struct AreUsed : public std::bool_constant<containsTypes<OtherTypes...>()>{};
 
 };
 

@@ -6,6 +6,7 @@ inline void System<CTypes...>::init(const TuplePlus<Dependencies...>& dep)
 	// default init function
 }
 
+
 template<class ...CTypes>
 inline void System<CTypes...>::removeEntity(EntityId id)
 {
@@ -14,11 +15,12 @@ inline void System<CTypes...>::removeEntity(EntityId id)
 		entitiesComponents.erase(id);
 }
 
+
 template<class ...CTypes>
 template<class ...EntityCTypes>
-inline typename std::enable_if<TuplePlus<EntityCTypes...>::template areUsed<CTypes...>, void>::type
+inline typename std::enable_if<TuplePlus<EntityCTypes...>::template AreUsed<CTypes...>::value, void>::type
 System<CTypes...>::addEntity(EntityId id, const TuplePlus<CPtr_t<EntityCTypes>...>& componentsHolder)
 {
 	ASSERT(!entitiesComponents.count(id), std::string("Added components of entity with id: \"") + std::to_string(id) + "\" more than once!");
-	((std::get<CPtr_t<CTypes>>(entitiesComponents[id]) = std::get<CPtr_t<CTypes>>(componentsHolder)), ...);
+	((entitiesComponents[id].get<CPtr_t<CTypes>>() = componentsHolder.get<CPtr_t<CTypes>>()), ...);
 }

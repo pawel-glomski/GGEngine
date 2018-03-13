@@ -4,53 +4,11 @@
 #include "Character.h"
 
 
-DisplaySystem::DisplaySystem()
+
+void DisplaySystem::update(float_t dt)
 {
-	usesEveryEntity = false;
-}
-
-void DisplaySystem::startUp(const std::shared_ptr<DisplayManager>& displayManager)
-{
-	ASSERT(displayManager, "Tried to set displayManager to nullptr!");
-	if(displayManager)
-		this->displayManager = displayManager;
-}
-
-void DisplaySystem::shoutDown()
-{
-	displayManager.reset();
-	camera.reset();
-}
-
-void DisplaySystem::update(EntityManager & entityManager, float_t dt)
-{
-	beforeUpdate();
-
-	ASSERT(!camera.expired(), "Camera not set");
-	if (!camera.expired())
-	{
-		drawWorldStaticEntities();
-		drawDynamicEntities();
-	}
-}
-
-void DisplaySystem::beforeUpdate()
-{
-	if (auto& cam = camera.lock())
-	{
-		ASSERT(displayManager, "DisplayManager not set");
-		if (displayManager)
-		{
-
-			auto camPos = cam->getComponent<TransformComponent>()->getGlobalPosition();
-			// implement lag/interp here maybe
-			displayManager->getWin()->setView
-			(sf::View(sf::Vector2f(
-				camPos.x * DisplaySettings::WorldToWindowRatio, 
-				camPos.y * DisplaySettings::WorldToWindowRatio), 
-				(DisplaySettings::ViewResolution).asSfVec()));
-		}
-	}
+	drawWorldStaticEntities();
+	drawDynamicEntities();
 }
 
 void DisplaySystem::drawWorldStaticEntities()
@@ -74,8 +32,8 @@ void DisplaySystem::drawWorldStaticEntities()
 	for (int32_t x = minIndices.x; x <= maxIndices.x; x++)
 		for (int32_t y = minIndices.y; y <= maxIndices.y; y++)
 			if (entityGrid.count(Vec2i(x, y)))
-				for (auto & entityNode : entityGrid[Vec2i(x, y)])
-					drawEntity(*entityNode.second);
+				for (auto & entityId : entityGrid[Vec2i(x, y)])
+					drawEntity(entityId);
 }
 
 void DisplaySystem::drawDynamicEntities()

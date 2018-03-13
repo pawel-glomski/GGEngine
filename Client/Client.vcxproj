@@ -19,28 +19,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="DisplayLayer.cpp" />
+    <ClCompile Include="DisplayManager.cpp" />
+    <ClCompile Include="DisplayModule.cpp" />
+    <ClCompile Include="EntityModule.cpp" />
     <ClCompile Include="LifetimeComponent.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
+    <ClCompile Include="WindowModule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Client.h" />
     <ClInclude Include="ClientOnly\stdInclude.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="DisplayLayer.h" />
+    <ClInclude Include="DisplayManager.h" />
+    <ClInclude Include="DisplayModule.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityModule.h" />
     <ClInclude Include="LifetimeComponent.h" />
     <ClInclude Include="MathUtilities.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="Module.h" />
+    <ClInclude Include="ModulesHolder.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="SystemsManager.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="TuplePlus.h" />
     <ClInclude Include="Vec2.h" />
+    <ClInclude Include="WindowModule.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Entity.inl" />
-    <None Include="EntityModule.inl" />
     <None Include="System.inl" />
     <None Include="TuplePlus.inl" />
     <None Include="Vec2.inl" />

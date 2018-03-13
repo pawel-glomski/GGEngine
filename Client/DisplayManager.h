@@ -1,8 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
-#include "Camera.h"
-#include "EntityManager.h"
+#include "MathUtilities.h"
+//#include "Camera.h"
 
 struct DisplaySettings
 {

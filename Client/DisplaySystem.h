@@ -1,16 +1,15 @@
 #pragma once
 #include <memory>
-#include <unordered_map>
-#include "EntityUpdateSystem.h"
+#include <unordered_set>
+#include "System.h"
 #include "DisplayComponent.h"
-#include "DisplayManager.h"
-#include "EntityManager.h"
+#include "TransformComponent.h"
 #include "DisplayLayer.h"
 #include "Camera.h"
 
 
 class DisplaySystem :
-	public EntityUpdateSystem
+	public System<DisplayComponent, TransformComponent>
 {
 	friend class DisplayManager;
 public:
@@ -22,41 +21,24 @@ public:
 	void shoutDown();
 
 
-	virtual void update(EntityManager & entityManager, float_t dt) override;
-
-
-	virtual void addEntity(const EntityManager::EntityPtr & entity, const std::shared_ptr<EntityManager::EntityContainer> & everyEntityContainer) override;
-
-	virtual void removeEntity(const Entity::ID & entity);
-
-	virtual void reset();
-
-
-	void setCamera(const std::shared_ptr<Entity> & camera);
+	virtual void update(float_t dt) override;
 
 private:
-
-	virtual void beforeUpdate();
-
 
 	void drawWorldStaticEntities();
 
 	void drawDynamicEntities();
 
-	void drawEntity(const Entity & entity);
+	void drawEntity(EntityId id);
 
 
 private:
 
-	std::unordered_map<Vec2i, std::unordered_map<Entity::ID, EntityManager::EntityPtr>, Vec2Hash<int32_t>> entityGrid;
+	std::unordered_map<Vec2i, std::unordered_set<EntityId>, Vec2Hash<int32_t>> entityGrid;
 
 	const float_t gridSize = 2;
 
-	// level-divided entities to draw in DisplayManager
+	// Layer-divided entities to draw in DisplayManager
 	// DisplayLevel members are used as indices here
 	std::array<DisplayLayer, (uint8_t)DisplayLayer::Level::Count> displayLayers;
-
-	std::shared_ptr<DisplayManager> displayManager;
-
-	std::weak_ptr<Camera> camera;
 };

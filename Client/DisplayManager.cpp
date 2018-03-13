@@ -1,7 +1,7 @@
 #include "stdInclude.h"
 #include "DisplayManager.h"
 #include "TransformComponent.h"
-#include "DisplaySystem.h"
+
 
 const sf::Vector2u DisplaySettings::windowSizes[uint8_t(WindowSize::SCount)] =
 {
@@ -22,7 +22,7 @@ void DisplayManager::startUp(const DisplaySettings & settings)
 
 void DisplayManager::shoutDown()
 {
-	ASSERT(window.unique(), "DisplayManager shoutdown while there are pointers pointing to window");
+	ASSERT((window.use_count() == 1), "DisplayManager shoutdown while there are pointers pointing to window");
 	window->close();
 	window.reset();
 }
@@ -50,9 +50,9 @@ const std::shared_ptr<sf::RenderWindow>& DisplayManager::getWin() const
 
 void DisplayManager::display(const std::shared_ptr<DisplaySystem> system)
 {
-	window->clear();
-	for (auto & layer : system->displayLayers)
-		layer.display(*window);
+	//window->clear();
+	//for (auto & layer : system->displayLayers)
+	//	layer.display(*window);
 
 	//for (auto & gridCell : system->entityGrid)
 	//{

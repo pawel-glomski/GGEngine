@@ -1,29 +1,54 @@
+#include "TuplePlus.h"
 
 template<class ...Types>
-template<class T>
-inline constexpr bool TuplePlus<Types...>::containsType()
+template<class U>
+inline U & TuplePlus<Types...>::get()
 {
-	return isTypeInPack<T, Types...>();
+	static_assert(isTypeInPack<U, Types...>(), "Tried to get wrong type from tuple!");
+	return std::get<U>(*this);
 }
 
 template<class ...Types>
-template<class ...SearchedTypes>
-inline constexpr bool TuplePlus<Types...>::containsTypes()
+template<class U>
+inline const U & TuplePlus<Types...>::get() const
 {
-	return (containsType<SearchedTypes>() && ...);
+	static_assert(isTypeInPack<U, Types...>(), "Tried to get wrong type from tuple!");
+	return std::get<U>(*this);
 }
+
+
+template<class ...Types>
+template<class ...OtherTypes>
+inline TuplePlus<OtherTypes...> TuplePlus<Types...>::asTuple()
+{
+	static_assert(AreUsed<OtherTypes...>::value || !sizeof...(OtherTypes), "Tuple does not contain given sequence of types");
+	return std::tuple<OtherTypes...>(get<OtherTypes>()...);
+}
+
 
 template<class ...Types>
 template<class ...OtherTypes>
 inline TuplePlus<OtherTypes...> TuplePlus<Types...>::asTuple() const
 {
-	static_assert(areUsed<OtherTypes...>, "Tuple does not contain given sequence of types");
-	return std::make_tuple(std::get<OtherTypes>(*this)...);
+	static_assert(AreUsed<OtherTypes...>::value || !sizeof...(OtherTypes), "Tuple does not contain given sequence of types");
+	return std::tuple<OtherTypes...>(get<OtherTypes>()...);
 }
 
-template<>
-template<class ...SearchedTypes>
-inline constexpr bool TuplePlus<>::containsTypes()
+
+template<class ...Types>
+template<class ...OtherTypes>
+inline TuplePlus<OtherTypes&...> TuplePlus<Types...>::asRefTuple()
 {
-	return false;
+	static_assert(AreUsed<OtherTypes...>::value || !sizeof...(OtherTypes), "Tuple does not contain given sequence of types");
+	return std::tuple<OtherTypes&...>(get<OtherTypes>()...);
+}
+
+
+
+template<class ...Types>
+template<class ...OtherTypes>
+inline TuplePlus<const OtherTypes&...> TuplePlus<Types...>::asRefTuple() const
+{
+	static_assert(AreUsed<OtherTypes...>::value || !sizeof...(OtherTypes), "Tuple does not contain given sequence of types");
+	return std::tuple<const OtherTypes&...>(get<OtherTypes>()...);
 }
