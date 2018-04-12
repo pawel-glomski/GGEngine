@@ -23,6 +23,6 @@ public:
 };
 
 Matrix operator*(const Matrix & left, const Matrix& right);
-// just as Vec3f, but with always z = 1
+
 Vec2f operator*(const Vec2f & left, const Matrix & right);
 std::ostream& operator<<(std::ostream& os, const Matrix & m);

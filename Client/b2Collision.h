@@ -1,0 +1,9 @@
+#pragma once
+#include "Box2D/Collision/Shapes/b2CircleShape.h"
+#include "Box2D/Collision/Shapes/b2EdgeShape.h"
+#include "Box2D/Collision/Shapes/b2ChainShape.h"
+#include "Box2D/Collision/Shapes/b2PolygonShape.h"
+#include "Box2D/Collision/b2BroadPhase.h"
+#include "Box2D/Collision/b2Distance.h"
+#include "Box2D/Collision/b2DynamicTree.h"
+#include "Box2D/Collision/b2TimeOfImpact.h"

@@ -1,29 +1,16 @@
-#include "stdInclude.h"
 #include "DisplayComponent.h"
+#include "WindowModule.h"
+
 
 DisplayComponent::DisplayComponent()
 {
-	setSFMLShape(sf::CircleShape());
-	displayShape.setPrimitiveType(sf::PrimitiveType::TriangleFan);
-}
-
-void DisplayComponent::setSFMLShape(sf::Shape & shape)
-{
-	sf::Color color;
-	if (displayShape.getVertexCount())
-		color = displayShape[0].color;
-	displayShape.clear();
-	sf::Vector2f originOffset(shape.getLocalBounds().width / 2.f, shape.getLocalBounds().height / 2.f);
-
-	for (uint8_t i = 8; i <= shape.getPointCount() + 8; i++)
-		displayShape.append(shape.getPoint(i % shape.getPointCount()) - originOffset);
-	setColor(color);
+	setShape(CircleShape());
+	//setColor(sf::Color::Red);
 }
 
 void DisplayComponent::setColor(const sf::Color & color)
 {
-	for (uint8_t i = 0; i < displayShape.getVertexCount(); i++)
-		displayShape[i].color = color;
+	displayShape->setColor(color);
 }
 
 void DisplayComponent::setDisplayLevel(DisplayLayer::Level level)
@@ -31,17 +18,26 @@ void DisplayComponent::setDisplayLevel(DisplayLayer::Level level)
 	displayLevel = level;
 }
 
-sf::VertexArray & DisplayComponent::getShape()
+ShapeBase& DisplayComponent::getShape()
 {
-	return displayShape;
+	return *displayShape;
 }
 
-const sf::VertexArray & DisplayComponent::getShape() const
+const ShapeBase& DisplayComponent::getShape() const
 {
-	return displayShape;
+	return *displayShape;
 }
 
 DisplayLayer::Level DisplayComponent::getDisplayLevel() const
 {
 	return displayLevel;
+}
+
+sf::Color DisplayComponent::getColor() const
+{
+	//if (displayShape.getVertexCount())
+	//	return displayShape[0].color;
+	//return sf::Color::Transparent;
+
+	return sf::Color();
 }

@@ -1,22 +1,39 @@
-#include "stdInclude.h"
-#include "RawInputReceiver.h"
-#include "DisplayManager.h"
+#include "InputModule.h"
 
 void setInputDivice(RawInputPack::RawKey & key, const sf::Event & event);
 
 void setKeyState(RawInputPack::RawKey & key, const sf::Event & event);
 
-void RawInputReceiver::catchInput(const std::shared_ptr<sf::RenderWindow>& window)
+void InputModule::update(float_t dt)
 {
-	currentInput = RawInputPack();
-	currentInput.absCursorPosition = sf::Mouse::getPosition(*window);
-	currentInput.signedCursorVector = currentInput.absCursorPosition - Vec2f(window->getSize()) / 2.f;
-	currentInput.windowSizeScale = Vec2f(DisplaySettings::ViewResolution.x / window->getSize().x, DisplaySettings::ViewResolution.y / window->getSize().y);
+	currentInput.resetKeys();
+
+	assignInputKeys();
+	assignMousePosition();
+}
+
+void InputModule::assignMousePosition()
+{
+	auto & windowModule = getDependency<WindowModule>();
+	auto & window = windowModule.getWin();
+
+	currentInput.absCursorPosition = Vec2f(sf::Mouse::getPosition(window)).clamp(Vec2f(0, 0), Vec2f(window.getSize()));
+	currentInput.signedCursorVector = Vec2f(currentInput.absCursorPosition - Vec2f(window.getSize()) / 2.f).clamp(-Vec2f(window.getSize()) / 2.f, Vec2f(window.getSize()) / 2.f);
+
+	scaleVectorByVector(currentInput.absCursorPosition, windowModule.getRatioToMatchDefaultResolution());
+	scaleVectorByVector(currentInput.signedCursorVector, windowModule.getRatioToMatchDefaultResolution());
+}
+
+void InputModule::assignInputKeys()
+{
+	auto & windowModule = getDependency<WindowModule>();
+	auto & window = windowModule.getWin();
 
 	RawInputPack::RawKey key;
 	sf::Event event;
+	uint8_t iCount = 0;
 
-	while (window->pollEvent(event))
+	while (window.pollEvent(event))
 	{
 		setInputDivice(key, event);
 		if (key.divice != InputDivice::Count)
@@ -24,18 +41,13 @@ void RawInputReceiver::catchInput(const std::shared_ptr<sf::RenderWindow>& windo
 			key.code = (RawKeyCode)event.key.code;
 			setKeyState(key, event);
 
-			currentInput.rawKeys.push_back(key);
+			currentInput.rawKeys[iCount++] = key;
 		}
-		// for test purpose (deallocation), delete later on (window events should be handled by gui manager)
+		// for test purpose (deallocation)
 		else if (event.type == sf::Event::EventType::Closed)
-			window->close();
+			window.close();
 		///////////////////////////////////////////////////////////////////////////
 	}
-}
-
-const RawInputPack & RawInputReceiver::getCurrentInput() const
-{
-	return currentInput;
 }
 
 void setInputDivice(RawInputPack::RawKey & key, const sf::Event & event)
@@ -56,4 +68,8 @@ void setKeyState(RawInputPack::RawKey & key, const sf::Event & event)
 		key.state = KeyState::Released;
 }
 
+const RawInputPack & InputModule::getCurrentInput() const
+{
+	return currentInput;
+}
 

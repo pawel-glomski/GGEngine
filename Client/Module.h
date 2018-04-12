@@ -2,30 +2,34 @@
 #include <memory>
 #include "stdInclude.h"
 #include "TuplePlus.h"
+#include "Settings.h"
 
-// settings for a module (specialized in final modules)
+
 template<class T>
-class Settings {};
+using StdUPtr_t = std::unique_ptr<T>; // pointer used to store module
+
+template<class T>
+using MDep_t = const StdUPtr_t<T> &; // module dependency type
+
+template<class ...MTypes>
+using MDepPack_t = TypesPack_t<MDep_t<MTypes>...>;
+
 
 template<class ...DTypes> // DTypes = Dependencies (other modules)
 class Module
 {
-protected:
+public:
 
-	// base for inherting types
-	using Base_t = Module<DTypes...>;
-	
-private:
+	// for inherting classes
+	using ModuleBase_t = Module<DTypes...>;
 
-	template<class T>
-	using StdUPtr_t = std::unique_ptr<T>;
 
-	using DHolder_t = TuplePlus< StdUPtr_t<DTypes>& ...>;
+	using UsedMDepPack_t = MDepPack_t<DTypes...>;
 
 public:
 
-	template<class ...MPtrTypes>
-	Module(TuplePlus<MPtrTypes...> & modules) : dependencies(modules.asRefTuple<StdUPtr_t<DTypes>...>())	{}
+	template<class ...MTypes>
+	Module(const MDepPack_t<MTypes...> & dependencies) : dependencies(typename MDepPack_t<DTypes...>::Base_t(dependencies.get<MDep_t<DTypes>>()...)) {}
 
 	virtual ~Module() = default;
 
@@ -34,7 +38,12 @@ public:
 
 	virtual void update(float_t dt) {};
 
-	virtual void shoutDown() { std::cout << std::type_index(typeid(*this)).name() << std::endl; };
+	virtual void shutdown() 
+	{
+#ifdef _DEBUG
+		std::cout << std::type_index(typeid(*this)).name() << std::endl;
+#endif // _DEBUG
+	};
 
 
 protected:
@@ -42,12 +51,12 @@ protected:
 	template<class T>
 	T& getDependency() const
 	{
-		return *dependencies.get< StdUPtr_t<T>& >();
+		return *dependencies.get<MDep_t<T> >();
 	}
 
 
-private:
+protected:
 
-	const DHolder_t dependencies;
+	const UsedMDepPack_t dependencies;
 
 };

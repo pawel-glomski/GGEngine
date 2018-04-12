@@ -13,41 +13,44 @@
     <Filter Include="Modules">
       <UniqueIdentifier>{43e62833-de69-400a-ab78-5c44bc4e9c46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\EntityModule">
-      <UniqueIdentifier>{ec992a17-b7c6-4856-8a0a-19e081798c2e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\EntityModule\Component">
-      <UniqueIdentifier>{4d219eb8-a1bd-478c-8e89-d295efaccc4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\EntityModule\Entity">
-      <UniqueIdentifier>{76bd8aa0-fe2e-4332-94d7-b2806c1cc797}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\EntityModule\SystemManager">
-      <UniqueIdentifier>{71dc8142-5a0e-4ff0-9443-18752772b803}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\EntityModule\SystemManager\System">
-      <UniqueIdentifier>{99a37b19-f220-40f7-8710-3399d6938874}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\EntityModule\SystemManager\System\Systems">
-      <UniqueIdentifier>{7cf497e4-af22-48b2-b535-b88ca68f65cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\DisplayModule">
+    <Filter Include="Modules\Display">
       <UniqueIdentifier>{a46abbb5-a0d7-4039-bb31-a48700cb377d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\WindowModule">
+    <Filter Include="Modules\Controller">
+      <UniqueIdentifier>{dec6d3ae-b17b-4917-819b-2544fbefae62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Window">
       <UniqueIdentifier>{b5dd15c9-8115-4279-9f46-30d38dce9d98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Input">
+      <UniqueIdentifier>{67d71c5f-f0eb-449d-9081-994235207fb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Object">
+      <UniqueIdentifier>{ec992a17-b7c6-4856-8a0a-19e081798c2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Object\SystemsHolder">
+      <UniqueIdentifier>{c8182582-c737-4451-9327-cf9fc40a5411}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Object\SystemsHolder\Systems">
+      <UniqueIdentifier>{7cf497e4-af22-48b2-b535-b88ca68f65cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Object\Object">
+      <UniqueIdentifier>{6862f6ef-d1eb-4468-baaa-b4dee6bbef65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Object\Object\Entity">
+      <UniqueIdentifier>{4265eb8d-58bc-4278-aa26-f624ef2e2b89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Object\Object\Entity\Component">
+      <UniqueIdentifier>{4d219eb8-a1bd-478c-8e89-d295efaccc4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Object\Object\Objects">
+      <UniqueIdentifier>{c731506e-923d-44ee-ba37-80d05d5f859c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Object\Object\Entity\Component\SkeletonComponent">
+      <UniqueIdentifier>{42a4fab7-c865-4a7a-8378-fdeac58ebb9f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Component.h">
-      <Filter>Modules\EntityModule\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="TransformComponent.h">
-      <Filter>Modules\EntityModule\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="LifetimeComponent.h">
-      <Filter>Modules\EntityModule\Component</Filter>
-    </ClInclude>
     <ClInclude Include="MathUtilities.h">
       <Filter>Utilities\Math</Filter>
     </ClInclude>
@@ -63,23 +66,8 @@
     <ClInclude Include="ClientOnly\stdInclude.h">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Modules\EntityModule\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemsManager.h">
-      <Filter>Modules\EntityModule\SystemManager</Filter>
-    </ClInclude>
-    <ClInclude Include="System.h">
-      <Filter>Modules\EntityModule\SystemManager\System</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityModule.h">
-      <Filter>Modules\EntityModule</Filter>
-    </ClInclude>
     <ClInclude Include="DisplayLayer.h">
-      <Filter>Modules\DisplayModule</Filter>
-    </ClInclude>
-    <ClInclude Include="DisplayManager.h">
-      <Filter>Modules\DisplayModule</Filter>
+      <Filter>Modules\Display</Filter>
     </ClInclude>
     <ClInclude Include="Module.h">
       <Filter>Modules</Filter>
@@ -88,38 +76,169 @@
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="DisplayModule.h">
-      <Filter>Modules\DisplayModule</Filter>
+      <Filter>Modules\Display</Filter>
     </ClInclude>
     <ClInclude Include="WindowModule.h">
-      <Filter>Modules\WindowModule</Filter>
+      <Filter>Modules\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplaySystem.h">
+      <Filter>Modules\Object\SystemsHolder\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerModule.h">
+      <Filter>Modules\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="InputModule.h">
+      <Filter>Modules\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemsHolder.h">
+      <Filter>Modules\Object\SystemsHolder</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Modules\Object\Object\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityBase.h">
+      <Filter>Modules\Object\Object\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Client.h" />
+    <ClInclude Include="Component.h">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayComponent.h">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="IdentityComponent.h">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachableComponent.h">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerComponent.h">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Clock.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Utilities\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TypesPacksContainer.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectModule.h">
+      <Filter>Modules\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCharacter.h">
+      <Filter>Modules\Object\Object\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="MotionSystem.h">
+      <Filter>Modules\Object\SystemsHolder\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="MotionComponent.h">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Modules\Object\SystemsHolder</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicObject.h">
+      <Filter>Modules\Object\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonComponent.h">
+      <Filter>Modules\Object\Object\Entity\Component\SkeletonComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionSystem.h">
+      <Filter>Modules\Object\SystemsHolder\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeComponent.h">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionComponent.h">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponObject.h">
+      <Filter>Modules\Object\Object\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstructableComponent.h">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="BodyPartObject.h">
+      <Filter>Modules\Object\Object\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="LongswordObject.h">
+      <Filter>Modules\Object\Object\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="b2Collision.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="LifetimeComponent.cpp">
-      <Filter>Modules\EntityModule\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="TransformComponent.cpp">
-      <Filter>Modules\EntityModule\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Matrix.cpp">
       <Filter>Utilities\Math</Filter>
     </ClCompile>
     <ClCompile Include="DisplayLayer.cpp">
-      <Filter>Modules\DisplayModule</Filter>
-    </ClCompile>
-    <ClCompile Include="DisplayManager.cpp">
-      <Filter>Modules\DisplayModule</Filter>
+      <Filter>Modules\Display</Filter>
     </ClCompile>
     <ClCompile Include="DisplayModule.cpp">
-      <Filter>Modules\DisplayModule</Filter>
+      <Filter>Modules\Display</Filter>
     </ClCompile>
     <ClCompile Include="WindowModule.cpp">
-      <Filter>Modules\WindowModule</Filter>
+      <Filter>Modules\Window</Filter>
     </ClCompile>
-    <ClCompile Include="EntityModule.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="ControllerModule.cpp">
+      <Filter>Modules\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="InputModule.cpp">
+      <Filter>Modules\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplaySystem.cpp">
+      <Filter>Modules\Object\SystemsHolder\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayComponent.cpp">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="IdentityComponent.cpp">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Clock.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Utilities\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="MotionSystem.cpp">
+      <Filter>Modules\Object\SystemsHolder\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectModule.cpp">
+      <Filter>Modules\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCharacter.cpp">
+      <Filter>Modules\Object\Object\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonComponent.cpp">
+      <Filter>Modules\Object\Object\Entity\Component\SkeletonComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionSystem.cpp">
+      <Filter>Modules\Object\SystemsHolder\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="LongswordObject.cpp">
+      <Filter>Modules\Object\Object\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeComponent.cpp">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Vec2.inl">
@@ -129,10 +248,10 @@
       <Filter>Utilities\Tuple</Filter>
     </None>
     <None Include="Entity.inl">
-      <Filter>Modules\EntityModule\Entity</Filter>
+      <Filter>Modules\Object\Object\Entity</Filter>
     </None>
-    <None Include="System.inl">
-      <Filter>Modules\EntityModule\SystemManager\System</Filter>
+    <None Include="AttachableComponent.inl">
+      <Filter>Modules\Object\Object\Entity\Component</Filter>
     </None>
   </ItemGroup>
 </Project>

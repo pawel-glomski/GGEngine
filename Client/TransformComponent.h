@@ -1,27 +1,15 @@
 #pragma once
 #include <memory>
-#include "MathUtilities.h"
-#include "Component.h"
+#include "AttachableComponent.h"
+#include "Transform.h"
 
-class TransformComponent : 
-	public Component
+// Attachment effects - from parent's perspective, attached components are static when his transform changes (they transform with him)
+class TransformComponent : public AttachableComponent<TransformComponent>
 {
 public:
 
-	struct Transform
-	{
-		Vec2f position;
-
-		float_t rotation = 0;
-
-		Vec2f scaleV = Vec2f::oneVector;
-
-		Transform() = default;
-		Transform(Vec2f position, float_t rotation, Vec2f scaleV) : position(position), rotation(rotation), scaleV(scaleV) {}
-	};
-
-	// Describes if transform member can be changed
-	// if entity is in-game static, then TransformComponent's mobility member should be set to WorldStatic before first update after spawn, 
+	// Describes if transformation can be changed
+	// if entity is in-game static, TransformComponent's mobility member should be set to WorldStatic before first update after spawn, 
 	// so systems can make some optimization.
 	// Once mobility is set to WorldStatic, it shouldn't be changed back to any other mobility type 
 	// (systems may work with false data because of it, but thats only true for entities that were WorldStatic while adding them to systems (on first update after spawn)
@@ -34,6 +22,7 @@ public:
 	};
 
 public:
+
 
 	void setMobility(Mobility newMobility);
 
@@ -69,6 +58,10 @@ public:
 	void moveRight(float_t distance);
 
 
+	void setRelativeTransform(const Transform& transform);
+
+	void setGlobalTransform(const Transform& transform);
+
 
 	Mobility getMobility() const;
 
@@ -95,41 +88,13 @@ public:
 
 	Transform getRelativeTransform() const;
 
-	Transform getGlobalTransform() const;
-
-	
-	void setParentTransform(const TransformComponent * parentTransform);
-
-
-	void resetParentTransform();
+	const Transform& getGlobalTransform() const;
 
 private:
 
-	// when mobility turns WorldStatic, then transform will behave as there is no parent for this transform
+	// when mobility turns WorldStatic, then transform will behave as there is no parent for this transform (faster getters functions)
 	Mobility mobility = Mobility::Movable;
 
 
-	Transform relativeTransform;
-
-
-	// Relation component manages this variable (on attach, unattach, object destruction) 
-	const TransformComponent* parentTransform = nullptr;
-
-	// takes value of parentTransform when Mobility turns WorldStatic, so that when Mobility turns back to non-WorldStatic
-	// it can give parentTransform its old value
-	const TransformComponent* parentTransformCopy = nullptr;
+	Transform globalTransform;
 };
-
-Matrix asRotationMatrix(float_t rotation);
-
-Matrix asTranslationMatrix(const Vec2f & translation);
-
-Matrix asScaleMatrix(const Vec2f & scale);
-
-Vec2f forwardVectorFromRotation(const Matrix & rotationM);
-
-Vec2f forwardVectorFromRotation(float_t rotation);
-
-Vec2f rightVectorFromRotation(const Matrix & rotationM);
-
-Vec2f rightVectorFromRotation(float_t rotation);

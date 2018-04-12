@@ -20,40 +20,75 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Clock.cpp" />
+    <ClCompile Include="CollisionSystem.cpp" />
+    <ClCompile Include="ControllerModule.cpp" />
+    <ClCompile Include="DisplayComponent.cpp" />
     <ClCompile Include="DisplayLayer.cpp" />
-    <ClCompile Include="DisplayManager.cpp" />
     <ClCompile Include="DisplayModule.cpp" />
-    <ClCompile Include="EntityModule.cpp" />
-    <ClCompile Include="LifetimeComponent.cpp" />
+    <ClCompile Include="DisplaySystem.cpp" />
+    <ClCompile Include="IdentityComponent.cpp" />
+    <ClCompile Include="InputModule.cpp" />
+    <ClCompile Include="LongswordObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="MotionSystem.cpp" />
+    <ClCompile Include="ObjectModule.cpp" />
+    <ClCompile Include="PlayerCharacter.cpp" />
+    <ClCompile Include="ShapeComponent.cpp" />
+    <ClCompile Include="SkeletonComponent.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="WindowModule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AttachableComponent.h" />
+    <ClInclude Include="b2Collision.h" />
+    <ClInclude Include="BodyPartObject.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientOnly\stdInclude.h" />
+    <ClInclude Include="Clock.h" />
+    <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="ConstructableComponent.h" />
+    <ClInclude Include="LongswordObject.h" />
+    <ClInclude Include="ShapeComponent.h" />
+    <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ControllerComponent.h" />
+    <ClInclude Include="ControllerModule.h" />
+    <ClInclude Include="DisplayComponent.h" />
     <ClInclude Include="DisplayLayer.h" />
-    <ClInclude Include="DisplayManager.h" />
     <ClInclude Include="DisplayModule.h" />
+    <ClInclude Include="DisplaySystem.h" />
     <ClInclude Include="Entity.h" />
-    <ClInclude Include="EntityModule.h" />
-    <ClInclude Include="LifetimeComponent.h" />
+    <ClInclude Include="EntityBase.h" />
+    <ClInclude Include="MotionComponent.h" />
+    <ClInclude Include="SkeletonComponent.h" />
+    <ClInclude Include="MotionSystem.h" />
+    <ClInclude Include="ObjectModule.h" />
+    <ClInclude Include="IdentityComponent.h" />
+    <ClInclude Include="InputModule.h" />
     <ClInclude Include="MathUtilities.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModulesHolder.h" />
+    <ClInclude Include="PhysicsComponent.h" />
+    <ClInclude Include="PlayerCharacter.h" />
+    <ClInclude Include="Settings.h" />
     <ClInclude Include="System.h" />
-    <ClInclude Include="SystemsManager.h" />
+    <ClInclude Include="SystemsHolder.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="TuplePlus.h" />
+    <ClInclude Include="TypesPacksContainer.h" />
     <ClInclude Include="Vec2.h" />
+    <ClInclude Include="WeaponObject.h" />
     <ClInclude Include="WindowModule.h" />
+    <ClInclude Include="BasicObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="AttachableComponent.inl" />
     <None Include="Entity.inl" />
-    <None Include="System.inl" />
     <None Include="TuplePlus.inl" />
     <None Include="Vec2.inl" />
   </ItemGroup>
@@ -137,7 +172,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>A:\Biblioteki\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;sfml-system-s-d.lib;ws2_32.lib;sfml-network-s-d.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;sfml-audio-s-d.lib;opengl32.lib;gdi32.lib;sfml-window-s-d.lib;freetype.lib;jpeg.lib;sfml-graphics-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;sfml-system-s-d.lib;ws2_32.lib;sfml-network-s-d.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;sfml-audio-s-d.lib;opengl32.lib;gdi32.lib;sfml-window-s-d.lib;freetype.lib;jpeg.lib;sfml-graphics-s-d.lib;Box2D-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -145,15 +180,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>A:\Biblioteki\includes64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>SFML_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>A:\Biblioteki\includes64;A:\AProjekty\TheGame\Client\ClientOnly;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>A:\Biblioteki\libs64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;sfml-system-s-d.lib;ws2_32.lib;sfml-network-s-d.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;sfml-audio-s-d.lib;opengl32.lib;gdi32.lib;sfml-window-s-d.lib;freetype.lib;jpeg.lib;sfml-graphics-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;sfml-system-s-d.lib;ws2_32.lib;sfml-network-s-d.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;sfml-audio-s-d.lib;opengl32.lib;gdi32.lib;sfml-window-s-d.lib;freetype.lib;jpeg.lib;sfml-graphics-s-d.lib;Box2D-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -175,7 +210,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>A:\Biblioteki\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;sfml-system-s.lib;ws2_32.lib;sfml-network-s.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;sfml-audio-s.lib;opengl32.lib;gdi32.lib;sfml-window-s.lib;freetype.lib;jpeg.lib;sfml-graphics-s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;sfml-system-s.lib;ws2_32.lib;sfml-network-s.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;sfml-audio-s.lib;opengl32.lib;gdi32.lib;sfml-window-s.lib;freetype.lib;jpeg.lib;sfml-graphics-s.lib;Box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -194,7 +229,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>A:\Biblioteki\libs64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;sfml-system-s.lib;ws2_32.lib;sfml-network-s.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;sfml-audio-s.lib;opengl32.lib;gdi32.lib;sfml-window-s.lib;freetype.lib;jpeg.lib;sfml-graphics-s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;sfml-system-s.lib;ws2_32.lib;sfml-network-s.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;sfml-audio-s.lib;opengl32.lib;gdi32.lib;sfml-window-s.lib;freetype.lib;jpeg.lib;sfml-graphics-s.lib;Box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

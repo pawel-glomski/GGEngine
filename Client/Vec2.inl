@@ -52,6 +52,14 @@ inline Vec2<T>& Vec2<T>::normalize()
 	return *this;
 }
 
+template<class T>
+inline Vec2<T>& Vec2<T>::clamp(const Vec2<T> minValues, const Vec2<T> maxValues)
+{
+	::clamp(x, minValues.x, maxValues.x);
+	::clamp(y, minValues.y, maxValues.y);
+	return *this;
+}
+
 ////////////////////////////////////////////////////////// operators //////////////////////////////////////////////////////////
 
 template<class T>

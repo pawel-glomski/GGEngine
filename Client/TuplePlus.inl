@@ -1,53 +1,66 @@
-#include "TuplePlus.h"
 
-template<class ...Types>
+template<class ...TplTypes>
 template<class U>
-inline U & TuplePlus<Types...>::get()
+inline U& TuplePlus<TplTypes...>::get()
 {
-	static_assert(isTypeInPack<U, Types...>(), "Tried to get wrong type from tuple!");
+	static_assert(isTypeInPack<U, TplTypes...>(), "Tried to get wrong type from tuple!");
 	return std::get<U>(*this);
 }
 
-template<class ...Types>
+template<class ...TplTypes>
 template<class U>
-inline const U & TuplePlus<Types...>::get() const
+inline const U& TuplePlus<TplTypes...>::get() const
 {
-	static_assert(isTypeInPack<U, Types...>(), "Tried to get wrong type from tuple!");
+	static_assert(isTypeInPack<U, TplTypes...>(), "Tried to get wrong type from tuple!");
 	return std::get<U>(*this);
 }
 
-
-template<class ...Types>
+template<class ...TplTypes>
 template<class ...OtherTypes>
-inline TuplePlus<OtherTypes...> TuplePlus<Types...>::asTuple()
+inline TuplePlus<OtherTypes...> TuplePlus<TplTypes...>::asTuple()
 {
 	static_assert(AreUsed<OtherTypes...>::value || !sizeof...(OtherTypes), "Tuple does not contain given sequence of types");
 	return std::tuple<OtherTypes...>(get<OtherTypes>()...);
 }
 
 
-template<class ...Types>
+template<class ...TplTypes>
 template<class ...OtherTypes>
-inline TuplePlus<OtherTypes...> TuplePlus<Types...>::asTuple() const
+inline TuplePlus<OtherTypes...> TuplePlus<TplTypes...>::asTuple() const
 {
 	static_assert(AreUsed<OtherTypes...>::value || !sizeof...(OtherTypes), "Tuple does not contain given sequence of types");
 	return std::tuple<OtherTypes...>(get<OtherTypes>()...);
 }
 
 
-template<class ...Types>
+
+template<class ...TplTypes>
+inline TuplePlus<TplTypes&...> TuplePlus<TplTypes...>::asRefTuple()
+{
+	return std::tuple<TplTypes&...>(get<TplTypes>()...);
+}
+
+
+template<class ...TplTypes>
+inline TuplePlus<const TplTypes&...> TuplePlus<TplTypes...>::asRefTuple() const
+{
+	return std::tuple<const TplTypes&...>(get<TplTypes>()...);
+}
+
+
+
+template<class ...TplTypes>
 template<class ...OtherTypes>
-inline TuplePlus<OtherTypes&...> TuplePlus<Types...>::asRefTuple()
+inline TuplePlus<OtherTypes&...> TuplePlus<TplTypes...>::asRefTuple()
 {
 	static_assert(AreUsed<OtherTypes...>::value || !sizeof...(OtherTypes), "Tuple does not contain given sequence of types");
 	return std::tuple<OtherTypes&...>(get<OtherTypes>()...);
 }
 
 
-
-template<class ...Types>
+template<class ...TplTypes>
 template<class ...OtherTypes>
-inline TuplePlus<const OtherTypes&...> TuplePlus<Types...>::asRefTuple() const
+inline TuplePlus<const OtherTypes&...> TuplePlus<TplTypes...>::asRefTuple() const
 {
 	static_assert(AreUsed<OtherTypes...>::value || !sizeof...(OtherTypes), "Tuple does not contain given sequence of types");
 	return std::tuple<const OtherTypes&...>(get<OtherTypes>()...);

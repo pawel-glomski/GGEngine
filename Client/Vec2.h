@@ -17,14 +17,20 @@ struct Vec2
 
 	Vec2();
 
-	sf::Vector2<T> asSfVec() const;
+
+	Vec2<T>& normalize();
+
+
+	Vec2<T>& clamp(const Vec2<T> minValues, const Vec2<T> maxValues);
 
 
 	T length() const;
 
 	Vec2<T>	normalized() const;
 
-	Vec2<T>& normalize();
+
+	sf::Vector2<T> asSfVec() const;
+
 
 	template <typename U>
 	Vec2<T>& operator=(const sf::Vector2<U>& sfVector);
@@ -82,6 +88,20 @@ public:
 		return hash_combine(std::hash<Type>()(vec.x), std::hash<Type>()(vec.y));
 	}
 };
+
+
+template<class T>
+inline T& clamp(T& value, const T& min, const T& max)
+{
+	value = clamped(value, min, max);
+	return value;
+}
+
+template<class T>
+inline T clamped(const T & value, const T& min, const T& max)
+{
+	return minValue(maxValue(value, min), max);
+}
 
 
 #include "Vec2.inl"

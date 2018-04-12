@@ -1,21 +1,23 @@
 #pragma once
 #include <array>
 #include "Component.h"
-#include "RawInputReceiver.h"
-#include "Array.h"
-#include "PlayerController.h"
-
+#include "InputModule.h"
+#include "ControllerModule.h"
 
 // ControllerAction members are indices in this array 
-typedef std::array<KeyState, (uint8_t)ControllerAction::Count> ControllerButtonContainer;
+typedef std::array<KeyState, (uint8_t)ControllerAction::Count> ControllerKeyContainer;
 
 struct ControllerComponent : public Component
 {
-	ControllerComponent();
+	ControllerComponent()
+	{
+		for (uint8_t i = 0; i < (uint8_t)ControllerAction::Count; i++)
+			keysStates[i] = KeyState::Released;
+	}
 
-	float_t joystickRotation;		// angle between [1,0] vector and vector from window center to cursor
+	float_t joystickRotation = 0;		// angle between [1,0] vector and vector from window center to cursor
 
-	float_t joystickPositionOffset;	// length of a vector from window's center to cursor
+	float_t joystickPositionOffset = 0;	// length of vector from window's center to cursor
 
-	ControllerButtonContainer controllerButtonStates;	// ControllerAction members are indices in this array 
+	ControllerKeyContainer keysStates;	// ControllerAction members are indices in this array 
 };

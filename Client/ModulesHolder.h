@@ -5,17 +5,17 @@
 template<class ...MTypes>
 class ModulesHolder
 {
-	template<class T>
-	using StdUPtr_t = std::unique_ptr<T>;
 
-	using DHolder_t = TuplePlus<StdUPtr_t<MTypes>...>;
+	using MPack_t = TypesPack_t<StdUPtr_t<MTypes>...>;
+ 
 
 public:
 
 
 	ModulesHolder()
 	{
-		((modules.get<StdUPtr_t<MTypes>>() = std::make_unique<MTypes>(modules)), ...);
+		MDepPack_t<MTypes...> dependencies(modules.asRefTuple());
+		((modules.get<StdUPtr_t<MTypes>>() = std::make_unique<MTypes>(dependencies)), ...);
 	}
 
 	void startUp()
@@ -28,10 +28,9 @@ public:
 		(getModule<MTypes>().update(dt), ...);
 	}
 	
-	void shoutDown()
+	void shutdown()
 	{
-		ASSERT(false, "Shout down wrong order (should be reversed)");
-		shoutDownModules(getModule<MTypes>()...);
+		shutdownModules(getModule<MTypes>()...);
 	}
 
 
@@ -52,16 +51,16 @@ private:
 
 	// recursive function
 	template<class T, class ...ModulesTypes>
-	void shoutDownModules(T & module, ModulesTypes&... types)
+	void shutdownModules(T & module, ModulesTypes&... types)
 	{
-		shoutDownModules(types...);
-		module.shoutDown();
+		shutdownModules(types...);
+		module.shutdown();
 	}
-	void shoutDownModules() {}
+	void shutdownModules() {}
 
 
 private:
 
-	DHolder_t modules;
+	MPack_t modules;
 
 };

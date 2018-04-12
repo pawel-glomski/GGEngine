@@ -1,30 +1,38 @@
 #pragma once
-#include <SFML/Graphics/CircleShape.hpp>
 #include <memory>
 #include "Component.h"
 #include "DisplayLayer.h"
+#include "ShapeComponent.h"
 
 class DisplayComponent : public Component
 {
 public:
+
 	DisplayComponent();
 
-	void setSFMLShape(sf::Shape & shape);
+	template<class T>
+	void setShape(T& shape)
+	{
+		displayShape.reset();
+		displayShape = std::make_unique<T>(shape);
+	}
 
 	void setColor(const sf::Color & color);
 
 	void setDisplayLevel(DisplayLayer::Level level);
 
 
-	sf::VertexArray & getShape();
+	ShapeBase& getShape();
 
-	const sf::VertexArray & getShape() const;
+	const ShapeBase& getShape() const;
 
 	DisplayLayer::Level getDisplayLevel() const;
 
+	sf::Color getColor() const;
+
 private:
 
-	sf::VertexArray displayShape;
+	std::unique_ptr<ShapeBase> displayShape;
 
 	DisplayLayer::Level displayLevel = DisplayLayer::Level::Bottom;
 };

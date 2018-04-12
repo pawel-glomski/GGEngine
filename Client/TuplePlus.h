@@ -8,16 +8,32 @@ inline constexpr bool isTypeInPack()
 	return (std::is_same_v<T, Pack> || ...);
 }
 
-template<class ...Types>
-struct TuplePlus : public std::tuple<Types...>
-{
+template<class T>
+inline T tupleTestElement;
 
-	using Base_t = std::tuple<Types...>;
+
+
+
+template<class ...TplTypes>
+struct TuplePlus : public std::tuple<TplTypes...>
+{
+	using ThisTpl_t = TuplePlus<TplTypes...>;
+
+	using Base_t = std::tuple<TplTypes...>;
+
+
+	using Decayed_t = TuplePlus<std::decay_t<TplTypes>...>;
+
+	
+	template< template <typename T> class TemplateType>
+	using WithElementsWrappedInTemplate_t = TuplePlus< TemplateType<TplTypes>...>;
+
+
 
 
 	TuplePlus() = default;
 
-	TuplePlus(const TuplePlus<Types...>&) = default;
+	TuplePlus(const ThisTpl_t&) = default;
 
 	TuplePlus(const Base_t& rhs) : Base_t(rhs) {}
 
@@ -35,6 +51,12 @@ struct TuplePlus : public std::tuple<Types...>
 	template<class ...OtherTypes>
 	TuplePlus<OtherTypes...> asTuple() const;
 
+
+	TuplePlus<TplTypes&...> asRefTuple();
+
+	TuplePlus<const TplTypes&...> asRefTuple() const;
+
+
 	template<class ...OtherTypes>
 	TuplePlus<OtherTypes&...> asRefTuple();
 
@@ -42,10 +64,23 @@ struct TuplePlus : public std::tuple<Types...>
 	TuplePlus<const OtherTypes&...> asRefTuple() const;
 
 
+	template<class ...OtherTplTypes>
+	static ThisTpl_t makeFromTuple(const TuplePlus<OtherTplTypes...>& tplToCpyFrom)
+	{
+		return ThisTpl_t(Base_t(tplToCpyFrom.get<TplTypes>()...));
+	}
+
+	static ThisTpl_t& getTestInstance()
+	{
+		static ThisTpl_t testInstance = ThisTpl_t(Base_t(tupleTestElement<std::decay_t<TplTypes>>...));
+		return testInstance;
+	}
+
+
 	template<class T>
 	static constexpr bool containsType()
 	{
-		return isTypeInPack<T, Types...>();
+		return isTypeInPack<T, TplTypes...>();
 	}
 
 
@@ -63,8 +98,12 @@ struct TuplePlus : public std::tuple<Types...>
 
 
 	template<class ...OtherTypes>
-	struct AreUsed : public std::bool_constant<containsTypes<OtherTypes...>()>{};
+	struct AreUsed : public std::bool_constant<containsTypes<OtherTypes...>()> {};
 
 };
+
+
+template<class ...TplTypes>
+using TypesPack_t = TuplePlus<TplTypes...>;
 
 #include "TuplePlus.inl"

@@ -1,82 +1,75 @@
 #pragma once
 #include <memory>
+#include "stdInclude.h"
 #include "MathUtilities.h"
 #include "TuplePlus.h"
+#include "EntityBase.h"
+#include "AttachableComponent.h"
 
-using EntityId = uint32_t;
+class ObjectModule;
 
-struct EntityBase
-{
-	EntityBase(EntityId id) : id(id) {}
-
-	virtual ~EntityBase() = default;
-
-
-	EntityId getId() const
-	{
-		return id;
-	}
-
-
-protected:
-
-	static const uint32_t unidentifiedID = 0;
-
-	EntityId id = unidentifiedID;
-
-};
-
-template<class ...Types>
+template<class ...CTypes>
 class Entity : public EntityBase
 {
 public:
 
-	// base for inherting types
-	using Base_t = Entity<Types...>;
+	using UsedCPack_t = CPack_t<CTypes...>;
 
-	template<class T>
-	using CPtr_t = std::shared_ptr<T>;
+	using UsedCRefPack_t = CRefPack_t<CTypes...>;
 
-	using CHolder_t = TuplePlus<CPtr_t<Types>...>;
+protected:
+
+	// the base for inheriting types
+	using EntityBase_t = Entity<CTypes...>;
 
 public:
 
-	Entity(EntityId id);
+	Entity();
 
 	Entity(const Entity &) = delete;
 
-	Entity(Entity&&) = delete;
+	Entity(Entity&&) = default;
+
+	Entity& operator=(Entity &&) = default;
 
 	Entity& operator=(const Entity &) = delete;
 
-	Entity& operator=(Entity &&) = delete;
 
-	virtual ~Entity() = default;
+	virtual ~Entity()
+	{
+		(getComponent<CTypes>().onDestroy(), ...);
+		(assertOneReference<CTypes>(), ...);
+	}
 
 
-	// overrided by inherted types (if needed)
-	template<class U>
-	void construct(U & entityModule) {}
+	 // default implementation
+	virtual void construct(ObjectModule& objectModule)
+	{}
+
 
 
 
 	template<class T>
-	CPtr_t<T>& getComponent();
-
+	T& getComponent() const;
 
 	template<class T>
-	const CPtr_t<T> & getComponent() const;
+	const CPtr_t<T>& getComponentPtr() const;
+
+	const UsedCPack_t& getComponents() const;
 
 
-	CHolder_t & getComponents();
+	UsedCRefPack_t getComponentsRefPack() const;
 
 
-	const CHolder_t & getComponents() const;
+protected:
+
+	template<class T>
+	void assertOneReference();
 
 
 private:
 
-	CHolder_t components;
+	UsedCPack_t components;
 
 };
 
