@@ -32,6 +32,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
+    <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="RawKey.cpp" />
     <ClCompile Include="ShapeComponent.cpp" />
     <ClCompile Include="Spline.cpp" />
@@ -49,6 +50,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Clock.h" />
     <ClInclude Include="PhysicsComponent.h" />
+    <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="RawKey.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="ControllerModule.h" />

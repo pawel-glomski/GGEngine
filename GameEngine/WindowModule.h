@@ -84,14 +84,14 @@ inline void Settings<WindowModule>::makeWindow(sf::RenderWindow & window)
 
 	videoMode.width = windowSizes[(uint8_t)windowSize].x;
 	videoMode.height = windowSizes[(uint8_t)windowSize].y;
+	settings.antialiasingLevel = antialiasingLevel;
 
+	window.create(videoMode, "TheGame", windowType, settings);
 
 	view = window.getView();
 	view.setSize(asVec<sf::Vector2f>(ViewResolution));
 	view.setRotation(90.f);	// match game's forward vector
+	view.setCenter(sf::Vector2f());
 
-	settings.antialiasingLevel = antialiasingLevel;
-
-	window.create(videoMode, "TheGame", windowType, settings);
 	window.setView(view);
 }

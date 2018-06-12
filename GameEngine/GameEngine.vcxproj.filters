@@ -118,6 +118,9 @@
     <ClInclude Include="RawKey.h">
       <Filter>Engine\Modules\Input</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsSystem.h">
+      <Filter>Engine\Modules\World\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -175,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="RawKey.cpp">
       <Filter>Engine\Modules\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem.cpp">
+      <Filter>Engine\Modules\World\Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

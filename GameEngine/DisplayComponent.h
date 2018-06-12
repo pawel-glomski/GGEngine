@@ -54,12 +54,12 @@ public:
 	virtual bool copyConfiguration(const ShapeBase& shape) = 0;
 
 
+	void copyConfiguration(const sf::Shape& shape);
+
+
 	C2_TYPE getType() const;
 
-
-	virtual sf::Shape& getSfShape();
-
-	virtual const sf::Shape& getSfShape() const;
+	const sf::Shape& getSfShape() const;
 
 
 private:

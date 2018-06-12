@@ -7,7 +7,6 @@
 
 struct RawInputPack
 {
-
 	void resetKeys()
 	{
 		rawKeys = std::array<RawKey, maxInput>();

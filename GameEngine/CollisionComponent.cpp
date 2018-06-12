@@ -11,7 +11,7 @@ void CollisionComponent::clearCollisions()
 	collisions.clear();
 }
 
-void CollisionComponent::setCollisionChannels(uint16_t channels)
+void CollisionComponent::setCollisionChannels(uint32_t channels)
 {
 	collisionChannels = channels;
 }
@@ -31,7 +31,7 @@ const CollisionComponent::CollisionsHolder_t & CollisionComponent::getCollisions
 	return collisions;
 }
 
-uint16_t CollisionComponent::getCollisionChannels() const
+uint32_t CollisionComponent::getCollisionChannels() const
 {
 	return collisionChannels;
 }

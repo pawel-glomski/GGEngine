@@ -124,11 +124,13 @@ Features:
 #define C2_MAX_POLYGON_VERTS 8
 
 // 2d vector
-typedef struct
+struct c2v
 {
-	float x;
-	float y;
-} c2v;
+	c2v() = default;
+	c2v(float x, float y) : x(x), y(y) {}
+	float x = 0.f;
+	float y = 0.f;
+};
 
 // 2d rotation composed of cos/sin pair
 typedef struct

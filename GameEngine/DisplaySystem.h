@@ -4,6 +4,7 @@
 #include "TransformComponent.h"
 #include "ShapeComponent.h"
 #include "DisplayComponent.h"
+#include "CollisionComponent.h"
 
 class DisplaySystem : public epp::System
 {
@@ -19,5 +20,5 @@ private:
 
 	DisplayModule& displayModule;
 
-	epp::CGroup<DisplayComponent, TransformComponent, ShapeComponent> entities;
+	epp::CGroup<DisplayComponent, TransformComponent, ShapeComponent, CollisionComponent> entities;
 };

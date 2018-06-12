@@ -25,14 +25,14 @@ void DisplayShape::draw(sf::RenderTarget & target, sf::RenderStates states) cons
 	target.draw(shapeRef, states);
 }
 
+void DisplayShape::copyConfiguration(const sf::Shape & shape)
+{
+	this->shapeRef = shape;
+}
+
 C2_TYPE DisplayShape::getType() const
 {
 	return type;
-}
-
-sf::Shape & DisplayShape::getSfShape()
-{
-	return shapeRef;
 }
 
 const sf::Shape & DisplayShape::getSfShape() const
@@ -46,7 +46,7 @@ CircleDisplayShape::CircleDisplayShape() : DisplayShape(shape, C2_TYPE::C2_CIRCL
 {
 	shape.setFillColor(sf::Color::Transparent);
 	shape.setOutlineColor(sf::Color::White);
-	shape.setOutlineThickness(0.05f);
+	shape.setOutlineThickness(0.01f);
 }
 
 bool CircleDisplayShape::copyConfiguration(const ShapeBase & shapeToCpy)
@@ -101,7 +101,7 @@ void DisplayComponent::takeShape(const ShapeBase & shape)
 
 		if (newShape)
 		{
-			newShape->getSfShape() = displayShape->getSfShape();
+			newShape->copyConfiguration(displayShape->getSfShape());
 		
 			displayShape = std::move(newShape);
 		}

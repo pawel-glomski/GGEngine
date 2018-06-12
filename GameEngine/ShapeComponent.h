@@ -14,7 +14,7 @@ public:
 	virtual ~ShapeBase() = default;
 
 
-	void setTransform(Transform newTransform);
+	void setTransform(const Transform& newTransform);
 
 
 	c2Manifold collisionManifold(const ShapeBase& otherShape) const;
@@ -109,7 +109,6 @@ public:
 	template<class T>
 	T& takeShape()
 	{
-		shape.reset();
 		shape = std::make_unique<T>();
 		return *(T*)shape.get();
 	}

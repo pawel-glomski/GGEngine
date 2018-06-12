@@ -19,11 +19,13 @@ struct CollisionData
 
 	Vec2f collisionPoint;
 
-	Vec2f depth;
+	Vec2f normal;
+
+	float magnitude = 0;
 };
 
 
-class CollisionComponent
+class CollisionComponent : public epp::Component
 {
 
 	using CollisionsHolder_t = std::vector<CollisionData>;
@@ -36,7 +38,7 @@ public:
 	void clearCollisions();
 
 
-	void setCollisionChannels(uint16_t channels);
+	void setCollisionChannels(uint32_t channels);
 
 	void addCollisionChannel(CollisionChannel channel);
 
@@ -46,12 +48,12 @@ public:
 
 	const CollisionsHolder_t& getCollisions() const;
 
-	uint16_t getCollisionChannels() const;
+	uint32_t getCollisionChannels() const;
 
 
 private:
 
-	uint16_t collisionChannels = C_Every;
+	uint32_t collisionChannels = C_Every;
 
 	CollisionsHolder_t collisions;
 

@@ -13,4 +13,8 @@ public:
 	virtual void init(epp::EntityManager& entityManager) override;
 
 	virtual void update(epp::EntityManager& entityManager, float dt) override;
+
+private:
+
+	epp::CGroup<CollisionComponent, ShapeComponent, TransformComponent> entities;
 };

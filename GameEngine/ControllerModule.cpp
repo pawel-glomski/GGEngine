@@ -35,13 +35,13 @@ void ControllerModule::response()
 		sf::View view = getDependency<WindowModule>().getWin().getView();
 
 		if (getActionKeyState(ActionKey::MoveForward) != KeyState::Released)
-			view.setCenter(view.getCenter() + sf::Vector2f(0.1f, 0.f) * Settings<WindowModule>().WorldToViewRatio);
+			view.setCenter(view.getCenter() + sf::Vector2f(0.1f, 0.f) * Settings<WindowModule>::WorldToViewRatio);
 		if (getActionKeyState(ActionKey::MoveBackward) != KeyState::Released)
-			view.setCenter(view.getCenter() + sf::Vector2f(-0.1f, 0.f) * Settings<WindowModule>().WorldToViewRatio);
+			view.setCenter(view.getCenter() + sf::Vector2f(-0.1f, 0.f) * Settings<WindowModule>::WorldToViewRatio);
 		if (getActionKeyState(ActionKey::MoveLeft) != KeyState::Released)
-			view.setCenter(view.getCenter() + sf::Vector2f(0, -0.1f) * Settings<WindowModule>().WorldToViewRatio);
+			view.setCenter(view.getCenter() + sf::Vector2f(0, -0.1f) * Settings<WindowModule>::WorldToViewRatio);
 		if (getActionKeyState(ActionKey::MoveRight) != KeyState::Released)
-			view.setCenter(view.getCenter() + sf::Vector2f(0, 0.1f) * Settings<WindowModule>().WorldToViewRatio);
+			view.setCenter(view.getCenter() + sf::Vector2f(0, 0.1f) * Settings<WindowModule>::WorldToViewRatio);
 
 		if (getActionKeyState(ActionKey::ZoomIn) != KeyState::Released)
 			view.setSize(view.getSize() / 1.01f);
