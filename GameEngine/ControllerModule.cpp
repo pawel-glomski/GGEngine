@@ -8,6 +8,16 @@ void ControllerModule::update()
 	updateControllerState(rawInput);
 }
 
+const ControllerModule::KeyBindingsArray & ControllerModule::getBindings() const
+{
+	return bindings;
+}
+
+const ControllerModule::KeysStatesArray & ControllerModule::getKeysStates() const
+{
+	return bindedKeysStates;
+}
+
 void ControllerModule::updateControllerState(const RawInputPack & rawInput)
 {
 	// set as HeldDown every keyState, that in previous tick was "Pressed"

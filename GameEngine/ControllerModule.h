@@ -1,18 +1,14 @@
 #pragma once
 #include <unordered_map>
 #include <array>
-#include <memory>
-#include <ECSpp/Component.h>
-#include <ECSpp/EntityManager/EntityRef.h>
 #include "InputModule.h"
 
 struct ControllerComponent;
 
 enum class ControllerAction : uint8_t
 {
-	Rotate, 
-	PrimaryAttack, SecondaryAttack,
 	MoveForward, MoveBackward, MoveLeft, MoveRight,
+	PrimaryAttack, SecondaryAttack,
 	FirstAbility, SecondAbility, ThridAbility, FourthAbility,
 	Num1, Num2, Num3, Num4, Num5,
 	Options,
@@ -33,6 +29,10 @@ struct ControllerButton
 class ControllerModule : public Module<InputModule>
 {
 
+	using KeyBindingsArray = std::array<RawInputPack::RawKey, (uint8_t)ControllerAction::Count>;
+
+	using KeysStatesArray = std::array<std::unordered_map<RawKeyCode, KeyState>, (uint8_t)InputDivice::Count>;
+
 public:
 
 	template<class ...MTypes>
@@ -40,6 +40,10 @@ public:
 
 
 	virtual void update() override;
+
+	const KeyBindingsArray& getBindings() const;
+
+	const KeysStatesArray& getKeysStates() const;
 
 private:
 
@@ -49,13 +53,13 @@ private:
 
 	// RawKey to ControllerAction bindings
 	// ControllerAction members are used as indices here
-	std::array<RawInputPack::RawKey, (uint8_t)ControllerAction::Count> bindings;	// move it to settings
+	KeyBindingsArray bindings;	// move it to settings
 
 
 	// divice-devided key bindings
-	// InputDivice members are used as first indices (getting correct RawKeyCode-ControllerButton bindings for this divice)
+	// InputDivice components are used as first indices (getting correct RawKeyCode-ControllerButton bindings for this divice)
 	// RawKeyCode is used as second index (getting ControllerButton binded to this RawKeyCode)
-	std::array<std::unordered_map<RawKeyCode, KeyState>, (uint8_t)InputDivice::Count> bindedKeysStates;
+	KeysStatesArray bindedKeysStates;
 
 };
 
@@ -63,8 +67,6 @@ private:
 template<class ...MTypes>
 inline ControllerModule::ControllerModule(const MDepPack_t<MTypes...>& dependencies) : ModuleBase_t(dependencies)
 {
-	// rotate action has no key, its always set as HeldDown
-	bindings[(uint8_t)ControllerAction::Rotate] = RawInputPack::RawKey(sf::Mouse::Button::ButtonCount, InputDivice::Mouse);
 
 	bindings[(uint8_t)ControllerAction::PrimaryAttack] = RawInputPack::RawKey(sf::Mouse::Button::Left, InputDivice::Mouse);
 	bindings[(uint8_t)ControllerAction::SecondaryAttack] = RawInputPack::RawKey(sf::Mouse::Button::Right, InputDivice::Mouse);
@@ -90,6 +92,4 @@ inline ControllerModule::ControllerModule(const MDepPack_t<MTypes...>& dependenc
 
 	for (auto & bind : bindings)
 		bindedKeysStates[(uint8_t)bind.divice][bind.code] = KeyState::Released;
-
-	bindedKeysStates[(uint8_t)InputDivice::Mouse][sf::Mouse::Button::ButtonCount] = KeyState::HeldDown;
 };
