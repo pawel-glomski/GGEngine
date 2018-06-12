@@ -3,7 +3,7 @@
 
 bool Transform::operator==(const Transform & rhs) const
 {
-	return (position == rhs.position && rotation == rhs.rotation && scaleV == rhs.scaleV);
+	return (position == rhs.position && rotation == rhs.rotation && scale == rhs.scale);
 }
 
 bool Transform::operator!=(const Transform & rhs) const

@@ -7,12 +7,12 @@ struct Transform
 
 	float_t rotation = 0.f;
 
-	Vec2f scaleV = Vec2f::OneVector;
+	Vec2f scale = Vec2f::OneVector;
 
 
 	Transform() = default;
 
-	Transform(Vec2f position, float_t rotation, Vec2f scaleV) : position(position), rotation(rotation), scaleV(scaleV) {}
+	Transform(Vec2f position, float_t rotation, Vec2f scaleV) : position(position), rotation(rotation), scale(scaleV) {}
 
 
 	bool operator==(const Transform& rhs) const;

@@ -23,7 +23,7 @@ void DisplayModule::drawWorldObject(const sf::Drawable & object, const Transform
 
 	states.transform.translate(asVec<sf::Vector2f>(transform.position) * Settings<WindowModule>::WorldToViewRatio);
 	states.transform.rotate(toDegrees(transform.rotation));
-	states.transform.scale(asVec<sf::Vector2f>(transform.scaleV) * Settings<WindowModule>::WorldToViewRatio);
+	states.transform.scale(asVec<sf::Vector2f>(transform.scale) * Settings<WindowModule>::WorldToViewRatio);
 
 	layers[(uint8_t)level].draw(object, states);
 }

@@ -91,6 +91,33 @@
     <ClInclude Include="tinyc2.h">
       <Filter>Engine\Utilities\ThirdParty</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>Engine\Modules\World\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeComponent.h">
+      <Filter>Engine\Modules\World\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayComponent.h">
+      <Filter>Engine\Modules\World\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerComponent.h">
+      <Filter>Engine\Modules\World\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionComponent.h">
+      <Filter>Engine\Modules\World\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionSystem.h">
+      <Filter>Engine\Modules\World\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplaySystem.h">
+      <Filter>Engine\Modules\World\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Engine\Modules\World\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="RawKey.h">
+      <Filter>Engine\Modules\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -124,6 +151,30 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="WorldModule.cpp">
       <Filter>Engine\Modules\World</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>Engine\Modules\World\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayComponent.cpp">
+      <Filter>Engine\Modules\World\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionComponent.cpp">
+      <Filter>Engine\Modules\World\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeComponent.cpp">
+      <Filter>Engine\Modules\World\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionSystem.cpp">
+      <Filter>Engine\Modules\World\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplaySystem.cpp">
+      <Filter>Engine\Modules\World\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
+      <Filter>Engine\Modules\World\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="RawKey.cpp">
+      <Filter>Engine\Modules\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

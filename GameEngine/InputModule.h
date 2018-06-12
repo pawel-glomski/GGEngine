@@ -1,32 +1,12 @@
 #pragma once
 #include <array>
 #include "WindowModule.h"
+#include "RawKey.h"
 
-enum class InputDivice : uint8_t 
-{ Keyboard, Mouse, Count };
 
-enum class KeyState : uint8_t
-{
-	Pressed,	// when key is pressed for the first time
-	HeldDown,	// when key is pressed for more than one tick
-	Released	// when key is released
-};
-
-using RawKeyCode = int8_t;
 
 struct RawInputPack
 {
-	struct RawKey
-	{
-		RawKey() = default;
-
-		RawKey(RawKeyCode keyCode, InputDivice inputDivice) : code(keyCode), divice(inputDivice) {};
-
-		RawKeyCode code = -1;
-		KeyState state = KeyState::Released;
-		InputDivice divice = InputDivice::Keyboard;
-	};
-
 
 	void resetKeys()
 	{

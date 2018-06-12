@@ -67,5 +67,5 @@ inline Vec2<T> VectorScaledByVector(Vec2<T> scaled, const Vec2<T> & scale)
 template<class T, class U>
 inline T asVec(const U& vec)
 {
-	return T(vec.x, vec.y);
+	return { vec.x, vec.y };
 }

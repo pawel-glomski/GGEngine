@@ -1,8 +1,8 @@
 #pragma once
 #include <ECSpp/ECSWorld.h>
-#include "Module.h"
+#include "DisplayModule.h"
 
-class WorldModule : public Module<>
+class WorldModule : public Module<DisplayModule>
 {
 
 public:

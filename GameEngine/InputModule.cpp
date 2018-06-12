@@ -1,8 +1,8 @@
 #include "InputModule.h"
 
-void setInputDivice(RawInputPack::RawKey & key, const sf::Event & event);
+void setInputDivice(RawKey & key, const sf::Event & event);
 
-void setKeyState(RawInputPack::RawKey & key, const sf::Event & event);
+void setKeyState(RawKey & key, const sf::Event & event);
 
 void InputModule::update()
 {
@@ -34,7 +34,7 @@ void InputModule::assignInputKeys()
 	auto & windowModule = getDependency<WindowModule>();
 	auto & window = windowModule.getWin();
 
-	RawInputPack::RawKey key;
+	RawKey key;
 	sf::Event event;
 	uint8_t iCount = 0;
 
@@ -55,7 +55,7 @@ void InputModule::assignInputKeys()
 	}
 }
 
-void setInputDivice(RawInputPack::RawKey & key, const sf::Event & event)
+void setInputDivice(RawKey & key, const sf::Event & event)
 {
 	if (event.type == sf::Event::EventType::KeyPressed || event.type == sf::Event::EventType::KeyReleased)
 		key.divice = InputDivice::Keyboard;
@@ -65,7 +65,7 @@ void setInputDivice(RawInputPack::RawKey & key, const sf::Event & event)
 		key.divice = InputDivice::Count;
 }
 
-void setKeyState(RawInputPack::RawKey & key, const sf::Event & event)
+void setKeyState(RawKey & key, const sf::Event & event)
 {
 	if (event.type == sf::Event::EventType::KeyPressed || event.type == sf::Event::EventType::MouseButtonPressed)
 		key.state = KeyState::Pressed;

@@ -5,33 +5,22 @@
 
 struct ControllerComponent;
 
-enum class ControllerAction : uint8_t
+enum class ActionKey : uint8_t
 {
 	MoveForward, MoveBackward, MoveLeft, MoveRight,
-	PrimaryAttack, SecondaryAttack,
-	FirstAbility, SecondAbility, ThridAbility, FourthAbility,
+	ZoomIn, ZoomOut,
+	LMB, RMB,
 	Num1, Num2, Num3, Num4, Num5,
 	Options,
 	Count
 };
 
-struct ControllerButton
-{
-	ControllerAction action = ControllerAction::Count;
-	KeyState keyState = KeyState::Released;
-
-	ControllerButton(ControllerAction action) : action(action) {}
-	ControllerButton() = default;
-};
-
-
-
-class ControllerModule : public Module<InputModule>
+class ControllerModule : public Module<InputModule, WindowModule>
 {
 
-	using KeyBindingsArray = std::array<RawInputPack::RawKey, (uint8_t)ControllerAction::Count>;
+	using RawToActionMap = spp::sparse_hash_map<RawKey, ActionKey>;
 
-	using KeysStatesArray = std::array<std::unordered_map<RawKeyCode, KeyState>, (uint8_t)InputDivice::Count>;
+	using ActionStateMap = spp::sparse_hash_map<ActionKey, KeyState>;
 
 public:
 
@@ -41,25 +30,25 @@ public:
 
 	virtual void update() override;
 
-	const KeyBindingsArray& getBindings() const;
 
-	const KeysStatesArray& getKeysStates() const;
+	const RawToActionMap& getBindings() const;
 
-private:
 
-	void updateControllerState(const RawInputPack & rawInput);
+	KeyState getActionKeyState(ActionKey actionKey);
 
 private:
 
-	// RawKey to ControllerAction bindings
-	// ControllerAction members are used as indices here
-	KeyBindingsArray bindings;	// move it to settings
+	void setBinding(const RawKey& raw, ActionKey action);
 
+	void updateControllerState();
 
-	// divice-devided key bindings
-	// InputDivice components are used as first indices (getting correct RawKeyCode-ControllerButton bindings for this divice)
-	// RawKeyCode is used as second index (getting ControllerButton binded to this RawKeyCode)
-	KeysStatesArray bindedKeysStates;
+	void response();
+
+private:
+
+	RawToActionMap bindings;
+
+	ActionStateMap states;
 
 };
 
@@ -67,29 +56,22 @@ private:
 template<class ...MTypes>
 inline ControllerModule::ControllerModule(const MDepPack_t<MTypes...>& dependencies) : ModuleBase_t(dependencies)
 {
+	setBinding({ sf::Mouse::Button::Left, InputDivice::Mouse }, ActionKey::LMB);
+	setBinding({ sf::Mouse::Button::Right, InputDivice::Mouse }, ActionKey::RMB);
 
-	bindings[(uint8_t)ControllerAction::PrimaryAttack] = RawInputPack::RawKey(sf::Mouse::Button::Left, InputDivice::Mouse);
-	bindings[(uint8_t)ControllerAction::SecondaryAttack] = RawInputPack::RawKey(sf::Mouse::Button::Right, InputDivice::Mouse);
+	setBinding({ sf::Keyboard::Key::W, InputDivice::Keyboard }, ActionKey::MoveForward);
+	setBinding({ sf::Keyboard::Key::S, InputDivice::Keyboard }, ActionKey::MoveBackward);
+	setBinding({ sf::Keyboard::Key::A, InputDivice::Keyboard }, ActionKey::MoveLeft);
+	setBinding({ sf::Keyboard::Key::D, InputDivice::Keyboard }, ActionKey::MoveRight);
 
+	setBinding({ sf::Keyboard::Key::LControl, InputDivice::Keyboard }, ActionKey::ZoomIn);
+	setBinding({ sf::Keyboard::Key::Space, InputDivice::Keyboard }, ActionKey::ZoomOut);
 
-	bindings[(uint8_t)ControllerAction::MoveForward] = RawInputPack::RawKey(sf::Keyboard::Key::W, InputDivice::Keyboard);
-	bindings[(uint8_t)ControllerAction::MoveBackward] = RawInputPack::RawKey(sf::Keyboard::Key::S, InputDivice::Keyboard);
-	bindings[(uint8_t)ControllerAction::MoveLeft] = RawInputPack::RawKey(sf::Keyboard::Key::A, InputDivice::Keyboard);
-	bindings[(uint8_t)ControllerAction::MoveRight] = RawInputPack::RawKey(sf::Keyboard::Key::D, InputDivice::Keyboard);
-	bindings[(uint8_t)ControllerAction::FirstAbility] = RawInputPack::RawKey(sf::Keyboard::Key::Q, InputDivice::Keyboard);
-	bindings[(uint8_t)ControllerAction::SecondAbility] = RawInputPack::RawKey(sf::Keyboard::Key::E, InputDivice::Keyboard);
-	bindings[(uint8_t)ControllerAction::ThridAbility] = RawInputPack::RawKey(sf::Keyboard::Key::LControl, InputDivice::Keyboard);
-	bindings[(uint8_t)ControllerAction::FourthAbility] = RawInputPack::RawKey(sf::Keyboard::Key::Space, InputDivice::Keyboard);
+	setBinding({ sf::Keyboard::Key::Num1, InputDivice::Keyboard }, ActionKey::Num1);
+	setBinding({ sf::Keyboard::Key::Num2, InputDivice::Keyboard }, ActionKey::Num2);
+	setBinding({ sf::Keyboard::Key::Num3, InputDivice::Keyboard }, ActionKey::Num3);
+	setBinding({ sf::Keyboard::Key::Num4, InputDivice::Keyboard }, ActionKey::Num4);
+	setBinding({ sf::Keyboard::Key::Num5, InputDivice::Keyboard }, ActionKey::Num5);
 
-	bindings[(uint8_t)ControllerAction::Num1] = RawInputPack::RawKey(sf::Keyboard::Key::Num1, InputDivice::Keyboard);
-	bindings[(uint8_t)ControllerAction::Num2] = RawInputPack::RawKey(sf::Keyboard::Key::Num2, InputDivice::Keyboard);
-	bindings[(uint8_t)ControllerAction::Num3] = RawInputPack::RawKey(sf::Keyboard::Key::Num3, InputDivice::Keyboard);
-	bindings[(uint8_t)ControllerAction::Num4] = RawInputPack::RawKey(sf::Keyboard::Key::Num4, InputDivice::Keyboard);
-	bindings[(uint8_t)ControllerAction::Num5] = RawInputPack::RawKey(sf::Keyboard::Key::Num5, InputDivice::Keyboard);
-
-	bindings[(uint8_t)ControllerAction::Options] = RawInputPack::RawKey(sf::Keyboard::Key::Escape, InputDivice::Keyboard);
-
-
-	for (auto & bind : bindings)
-		bindedKeysStates[(uint8_t)bind.divice][bind.code] = KeyState::Released;
+	setBinding({ sf::Keyboard::Key::Escape, InputDivice::Keyboard }, ActionKey::Options);
 };
