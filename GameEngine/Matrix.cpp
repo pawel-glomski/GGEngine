@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <string>
 #include <iomanip>
-#include "stdInclude.h"
+#include <ECSpp/Utility/DebugAssert.h>
 
 const Matrix Matrix::identityMatrix;
 

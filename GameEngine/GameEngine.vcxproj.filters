@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{fb5d816d-466f-43dd-b221-d418d1992555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Utilities">
+      <UniqueIdentifier>{6b30adae-6dde-4d0e-81a6-1a3ec130b521}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Utilities\Math">
+      <UniqueIdentifier>{68890774-9b4b-45c4-825f-7fd27fe01d62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Utilities\Time">
+      <UniqueIdentifier>{9c07b821-cb61-446a-9714-ae7ef233164a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Modules">
+      <UniqueIdentifier>{43e62833-de69-400a-ab78-5c44bc4e9c46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Modules\Display">
+      <UniqueIdentifier>{a46abbb5-a0d7-4039-bb31-a48700cb377d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Modules\Controller">
+      <UniqueIdentifier>{dec6d3ae-b17b-4917-819b-2544fbefae62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Modules\Window">
+      <UniqueIdentifier>{b5dd15c9-8115-4279-9f46-30d38dce9d98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Modules\Input">
+      <UniqueIdentifier>{67d71c5f-f0eb-449d-9081-994235207fb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Modules\World">
+      <UniqueIdentifier>{ec992a17-b7c6-4856-8a0a-19e081798c2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Modules\World\Components">
+      <UniqueIdentifier>{4d219eb8-a1bd-478c-8e89-d295efaccc4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Modules\World\Systems">
+      <UniqueIdentifier>{c101c8ac-1e57-4aa6-8a52-b5c09216747a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Utilities\ThirdParty">
+      <UniqueIdentifier>{11330b61-3ef9-49cc-aea3-424bf7b798b0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MathUtilities.h">
+      <Filter>Engine\Utilities\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>Engine\Utilities\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec2.h">
+      <Filter>Engine\Utilities\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayLayer.h">
+      <Filter>Engine\Modules\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Module.h">
+      <Filter>Engine\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayModule.h">
+      <Filter>Engine\Modules\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowModule.h">
+      <Filter>Engine\Modules\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerModule.h">
+      <Filter>Engine\Modules\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="InputModule.h">
+      <Filter>Engine\Modules\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Engine\Utilities\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Engine\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Clock.h">
+      <Filter>Engine\Utilities\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Spline.h">
+      <Filter>Engine\Utilities\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="WorldModule.h">
+      <Filter>Engine\Modules\World</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyc2.h">
+      <Filter>Engine\Utilities\ThirdParty</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Matrix.cpp">
+      <Filter>Engine\Utilities\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayLayer.cpp">
+      <Filter>Engine\Modules\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayModule.cpp">
+      <Filter>Engine\Modules\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowModule.cpp">
+      <Filter>Engine\Modules\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerModule.cpp">
+      <Filter>Engine\Modules\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="InputModule.cpp">
+      <Filter>Engine\Modules\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Engine\Utilities\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Clock.cpp">
+      <Filter>Engine\Utilities\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Spline.cpp">
+      <Filter>Engine\Utilities\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="WorldModule.cpp">
+      <Filter>Engine\Modules\World</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Vec2.inl">
+      <Filter>Engine\Utilities\Math</Filter>
+    </None>
+  </ItemGroup>
+</Project>
