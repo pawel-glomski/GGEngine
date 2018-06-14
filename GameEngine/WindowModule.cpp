@@ -27,5 +27,5 @@ const sf::RenderWindow & WindowModule::getWin() const
 
 Vec2f WindowModule::getRatioToMatchDefaultResolution() const
 {
-	return Vec2f(VectorScaledByVector(Settings_t::ViewResolution, 1.f / Vec2f(window.getSize())));
+	return Vec2f(VectorScaledByVector(asVec<Vec2f>(window.getView().getSize()), 1.f / Vec2f(window.getSize())));
 }

@@ -7,7 +7,7 @@ struct ControllerComponent;
 
 enum class ActionKey : uint8_t
 {
-	MoveForward, MoveBackward, MoveLeft, MoveRight,
+	MoveUp, MoveDown, MoveLeft, MoveRight,
 	ZoomIn, ZoomOut,
 	LMB, RMB,
 	Num1, Num2, Num3, Num4, Num5,
@@ -34,11 +34,17 @@ public:
 	const RawToActionMap& getBindings() const;
 
 
-	KeyState getActionKeyState(ActionKey actionKey);
+	KeyState getActionKeyState(ActionKey actionKey) const;
+
+	const Vec2f& getCursorWorldPosition() const;
+
+	const Vec2f& getCursorWorldDeltaPosition() const;
 
 private:
 
 	void setBinding(const RawKey& raw, ActionKey action);
+
+	void updateCursorState();
 
 	void updateControllerState();
 
@@ -50,6 +56,10 @@ private:
 
 	ActionStateMap states;
 
+	Vec2f cursorWorldPos;
+
+	Vec2f cursorWorldDeltaPos;
+
 };
 
 
@@ -59,8 +69,8 @@ inline ControllerModule::ControllerModule(const MDepPack_t<MTypes...>& dependenc
 	setBinding({ sf::Mouse::Button::Left, InputDivice::Mouse }, ActionKey::LMB);
 	setBinding({ sf::Mouse::Button::Right, InputDivice::Mouse }, ActionKey::RMB);
 
-	setBinding({ sf::Keyboard::Key::W, InputDivice::Keyboard }, ActionKey::MoveForward);
-	setBinding({ sf::Keyboard::Key::S, InputDivice::Keyboard }, ActionKey::MoveBackward);
+	setBinding({ sf::Keyboard::Key::W, InputDivice::Keyboard }, ActionKey::MoveUp);
+	setBinding({ sf::Keyboard::Key::S, InputDivice::Keyboard }, ActionKey::MoveDown);
 	setBinding({ sf::Keyboard::Key::A, InputDivice::Keyboard }, ActionKey::MoveLeft);
 	setBinding({ sf::Keyboard::Key::D, InputDivice::Keyboard }, ActionKey::MoveRight);
 

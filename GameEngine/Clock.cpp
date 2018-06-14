@@ -3,7 +3,7 @@
 #include <SFML/System/Sleep.hpp>
 #include "MathUtilities.h"
 
-const float_t SimulationClock::timestep = 1.f / 60.f;
+const float_t SimulationClock::timestep = 1.f / 120.f;
 
 SimulationClock::Clock_t clock;
 SimulationClock::TimePoint_t last;

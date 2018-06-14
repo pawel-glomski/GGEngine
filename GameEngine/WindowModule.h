@@ -90,7 +90,6 @@ inline void Settings<WindowModule>::makeWindow(sf::RenderWindow & window)
 
 	view = window.getView();
 	view.setSize(asVec<sf::Vector2f>(ViewResolution));
-	view.setRotation(90.f);	// match game's forward vector
 	view.setCenter(sf::Vector2f());
 
 	window.setView(view);

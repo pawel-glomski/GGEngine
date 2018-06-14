@@ -21,11 +21,15 @@ void DisplaySystem::update(epp::EntityManager & entityManager, float dt)
 
 		displayC.takeShape(shapeC.getShape());
 
+		// display collision points + normals
 		if (collisonC.getCollisions().size())
 			for (auto& collison : collisonC.getCollisions())
 			{
-				displayModule.drawWorldPoint(collison.collisionPoint, 0.1f, sf::Color::Cyan);
-				displayModule.drawWorldLine(collison.collisionPoint, collison.collisionPoint + collison.normal * 0.2f, sf::Color::Magenta);
+				for (size_t i = 0; i < collison.manifold.count; ++i)
+				{
+					displayModule.drawWorldPoint(collison.manifold.contact_points[i], 0.1f, sf::Color::Cyan);
+					displayModule.drawWorldLine(collison.manifold.contact_points[i], collison.manifold.contact_points[i] + collison.manifold.n * 0.2f, sf::Color::Magenta);
+				}
 			}
 		displayModule.drawWorldObject(displayC.getShape(), transformC.getTransform(), displayC.getDisplayLevel());
 	}

@@ -121,6 +121,9 @@
     <ClInclude Include="PhysicsSystem.h">
       <Filter>Engine\Modules\World\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="InteractionSystem.h">
+      <Filter>Engine\Modules\World\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -180,6 +183,9 @@
       <Filter>Engine\Modules\Input</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
+      <Filter>Engine\Modules\World\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractionSystem.cpp">
       <Filter>Engine\Modules\World\Systems</Filter>
     </ClCompile>
   </ItemGroup>

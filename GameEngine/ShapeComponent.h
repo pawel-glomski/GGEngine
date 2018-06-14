@@ -21,6 +21,8 @@ public:
 
 	bool isColliding(const ShapeBase& otherShape) const;
 
+	bool isColliding(void *otherShape, C2_TYPE type, c2x* transform = nullptr) const;
+
 
 	const Transform& getTransform() const;
 

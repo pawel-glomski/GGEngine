@@ -18,8 +18,8 @@ struct RawInputPack
 	std::array<RawKey, maxInput> rawKeys;
 
 	Vec2f absCursorPos;	// position of a cursor on a window <0; winSize>
-	Vec2f signedCursorVec;	// vector from window's center to cursor <-winSize / 2; winSize / 2f>
-	Vec2f cursorPosChange;
+	Vec2f signedCursorPos;	// vector from window's center to cursor <-winSize / 2; winSize / 2>
+	Vec2f cursorDeltaPos;
 };
 
 

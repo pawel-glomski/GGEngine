@@ -4,67 +4,23 @@
 #include "ShapeComponent.h"
 
 
-namespace sf
-{
-	class PolygonShape : public sf::Shape
-	{
-	public:
-
-		template<class T>
-		void setupVertices(const T* vertices, int32_t count)
-		{
-			ASSERT((count <= C2_MAX_POLYGON_VERTS), "Vertices count cannot be greater b2_maxPolygonVertices!");
-			ASSERT((sizeof(Vec2f) == sizeof(T)), "Different sizes of vector types!");
-
-			count = minValue(count, C2_MAX_POLYGON_VERTS);
-
-			verticesCount = uint8_t(count);
-			memcpy(this->vertices, vertices, count * sizeof(Vec2f));
-			update();
-		}
-	
-
-		virtual std::size_t getPointCount() const override;
-
-		virtual Vector2f getPoint(std::size_t index) const override;
-
-
-	private:
-
-		Vec2f vertices[C2_MAX_POLYGON_VERTS];
-
-		uint8_t verticesCount = 0;
-	};
-}
-
-
-
-
 class DisplayShape : public sf::Drawable
 {
 protected:
 
-	DisplayShape(sf::Shape& shape, C2_TYPE shapeType);
+	DisplayShape(C2_TYPE shapeType);
 
 public:
 
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 
 	virtual bool copyConfiguration(const ShapeBase& shape) = 0;
 
 
-	void copyConfiguration(const sf::Shape& shape);
-
-
 	C2_TYPE getType() const;
-
-	const sf::Shape& getSfShape() const;
 
 
 private:
-
-	sf::Shape& shapeRef;
 
 	C2_TYPE type;
 
@@ -79,12 +35,17 @@ public:
 
 	CircleDisplayShape();
 
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
 	virtual bool copyConfiguration(const ShapeBase& shape) override;
+
+	void setRadius(float radius);
 
 private:
 
-	sf::CircleShape shape;
+	sf::VertexArray shape;
 
+	float radius = 1.f;
 };
 
 
@@ -96,12 +57,23 @@ public:
 
 	PolygonDisplayShape();
 
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
 	virtual bool copyConfiguration(const ShapeBase& shape) override;
+
+	template<class T>
+	void setupVertices(const T* vertices, int32_t count)
+	{
+		shape.clear();
+		for (int32_t i = 0; i <= count; ++i)
+			shape.append(asVec<sf::Vector2f>(*(vertices + i % count)));
+	}
+
+	const sf::VertexArray& getVertexArray() const;
 
 private:
 
-	sf::PolygonShape shape;
-
+	sf::VertexArray shape;
 };
 
 

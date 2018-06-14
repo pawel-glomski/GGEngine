@@ -2,32 +2,8 @@
 #include "WindowModule.h"
 
 
-
-std::size_t sf::PolygonShape::getPointCount() const
+DisplayShape::DisplayShape(C2_TYPE shapeType) : type(shapeType)
 {
-	return verticesCount;
-}
-
-sf::Vector2f sf::PolygonShape::getPoint(std::size_t index) const
-{
-	return asVec<sf::Vector2f>(vertices[index]);
-}
-
-
-
-
-DisplayShape::DisplayShape(sf::Shape & shape, C2_TYPE shapeType) : shapeRef(shape), type(shapeType)
-{
-}
-
-void DisplayShape::draw(sf::RenderTarget & target, sf::RenderStates states) const
-{
-	target.draw(shapeRef, states);
-}
-
-void DisplayShape::copyConfiguration(const sf::Shape & shape)
-{
-	this->shapeRef = shape;
 }
 
 C2_TYPE DisplayShape::getType() const
@@ -35,18 +11,22 @@ C2_TYPE DisplayShape::getType() const
 	return type;
 }
 
-const sf::Shape & DisplayShape::getSfShape() const
+
+CircleDisplayShape::CircleDisplayShape() : DisplayShape(C2_TYPE::C2_CIRCLE)
 {
-	return shapeRef;
+	static const uint8_t vertices = 30;
+	static const float step = 2*PI_F / vertices;
+
+	shape.setPrimitiveType(sf::PrimitiveType::LinesStrip);
+	shape.append(sf::Vector2f());
+	for (uint8_t i = 0; i <= vertices; ++i)
+		shape.append(sf::Vector2f(std::cosf(step * i), std::sinf(step * i)));
 }
 
-
-
-CircleDisplayShape::CircleDisplayShape() : DisplayShape(shape, C2_TYPE::C2_CIRCLE)
+void CircleDisplayShape::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	shape.setFillColor(sf::Color::Transparent);
-	shape.setOutlineColor(sf::Color::White);
-	shape.setOutlineThickness(0.01f);
+	states.transform.scale(radius, radius);
+	target.draw(shape, states);
 }
 
 bool CircleDisplayShape::copyConfiguration(const ShapeBase & shapeToCpy)
@@ -54,18 +34,28 @@ bool CircleDisplayShape::copyConfiguration(const ShapeBase & shapeToCpy)
 	if (shapeToCpy.getType() == C2_TYPE::C2_CIRCLE)
 	{
 		const CircleShape& castedShapeToCpy = static_cast<const CircleShape&>(shapeToCpy);
-		shape.setRadius(castedShapeToCpy.getDetails().r);
-		shape.setOrigin(shape.getRadius(), shape.getRadius());
+		setRadius(castedShapeToCpy.getDetails().r);
 		return true;
 	}
 	return false;
 }
 
-
-
-
-PolygonDisplayShape::PolygonDisplayShape() : DisplayShape(shape, C2_TYPE::C2_POLY)
+void CircleDisplayShape::setRadius(float radius)
 {
+	radius = radius;
+}
+
+
+
+
+PolygonDisplayShape::PolygonDisplayShape() : DisplayShape(C2_TYPE::C2_POLY)
+{
+	shape.setPrimitiveType(sf::PrimitiveType::LinesStrip);
+}
+
+void PolygonDisplayShape::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	target.draw(shape, states);
 }
 
 bool PolygonDisplayShape::copyConfiguration(const ShapeBase & shapeToCpy)
@@ -73,12 +63,18 @@ bool PolygonDisplayShape::copyConfiguration(const ShapeBase & shapeToCpy)
 	if (shapeToCpy.getType() == C2_TYPE::C2_POLY)
 	{
 		const PolygonShape& castedShapeToCpy = static_cast<const PolygonShape&>(shapeToCpy);
-		shape.setupVertices(castedShapeToCpy.getDetails().verts, castedShapeToCpy.getDetails().count);
+		setupVertices(castedShapeToCpy.getDetails().verts, castedShapeToCpy.getDetails().count);
 
 		return true;
 	}
 	return false;
 }
+
+const sf::VertexArray & PolygonDisplayShape::getVertexArray() const
+{
+	return shape;
+}
+
 
 
 
@@ -99,12 +95,8 @@ void DisplayComponent::takeShape(const ShapeBase & shape)
 		else if (shape.getType() == C2_TYPE::C2_POLY)
 			newShape = std::make_unique<PolygonDisplayShape>();
 
-		if (newShape)
-		{
-			newShape->copyConfiguration(displayShape->getSfShape());
-		
+		if (newShape)	
 			displayShape = std::move(newShape);
-		}
 		else
 			ASSERT(newShape, "Used unsupported shape type");
 	}

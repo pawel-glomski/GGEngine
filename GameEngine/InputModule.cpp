@@ -19,14 +19,14 @@ void InputModule::assignMousePosition()
 
 	Vec2f newAbsPos =  Vec2f(sf::Mouse::getPosition(window)).clamp(Vec2f(0, 0), Vec2f(window.getSize()));
 
-	currentInput.cursorPosChange = newAbsPos - currentInput.absCursorPos;
+	currentInput.cursorDeltaPos = newAbsPos - currentInput.absCursorPos;
 	currentInput.absCursorPos = newAbsPos;
-	currentInput.signedCursorVec = Vec2f(currentInput.absCursorPos - Vec2f(window.getSize()) / 2.f).clamp(-Vec2f(window.getSize()) / 2.f, Vec2f(window.getSize()) / 2.f);
+	currentInput.signedCursorPos = Vec2f(currentInput.absCursorPos - Vec2f(window.getSize()) / 2.f).clamp(-Vec2f(window.getSize()) / 2.f, Vec2f(window.getSize()) / 2.f);
 
 
-	scaleVectorByVector(currentInput.cursorPosChange, windowModule.getRatioToMatchDefaultResolution());
+	scaleVectorByVector(currentInput.cursorDeltaPos, windowModule.getRatioToMatchDefaultResolution());
 	scaleVectorByVector(currentInput.absCursorPos, windowModule.getRatioToMatchDefaultResolution());
-	scaleVectorByVector(currentInput.signedCursorVec, windowModule.getRatioToMatchDefaultResolution());
+	scaleVectorByVector(currentInput.signedCursorPos, windowModule.getRatioToMatchDefaultResolution());
 }
 
 void InputModule::assignInputKeys()

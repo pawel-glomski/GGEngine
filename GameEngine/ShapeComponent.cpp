@@ -25,6 +25,12 @@ bool ShapeBase::isColliding(const ShapeBase & otherShape) const
 	return c2Collided(shape, &thisC2transform, type, otherShape.shape, &otherC2transform, otherShape.type);
 }
 
+bool ShapeBase::isColliding(void * otherShape, C2_TYPE type, c2x * transform) const
+{
+	c2x thisC2transform = c2Transform(asVec<c2v>(this->transform.position), this->transform.rotation);
+	return c2Collided(shape, &thisC2transform, this->type, otherShape, transform, type);
+}
+
 void ShapeBase::setTransform(const Transform& newTransform)
 {
 	if (transform != newTransform)
