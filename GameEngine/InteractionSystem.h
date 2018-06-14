@@ -8,6 +8,7 @@
 #include "PhysicsComponent.h"
 #include "ShapeComponent.h"
 
+
 class InteractionSystem : public epp::System
 {
 public:
@@ -35,8 +36,10 @@ private:
 
 	std::random_device rd;
 
-	std::uniform_real_distribution<float> dist = std::uniform_real_distribution<float>(0.f, 3.f);
+	std::uniform_real_distribution<float> dist = std::uniform_real_distribution<float>(0.f, 4.f);
 
+
+	size_t spawnedCount = 0;
 
 	const ControllerModule & controllerModule;
 };

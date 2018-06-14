@@ -6,12 +6,6 @@ inline Vec2<T>::Vec2(const Vec2<U>& vec) : x(T(vec.x)), y(T(vec.y))
 }
 
 template<class T>
-template<typename U>
-inline Vec2<T>::Vec2(const sf::Vector2<U>& vec) : x(T(vec.x)), y(T(vec.y))
-{
-}
-
-template<class T>
 inline Vec2<T>::Vec2(T x, T y) : x(x), y(y)
 {
 }
@@ -55,15 +49,6 @@ inline Vec2<T>& Vec2<T>::clamp(const Vec2<T> minValues, const Vec2<T> maxValues)
 }
 
 ////////////////////////////////////////////////////////// operators //////////////////////////////////////////////////////////
-
-template<class T>
-template<typename U>
-inline Vec2<T>& Vec2<T>::operator=(const sf::Vector2<U>& sfVector)
-{
-	x = T(sfVector.x);
-	y = T(sfVector.y);
-	return *this;
-}
 
 template<class T>
 inline Vec2<T> operator+(const Vec2<T> & left, const Vec2<T> & right)

@@ -32,7 +32,7 @@ struct PhysicsComponent : public epp::Component
 	float moi = 5.f;  // moment of inertia
 	float moiInv = 0.2f; // inverse inertia
 
-	float restitution = 0.0f;
+	float restitution = 0.2f;
 	float staticFriction = 0.6f;
 	float dynamicFriction = 0.4f;
 

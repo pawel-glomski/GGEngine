@@ -22,22 +22,19 @@ inline T minValue(const T & value1, const T & value2)
 	return value2;
 }
 
-// returns 1 for values >= 0; resturns -1 for < 0
+// returns 1 for value > 0; 0 for value == 0, -1 for value < 0
 template<class T>
-inline T sign(const T& value)
+inline int sign(const T& value)
 {
-	if (value > 0)
-		return T(1);
-	else if (value == 0)
-		return T(0);
-	else
-		return T(-1);
+	if (!value)		return 0;
+	if (value > 0)	return 1;
+	return -1;
 }
 
 template<class T>
-inline Vec2<T> sign(const Vec2<T>& vec)
+inline Vec2i signs(const Vec2<T>& vec)
 {
-	return Vec2<T>(sign(vec.x), sign(vec.y));
+	return Vec2i(sign(vec.x), sign(vec.y));
 }
 
 inline float_t toRadians(float_t degrees)
@@ -67,5 +64,7 @@ inline Vec2<T> VectorScaledByVector(Vec2<T> scaled, const Vec2<T> & scale)
 template<class T, class U>
 inline T asVec(const U& vec)
 {
-	return T(vec.x, vec.y);
+	using ComponentType = decltype(T::x);
+
+	return T(ComponentType(vec.x), ComponentType(vec.y));
 }

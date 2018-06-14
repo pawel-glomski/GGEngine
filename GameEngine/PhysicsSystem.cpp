@@ -29,17 +29,17 @@ void PhysicsSystem::update(epp::EntityManager & entityManager, float dt)
 
 void PhysicsSystem::fixSinking()
 {
-	for (auto it = entities.begin(); it != entities.end(); ++it)
-	{
-		auto& transformC = it.getComponent<TransformComponent>();
-		auto& collisionC = it.getComponent<CollisionComponent>();
-		auto& physicsC = it.getComponent<PhysicsComponent>();
+	//for (auto it = entities.begin(); it != entities.end(); ++it)
+	//{
+	//	auto& transformC = it.getComponent<TransformComponent>();
+	//	auto& collisionC = it.getComponent<CollisionComponent>();
+	//	auto& physicsC = it.getComponent<PhysicsComponent>();
 
-		for (const auto& collision : collisionC.getCollisions())
-			if(physicsC.mass)
-				for (size_t i = 0; i < collision.manifold.count; ++i)
-					transformC.moveGlobal(-collision.manifold.n * collision.manifold.depths[i] * std::clamp(dotProduct(collision.manifold.n, physicsC.velocity) / physicsC.velocity.length(), 0.f, 1.f) / (float)collision.manifold.count);
-	}
+	//	for (const auto& collision : collisionC.getCollisions())
+	//		if(physicsC.mass)
+	//			for (size_t i = 0; i < collision.manifold.count; ++i)
+	//				transformC.moveGlobal(-collision.manifold.n * collision.manifold.depths[i] * std::clamp(dotProduct(collision.manifold.n, physicsC.velocity) / physicsC.velocity.length(), 0.f, 1.f) / (float)collision.manifold.count);
+	//}
 }
 
 void PhysicsSystem::resolveCollisions()
@@ -63,7 +63,7 @@ void PhysicsSystem::resolveCollisions()
 					Vec2f ra = collision.manifold.contact_points[i] - transformC.getPosition();
 					Vec2f rb = collision.manifold.contact_points[i] - othertransformC.getPosition();
 
-					Vec2f rVel = otherPhysicsC.velocity - physicsC.velocity + crossProduct(otherPhysicsC.angularVelocity, rb) - crossProduct(physicsC.angularVelocity, ra);
+					Vec2f rVel = otherPhysicsC.velocity - physicsC.velocity + crossProduct(otherPhysicsC.angularVelocity, rb) - crossProduct(physicsC.angularVelocity, ra) - collision.manifold.depths[i] * collision.manifold.n * 10.f;
 					float rVelMagnitudeAlongN = dotProduct(rVel, collision.manifold.n);
 				
 					if (rVelMagnitudeAlongN > 0)

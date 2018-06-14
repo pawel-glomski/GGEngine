@@ -11,12 +11,12 @@ void DisplayModule::displayLayers()
 
 	window.clear();	
 
-	for (auto & layer : layers)
-		layer.display(window);
-
 	window.draw(lines);
 	for (auto& point : points)
 		window.draw(point);
+
+	for (auto & layer : layers)
+		layer.display(window);
 
 	window.display();
 

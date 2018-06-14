@@ -17,11 +17,11 @@ void InputModule::assignMousePosition()
 	auto & windowModule = getDependency<WindowModule>();
 	auto & window = windowModule.getWin();
 
-	Vec2f newAbsPos =  Vec2f(sf::Mouse::getPosition(window)).clamp(Vec2f(0, 0), Vec2f(window.getSize()));
+	Vec2f newAbsPos =  asVec<Vec2f>(sf::Mouse::getPosition(window)).clamp(Vec2f::ZeroVector, asVec<Vec2f>(window.getSize()));
 
 	currentInput.cursorDeltaPos = newAbsPos - currentInput.absCursorPos;
 	currentInput.absCursorPos = newAbsPos;
-	currentInput.signedCursorPos = Vec2f(currentInput.absCursorPos - Vec2f(window.getSize()) / 2.f).clamp(-Vec2f(window.getSize()) / 2.f, Vec2f(window.getSize()) / 2.f);
+	currentInput.signedCursorPos = Vec2f(currentInput.absCursorPos - asVec<Vec2f>(window.getSize()) / 2.f).clamp(-asVec<Vec2f>(window.getSize()) / 2.f, asVec<Vec2f>(window.getSize()) / 2.f);
 
 
 	scaleVectorByVector(currentInput.cursorDeltaPos, windowModule.getRatioToMatchDefaultResolution());

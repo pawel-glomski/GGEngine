@@ -65,8 +65,9 @@ public:
 	void setupVertices(const T* vertices, int32_t count)
 	{
 		shape.clear();
-		for (int32_t i = 0; i <= count; ++i)
-			shape.append(asVec<sf::Vector2f>(*(vertices + i % count)));
+		if(count)
+			for (int32_t i = 0; i <= count; ++i)
+				shape.append(asVec<sf::Vector2f>(*(vertices + i % count)));
 	}
 
 	const sf::VertexArray& getVertexArray() const;

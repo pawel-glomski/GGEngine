@@ -4,6 +4,11 @@
 #include "tinyc2.h"
 #include "Transform.h"
 
+struct AABB
+{
+	Vec2f min;
+	Vec2f max;
+};
 
 class ShapeBase
 {
@@ -12,7 +17,6 @@ public:
 	ShapeBase(void* shape, C2_TYPE type);
 
 	virtual ~ShapeBase() = default;
-
 
 	void setTransform(const Transform& newTransform);
 
@@ -28,11 +32,11 @@ public:
 
 	C2_TYPE getType() const;
 
+	AABB getAABB() const;
 
 private:
 
-	virtual void scaleShape(const Vec2f& scaleV) = 0;
-
+	virtual void transformShape(const Transform& newTransform) = 0;
 
 protected:
 
@@ -41,6 +45,9 @@ protected:
 	const C2_TYPE type;
 
 	Transform transform;
+
+	AABB aabb;
+
 };
 
 
@@ -61,8 +68,7 @@ public:
 
 private:
 
-	virtual void scaleShape(const Vec2f& scaleV) override;
-
+	virtual void transformShape(const Transform& newTransform) override;
 
 private:
 
@@ -89,12 +95,16 @@ public:
 
 private:
 
-	virtual void scaleShape(const Vec2f& scaleV) override;
+	virtual void transformShape(const Transform& newTransform) override;
+
+	void updateAABB(const Vec2f& newVec);
 
 
 private:
 
 	c2Poly shape;
+
+	c2Poly staticShape;
 };
 
 

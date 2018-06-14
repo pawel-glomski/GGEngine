@@ -7,34 +7,65 @@ void CollisionSystem::init(epp::EntityManager & entityManager)
 
 void CollisionSystem::update(epp::EntityManager & entityManager, float dt)
 {
-	for (auto entity : entities)
+	updateGrid();
+	findCollisions();
+}
+
+void CollisionSystem::updateGrid()
+{
+	grid.clear();
+	for (auto it = entities.begin(); it != entities.end(); )
 	{
-		entity.get<ShapeComponent&>().getShape().setTransform(entity.get<TransformComponent&>().getTransform());
-		entity.get<CollisionComponent&>().clearCollisions();
+		if (it.getComponent<TransformComponent>().getPosition().y >= 1000.f)
+		{
+			it.getERef().die();
+			if (!it.isValid())
+				++it;
+		}
+		else
+		{
+			grid.insert(it);
+			++it;
+		}
+	}
+}
+
+void CollisionSystem::findCollisions()
+{
+	for (auto it = entities.begin(); it != entities.end(); ++it)
+	{
+		it.getComponent<ShapeComponent>().getShape().setTransform(it.getComponent<TransformComponent>().getTransform());
+		it.getComponent<CollisionComponent>().clearCollisions();
 	}
 
 	for (auto it = entities.begin(); it != entities.end(); ++it)
 	{
-		auto entity = *it;
-		auto& collisionC = entity.get<CollisionComponent&>();
-		auto& shapeC = entity.get<ShapeComponent&>();
+		auto& collisionC = it.getComponent<CollisionComponent>();
+		auto& shapeC = it.getComponent<ShapeComponent>();
 
-		auto it2 = it;
-		for (++it2; it2 != entities.end(); ++it2)
-		{
-			auto entity2 = *it2;
-			auto& collisionC2 = entity2.get<CollisionComponent&>();
-			auto& shapeC2 = entity2.get<ShapeComponent&>();
-
-			if (collisionC.canCollideWith(collisionC2))
+		for (auto vecPtr : grid.queryFor(it.getComponent<TransformComponent>().getPosition(), shapeC.getShape().getAABB()))
+			for (auto otherEntityIt : *vecPtr)
 			{
-				if (c2Manifold manifold = shapeC.getShape().collisionManifold(shapeC2.getShape()); manifold.count)
+				if (otherEntityIt == it)
+					continue;
+
+				auto& collisionC2 = otherEntityIt.getComponent<CollisionComponent>();
+				auto& shapeC2 = otherEntityIt.getComponent<ShapeComponent>();
+
+				if (collisionC.canCollideWith(collisionC2))
 				{
-					collisionC.addCollision({ it2.getERef(), manifold });
-					manifold.n = c2v(-manifold.n.x, -manifold.n.y);
-					collisionC2.addCollision({ it.getERef(), manifold });
+					if (c2Manifold manifold = shapeC.getShape().collisionManifold(shapeC2.getShape()); manifold.count)
+					{
+						collisionC.addCollision({ otherEntityIt.getERef(), manifold });
+						manifold.n = c2v(-manifold.n.x, -manifold.n.y);
+						collisionC2.addCollision({ it.getERef(), manifold });
+					}
 				}
 			}
-		}
 	}
+}
+
+const Grid& CollisionSystem::getGrid() const
+{
+	return grid;
 }

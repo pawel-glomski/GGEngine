@@ -23,6 +23,7 @@
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="DisplayComponent.cpp" />
     <ClCompile Include="DisplaySystem.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="InteractionSystem.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Clock.cpp" />
@@ -48,6 +49,7 @@
     <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="DisplayComponent.h" />
     <ClInclude Include="DisplaySystem.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="InteractionSystem.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Clock.h" />

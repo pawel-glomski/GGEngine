@@ -10,42 +10,25 @@ ShapeBase::ShapeBase(void * shape, C2_TYPE type) : shape(shape), type(type)
 c2Manifold ShapeBase::collisionManifold(const ShapeBase & otherShape) const
 {
 	c2Manifold manifold;
-	c2x thisC2transform = c2Transform(asVec<c2v>(transform.position), transform.rotation);
-	c2x otherC2transform = c2Transform(asVec<c2v>(otherShape.transform.position), otherShape.transform.rotation);
-
-	c2Collide(shape, &thisC2transform, type, otherShape.shape, &otherC2transform, otherShape.type, &manifold);
-
+	c2Collide(shape, NULL, type, otherShape.shape, NULL, otherShape.type, &manifold);
 	return manifold;
 }
 
 bool ShapeBase::isColliding(const ShapeBase & otherShape) const
 {
-	c2x thisC2transform = c2Transform(asVec<c2v>(transform.position), transform.rotation);
-	c2x otherC2transform = c2Transform(asVec<c2v>(otherShape.transform.position), otherShape.transform.rotation);
-	return c2Collided(shape, &thisC2transform, type, otherShape.shape, &otherC2transform, otherShape.type);
+	return c2Collided(shape, NULL, type, otherShape.shape, NULL, otherShape.type);
 }
 
 bool ShapeBase::isColliding(void * otherShape, C2_TYPE type, c2x * transform) const
 {
-	c2x thisC2transform = c2Transform(asVec<c2v>(this->transform.position), this->transform.rotation);
-	return c2Collided(shape, &thisC2transform, this->type, otherShape, transform, type);
+	return c2Collided(shape, NULL, this->type, otherShape, transform, type);
 }
 
 void ShapeBase::setTransform(const Transform& newTransform)
 {
 	if (transform != newTransform)
 	{
-		if (type == C2_TYPE::C2_CIRCLE)
-		{
-			ASSERT((newTransform.scale.x == newTransform.scale.y), "Circle cannot be scaled differently in both dimentions. It is scaled only by value of x");
-			static_cast<c2Circle*>(shape)->p =  asVec<c2v>(newTransform.position);
-
-		}
-		if (transform.scale != newTransform.scale)
-		{
-			Vec2f scale = VectorScaledByVector(newTransform.scale, 1.f / transform.scale);
-			scaleShape(scale);
-		}
+		transformShape(newTransform);
 		transform = newTransform;
 	}
 }
@@ -60,6 +43,10 @@ C2_TYPE ShapeBase::getType() const
 	return type;
 }
 
+AABB ShapeBase::getAABB() const
+{
+	return aabb;
+}
 
 
 
@@ -70,6 +57,8 @@ CircleShape::CircleShape() : ShapeBase(&shape, C2_TYPE::C2_CIRCLE)
 void CircleShape::setRadius(float_t newRadius)
 {
 	shape.r = newRadius;
+	aabb.min = Vec2f(-newRadius, -newRadius);
+	aabb.max = Vec2f(newRadius, newRadius);
 }
 
 const c2Circle & CircleShape::getDetails() const
@@ -77,9 +66,10 @@ const c2Circle & CircleShape::getDetails() const
 	return shape;
 }
 
-void CircleShape::scaleShape(const Vec2f & scaleV)
+void CircleShape::transformShape(const Transform& newTransform)
 {
-	shape.r *= scaleV.x;
+	shape.p = asVec<c2v>(newTransform.position);
+	setRadius(shape.r * newTransform.scale.x / transform.scale.x);
 }
 
 
@@ -90,52 +80,78 @@ PolygonShape::PolygonShape() : ShapeBase(&shape, C2_TYPE::C2_POLY)
 
 void PolygonShape::setAsBox(const Vec2f & size)
 {
+	transform.rotation = 0.f;
+	transform.scale = Vec2f::OneVector;
+
 	Vec2f vertices[4];
 
-	Vec2f halfSize(size / 2.f);
+	Vec2f halfSize(size * 0.5f);
 
 	vertices[0] = -halfSize;
 	vertices[1] = { halfSize.x, -halfSize.y };
 	vertices[2] = halfSize;
 	vertices[3] = { -halfSize.x, halfSize.y };
 
-
 	setVertices(vertices, 4);
 }
 
 void PolygonShape::setVertices(const Vec2f* vertices, int count)
 {
+	if (!count)
+		return;
+
 	ASSERT((count <= C2_MAX_POLYGON_VERTS), "Vertices count cannot be greater b2_maxPolygonVertices!");
 	ASSERT((sizeof(Vec2f) == sizeof(c2v)), "Different sizes of vector types!");
 
 	count = minValue(count, C2_MAX_POLYGON_VERTS);
-
-	shape.count = int(count);
-	memcpy(shape.verts, vertices, count * sizeof(Vec2f));
+	staticShape.count = int(count);
+	memcpy(staticShape.verts, vertices, count * sizeof(Vec2f));
 	for (int i = 0; i < count; i++)
 	{
 		Vec2f vec = (vertices[(i + 1) % count] - vertices[i]);
 		vec.normalize();
-		shape.norms[i] = { vec.y, -vec.x };
+		staticShape.norms[i] = { vec.y, -vec.x };
 	}
+
+	transformShape(transform);
 }
 
 const c2Poly& PolygonShape::getDetails() const
 {
-	return shape;
+	return staticShape;
 }
 
-void PolygonShape::scaleShape(const Vec2f & scaleV)
+void PolygonShape::transformShape(const Transform& newTransform)
 {
-	for (int i = 0; i < shape.count; i++)
+	aabb = AABB();
+	Vec2f pos;
+	Matrix rotMatrix = asRotationMatrix(newTransform.rotation);
+	for (int i = 0; i < staticShape.count; i++)
 	{
-		shape.verts[i].x *= scaleV.x;
-		shape.verts[i].y *= scaleV.y;
+		pos = asVec<Vec2f>(staticShape.verts[i]);
+		pos = pos * rotMatrix;
+		updateAABB(pos);
+		scaleVectorByVector(pos, newTransform.scale);
+		pos += newTransform.position;
+		shape.verts[i] = asVec<c2v>(pos);
+		shape.norms[i] = asVec<c2v>(asVec<Vec2f>(staticShape.norms[i]) * rotMatrix);
 	}
+	shape.count = staticShape.count;
+
 }
 
+void PolygonShape::updateAABB(const Vec2f & newVec)
+{
+	if (aabb.min.x > newVec.x)
+		aabb.min.x = newVec.x;
+	else if (aabb.max.x < newVec.x)
+		aabb.max.x = newVec.x;
 
-
+	if (aabb.min.y > newVec.y)
+		aabb.min.y = newVec.y;
+	else if (aabb.max.y < newVec.y)
+		aabb.max.y = newVec.y;
+}
 
 ShapeComponent::ShapeComponent()
 {

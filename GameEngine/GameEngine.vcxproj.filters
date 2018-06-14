@@ -124,6 +124,7 @@
     <ClInclude Include="InteractionSystem.h">
       <Filter>Engine\Modules\World\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Grid.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="InteractionSystem.cpp">
       <Filter>Engine\Modules\World\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Grid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Vec2.inl">

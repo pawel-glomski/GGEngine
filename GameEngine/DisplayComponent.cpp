@@ -42,7 +42,7 @@ bool CircleDisplayShape::copyConfiguration(const ShapeBase & shapeToCpy)
 
 void CircleDisplayShape::setRadius(float radius)
 {
-	radius = radius;
+	this->radius = radius;
 }
 
 

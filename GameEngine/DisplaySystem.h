@@ -7,11 +7,13 @@
 #include "DisplayComponent.h"
 #include "CollisionComponent.h"
 
+#include "CollisionSystem.h"
+
 class DisplaySystem : public epp::System
 {
 public:
 
-	DisplaySystem(DisplayModule& displayModule);
+	DisplaySystem(DisplayModule& displayModule, const CollisionSystem& colSys);
 
 	virtual void init(epp::EntityManager& entityManager) override;
 
@@ -19,7 +21,19 @@ public:
 
 private:
 
+	void drawEntities();
+
+	void drawCollisions();
+
+	void drawCollisionGrid();
+
+private:
+
+	epp::CGroup<DisplayComponent, TransformComponent, ShapeComponent> entities;
+
+	epp::CGroup<DisplayComponent, TransformComponent, ShapeComponent, CollisionComponent> entitiesWithCollisions;
+
 	DisplayModule& displayModule;
 
-	epp::CGroup<DisplayComponent, TransformComponent, ShapeComponent, CollisionComponent> entities;
+	const CollisionSystem& colSys;
 };
