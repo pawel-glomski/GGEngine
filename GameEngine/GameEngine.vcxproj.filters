@@ -28,7 +28,6 @@
     <ClInclude Include="Engine\Utilities\Math\Spline.h" />
     <ClInclude Include="Engine\Utilities\Math\Transform.h" />
     <ClInclude Include="Engine\Utilities\Math\Vec2.h" />
-    <ClInclude Include="Engine\Utilities\ThirdParty\tinyc2.h" />
     <ClInclude Include="Engine\Utilities\Time\Clock.h" />
     <ClInclude Include="Engine\Utilities\Settings.h" />
     <ClInclude Include="Engine\Engine.h" />
