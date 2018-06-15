@@ -7,16 +7,6 @@
     <ClCompile Include="Engine\Modules\Input\InputModule.cpp" />
     <ClCompile Include="Engine\Modules\Input\RawKey.cpp" />
     <ClCompile Include="Engine\Modules\Window\WindowModule.cpp" />
-    <ClCompile Include="Engine\Modules\World\Components\CollisionComponent.cpp" />
-    <ClCompile Include="Engine\Modules\World\Components\DisplayComponent.cpp" />
-    <ClCompile Include="Engine\Modules\World\Components\PhysicsComponent.cpp" />
-    <ClCompile Include="Engine\Modules\World\Components\ShapeComponent.cpp" />
-    <ClCompile Include="Engine\Modules\World\Components\TransformComponent.cpp" />
-    <ClCompile Include="Engine\Modules\World\Systems\CollisionSystem\CollisionSystem.cpp" />
-    <ClCompile Include="Engine\Modules\World\Systems\CollisionSystem\Grid.cpp" />
-    <ClCompile Include="Engine\Modules\World\Systems\DisplaySystem.cpp" />
-    <ClCompile Include="Engine\Modules\World\Systems\InteractionSystem.cpp" />
-    <ClCompile Include="Engine\Modules\World\Systems\PhysicsSystem.cpp" />
     <ClCompile Include="Engine\Modules\World\WorldModule.cpp" />
     <ClCompile Include="Engine\Utilities\Math\Matrix.cpp" />
     <ClCompile Include="Engine\Utilities\Math\Spline.cpp" />
@@ -26,23 +16,11 @@
     <ClCompile Include="Game.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Modules\Controller\ControllerModule.h" />
     <ClInclude Include="Engine\Modules\Display\DisplayLayer.h" />
     <ClInclude Include="Engine\Modules\Display\DisplayModule.h" />
     <ClInclude Include="Engine\Modules\Input\InputModule.h" />
     <ClInclude Include="Engine\Modules\Input\RawKey.h" />
     <ClInclude Include="Engine\Modules\Window\WindowModule.h" />
-    <ClInclude Include="Engine\Modules\World\Components\CollisionComponent.h" />
-    <ClInclude Include="Engine\Modules\World\Components\ControllerComponent.h" />
-    <ClInclude Include="Engine\Modules\World\Components\DisplayComponent.h" />
-    <ClInclude Include="Engine\Modules\World\Components\PhysicsComponent.h" />
-    <ClInclude Include="Engine\Modules\World\Components\ShapeComponent.h" />
-    <ClInclude Include="Engine\Modules\World\Components\TransformComponent.h" />
-    <ClInclude Include="Engine\Modules\World\Systems\CollisionSystem\CollisionSystem.h" />
-    <ClInclude Include="Engine\Modules\World\Systems\CollisionSystem\Grid.h" />
-    <ClInclude Include="Engine\Modules\World\Systems\DisplaySystem.h" />
-    <ClInclude Include="Engine\Modules\World\Systems\InteractionSystem.h" />
-    <ClInclude Include="Engine\Modules\World\Systems\PhysicsSystem.h" />
     <ClInclude Include="Engine\Modules\World\WorldModule.h" />
     <ClInclude Include="Engine\Modules\Module.h" />
     <ClInclude Include="Engine\Utilities\Math\MathUtilities.h" />

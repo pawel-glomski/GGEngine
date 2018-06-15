@@ -3,7 +3,6 @@
 
 void ControllerModule::update()
 {
-	response();
 	updateControllerState();
 	updateCursorState();
 }
@@ -35,31 +34,6 @@ void ControllerModule::updateControllerState()
 		if (auto found = bindings.find(key); found != bindings.end())
 			states[found->second] = key.state;
 }
-
-void ControllerModule::response()
-{
-	{
-		sf::View view = getDependency<WindowModule>().getWin().getView();
-		float ratio = getDependency<WindowModule>().getViewToWindowRatio().length();
-
-		if (getActionKeyState(ActionKey::MoveUp) != KeyState::Released)
-			view.setCenter(view.getCenter() + sf::Vector2f(0.f, -0.1f) * Settings<WindowModule>::WorldToViewRatio * ratio);
-		if (getActionKeyState(ActionKey::MoveDown) != KeyState::Released)
-			view.setCenter(view.getCenter() + sf::Vector2f(0, 0.1f) * Settings<WindowModule>::WorldToViewRatio * ratio);
-		if (getActionKeyState(ActionKey::MoveLeft) != KeyState::Released)
-			view.setCenter(view.getCenter() + sf::Vector2f(-0.1f, 0.f) * Settings<WindowModule>::WorldToViewRatio * ratio);
-		if (getActionKeyState(ActionKey::MoveRight) != KeyState::Released)
-			view.setCenter(view.getCenter() + sf::Vector2f(0.1f, 0.f) * Settings<WindowModule>::WorldToViewRatio * ratio);
-
-		if (getActionKeyState(ActionKey::ZoomIn) != KeyState::Released)
-			view.setSize(view.getSize() / 1.01f);
-		if (getActionKeyState(ActionKey::ZoomOut) != KeyState::Released)
-			view.setSize(view.getSize() * 1.01f);
-
-		getDependency<WindowModule>().getWin().setView(view);
-	}
-}
-
 
 const ControllerModule::RawToActionMap & ControllerModule::getBindings() const
 {
