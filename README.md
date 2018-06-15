@@ -2,7 +2,7 @@ Example use of this framework
 ------------------------
 As an example I have made 2D rigid body physics simulation:
 
-https://youtu.be/lZbEP2iOVFw
+https://youtu.be/KKN77R6QsKM
 
 All the physics math equations are based on [this tutorial]( https://gamedevelopment.tutsplus.com/series/how-to-create-a-custom-physics-engine--gamedev-12715)
 
