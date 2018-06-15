@@ -1,12 +1,11 @@
 #pragma once
-
 #include "Engine.h"
 
-#include "WindowModule.h"
-#include "InputModule.h"
-#include "ControllerModule.h"
-#include "WorldModule.h"
-#include "DisplayModule.h"
+#include "Modules/Window/WindowModule.h"
+#include "Modules/Input/InputModule.h"
+#include "Modules/Controller/ControllerModule.h"
+#include "Modules/World/WorldModule.h"
+#include "Modules/Display/DisplayModule.h"
 
 
 class Game

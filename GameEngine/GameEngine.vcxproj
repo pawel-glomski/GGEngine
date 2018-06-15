@@ -19,63 +19,63 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CollisionComponent.cpp" />
-    <ClCompile Include="CollisionSystem.cpp" />
-    <ClCompile Include="DisplayComponent.cpp" />
-    <ClCompile Include="DisplaySystem.cpp" />
-    <ClCompile Include="Grid.cpp" />
-    <ClCompile Include="InteractionSystem.cpp" />
+    <ClCompile Include="Engine\Modules\Controller\ControllerModule.cpp" />
+    <ClCompile Include="Engine\Modules\Display\DisplayLayer.cpp" />
+    <ClCompile Include="Engine\Modules\Display\DisplayModule.cpp" />
+    <ClCompile Include="Engine\Modules\Input\InputModule.cpp" />
+    <ClCompile Include="Engine\Modules\Input\RawKey.cpp" />
+    <ClCompile Include="Engine\Modules\Window\WindowModule.cpp" />
+    <ClCompile Include="Engine\Modules\World\Components\CollisionComponent.cpp" />
+    <ClCompile Include="Engine\Modules\World\Components\DisplayComponent.cpp" />
+    <ClCompile Include="Engine\Modules\World\Components\PhysicsComponent.cpp" />
+    <ClCompile Include="Engine\Modules\World\Components\ShapeComponent.cpp" />
+    <ClCompile Include="Engine\Modules\World\Components\TransformComponent.cpp" />
+    <ClCompile Include="Engine\Modules\World\Systems\CollisionSystem\CollisionSystem.cpp" />
+    <ClCompile Include="Engine\Modules\World\Systems\CollisionSystem\Grid.cpp" />
+    <ClCompile Include="Engine\Modules\World\Systems\DisplaySystem.cpp" />
+    <ClCompile Include="Engine\Modules\World\Systems\InteractionSystem.cpp" />
+    <ClCompile Include="Engine\Modules\World\Systems\PhysicsSystem.cpp" />
+    <ClCompile Include="Engine\Modules\World\WorldModule.cpp" />
+    <ClCompile Include="Engine\Utilities\Math\Matrix.cpp" />
+    <ClCompile Include="Engine\Utilities\Math\Spline.cpp" />
+    <ClCompile Include="Engine\Utilities\Math\Transform.cpp" />
+    <ClCompile Include="Engine\Utilities\Time\Clock.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Clock.cpp" />
-    <ClCompile Include="ControllerModule.cpp" />
-    <ClCompile Include="DisplayLayer.cpp" />
-    <ClCompile Include="DisplayModule.cpp" />
-    <ClCompile Include="InputModule.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Matrix.cpp" />
-    <ClCompile Include="PhysicsComponent.cpp" />
-    <ClCompile Include="PhysicsSystem.cpp" />
-    <ClCompile Include="RawKey.cpp" />
-    <ClCompile Include="ShapeComponent.cpp" />
-    <ClCompile Include="Spline.cpp" />
-    <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="TransformComponent.cpp" />
-    <ClCompile Include="WindowModule.cpp" />
-    <ClCompile Include="WorldModule.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CollisionComponent.h" />
-    <ClInclude Include="CollisionSystem.h" />
-    <ClInclude Include="ControllerComponent.h" />
-    <ClInclude Include="DisplayComponent.h" />
-    <ClInclude Include="DisplaySystem.h" />
-    <ClInclude Include="Grid.h" />
-    <ClInclude Include="InteractionSystem.h" />
+    <ClInclude Include="Engine\Engine.h" />
+    <ClInclude Include="Engine\Modules\Controller\ControllerModule.h" />
+    <ClInclude Include="Engine\Modules\Display\DisplayLayer.h" />
+    <ClInclude Include="Engine\Modules\Display\DisplayModule.h" />
+    <ClInclude Include="Engine\Modules\Input\InputModule.h" />
+    <ClInclude Include="Engine\Modules\Input\RawKey.h" />
+    <ClInclude Include="Engine\Modules\Module.h" />
+    <ClInclude Include="Engine\Modules\Window\WindowModule.h" />
+    <ClInclude Include="Engine\Modules\World\Components\CollisionComponent.h" />
+    <ClInclude Include="Engine\Modules\World\Components\ControllerComponent.h" />
+    <ClInclude Include="Engine\Modules\World\Components\DisplayComponent.h" />
+    <ClInclude Include="Engine\Modules\World\Components\PhysicsComponent.h" />
+    <ClInclude Include="Engine\Modules\World\Components\ShapeComponent.h" />
+    <ClInclude Include="Engine\Modules\World\Components\TransformComponent.h" />
+    <ClInclude Include="Engine\Modules\World\Systems\CollisionSystem\CollisionSystem.h" />
+    <ClInclude Include="Engine\Modules\World\Systems\CollisionSystem\Grid.h" />
+    <ClInclude Include="Engine\Modules\World\Systems\DisplaySystem.h" />
+    <ClInclude Include="Engine\Modules\World\Systems\InteractionSystem.h" />
+    <ClInclude Include="Engine\Modules\World\Systems\PhysicsSystem.h" />
+    <ClInclude Include="Engine\Modules\World\WorldModule.h" />
+    <ClInclude Include="Engine\Utilities\Math\MathUtilities.h" />
+    <ClInclude Include="Engine\Utilities\Math\Matrix.h" />
+    <ClInclude Include="Engine\Utilities\Math\Spline.h" />
+    <ClInclude Include="Engine\Utilities\Math\Transform.h" />
+    <ClInclude Include="Engine\Utilities\Math\Vec2.h" />
+    <ClInclude Include="Engine\Utilities\Settings.h" />
+    <ClInclude Include="Engine\Utilities\ThirdParty\tinyc2.h" />
+    <ClInclude Include="Engine\Utilities\Time\Clock.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Clock.h" />
-    <ClInclude Include="PhysicsComponent.h" />
-    <ClInclude Include="PhysicsSystem.h" />
-    <ClInclude Include="RawKey.h" />
-    <ClInclude Include="Settings.h" />
-    <ClInclude Include="ControllerModule.h" />
-    <ClInclude Include="DisplayLayer.h" />
-    <ClInclude Include="DisplayModule.h" />
-    <ClInclude Include="InputModule.h" />
-    <ClInclude Include="MathUtilities.h" />
-    <ClInclude Include="Matrix.h" />
-    <ClInclude Include="Module.h" />
-    <ClInclude Include="Engine.h" />
-    <ClInclude Include="ShapeComponent.h" />
-    <ClInclude Include="Spline.h" />
-    <ClInclude Include="tinyc2.h" />
-    <ClInclude Include="Transform.h" />
-    <ClInclude Include="TransformComponent.h" />
-    <ClInclude Include="Vec2.h" />
-    <ClInclude Include="WindowModule.h" />
-    <ClInclude Include="WorldModule.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Vec2.inl" />
+    <None Include="Engine\Utilities\Math\Vec2.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -166,7 +166,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;SFML_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>A:\Biblioteki\includes64;A:\AProjekty\ECSpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>A:\Biblioteki\includes64;A:\AProjekty\ECSpp\include;$(SolutionDir)$(ProjectName)\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -206,7 +206,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;SFML_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>A:\Biblioteki\includes64;A:\AProjekty\ECSpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>A:\Biblioteki\includes64;A:\AProjekty\ECSpp\include;$(SolutionDir)$(ProjectName)\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
