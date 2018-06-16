@@ -53,7 +53,6 @@
     <ClInclude Include="Engine\Modules\Module.h" />
     <ClInclude Include="Engine\Modules\Window\WindowModule.h" />
     <ClInclude Include="Engine\Modules\World\Components\CollisionComponent.h" />
-    <ClInclude Include="Engine\Modules\World\Components\ControllerComponent.h" />
     <ClInclude Include="Engine\Modules\World\Components\DisplayComponent.h" />
     <ClInclude Include="Engine\Modules\World\Components\PhysicsComponent.h" />
     <ClInclude Include="Engine\Modules\World\Components\ShapeComponent.h" />
