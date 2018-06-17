@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <iostream>
 #include <ECSpp/Utility/DebugAssert.h>
+#include <algorithm>
 
 template<class T>
 struct Vec2
@@ -18,6 +19,8 @@ struct Vec2
 
 
 	Vec2<T>& clamp(const Vec2<T> minValues, const Vec2<T> maxValues);
+
+	Vec2<T>& clamp(float length);
 
 
 	T length() const;

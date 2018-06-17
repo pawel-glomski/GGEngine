@@ -48,6 +48,15 @@ inline Vec2<T>& Vec2<T>::clamp(const Vec2<T> minValues, const Vec2<T> maxValues)
 	return *this;
 }
 
+template<class T>
+inline Vec2<T>& Vec2<T>::clamp(float maxLength)
+{
+	float len = length();
+	if (len > maxLength)
+		*this *= maxLength / len;
+	return *this;
+}
+
 ////////////////////////////////////////////////////////// operators //////////////////////////////////////////////////////////
 
 template<class T>
