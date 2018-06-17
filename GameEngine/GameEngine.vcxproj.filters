@@ -14,6 +14,7 @@
     <ClCompile Include="Engine\Utilities\Time\Clock.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Engine\Modules\World\Systems\CollisionSystem\Collision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Modules\Display\DisplayLayer.h" />
@@ -32,6 +33,7 @@
     <ClInclude Include="Engine\Utilities\Settings.h" />
     <ClInclude Include="Engine\Engine.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Engine\Modules\World\Systems\CollisionSystem\Collision.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Utilities\Math\Vec2.inl" />
