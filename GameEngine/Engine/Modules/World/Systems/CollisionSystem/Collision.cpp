@@ -3,12 +3,13 @@
 
 struct PenetrationData
 {
+	enum ShapeIdx {A, B};
+
 	static const float NonCollidingDepth;
 
 	float depth = NonCollidingDepth;
-	size_t vertIdxA = 0;
-	size_t vertIdxB = 0;
-	Vec2f normal;
+	ShapeIdx shapeIdx = ShapeIdx::A;
+	size_t normalIdx = 0;;
 };
 
 const float PenetrationData::NonCollidingDepth = std::numeric_limits<float>().max();
@@ -58,65 +59,64 @@ PolygonShape PolygonShape::transformed(const Transform& t) const
 ShapeProjection PolygonShape::projectedOnNormal(const Vec2f& normal) const
 {
 	ShapeProjection result;
-	for (size_t i = 0; i < vertCount; ++i)
-	{
-		float projMagnitude = dotProduct(normal, vertices[i]);
-		if (result.left.magnitude >= projMagnitude)
-		{
-			result.left.magnitude = projMagnitude;
-			if(i > result.left.index)
-				result.left.index = i;
-		}
-		if (result.right.magnitude <= projMagnitude)
-		{
-			result.right.magnitude = projMagnitude;
-			if (i > result.left.index)
-				result.left.index = i;
-		}
-	}
+	result.left = dotProduct(normal, vertices[0]);
+	result.right = result.left;
+
+	for (size_t i = 1; i < vertCount; ++i)
+		if (float projMagnitude = dotProduct(normal, vertices[i]); result.left > projMagnitude)
+			result.left = projMagnitude;
+		else if (result.right < projMagnitude)
+			result.right = projMagnitude;
 	return result;
 }
 
-static PenetrationData computeMinPenUsingShapeA(const PolygonShape& shapeA, const PolygonShape& shapeB)
+static PenetrationData computePenetrationOnShapeA(const PolygonShape& shapeA, const PolygonShape& shapeB)
 {
 	PenetrationData result;
 	for (size_t i = 0; i < shapeA.vertCount; ++i)
 	{
 		ShapeProjection proj[2] = { shapeA.projectedOnNormal(shapeA.normals[i]), shapeB.projectedOnNormal(shapeA.normals[i]) };
-		uint8_t rightMostProjIdx = proj[0].right.magnitude > proj[1].right.magnitude ? 0 : 1;
-
-		float penDepth = proj[!rightMostProjIdx].right.magnitude - proj[rightMostProjIdx].left.magnitude;
-		if (penDepth < 0)
+		uint8_t rightMostProjIdx = proj[0].right > proj[1].right ? 0 : 1;
+		float depth = proj[!rightMostProjIdx].right - proj[rightMostProjIdx].left;
+		if (depth < 0)
 			return PenetrationData();
 
-		if (result.depth > penDepth)
+		if (result.depth == depth && rightMostProjIdx != 0)
+			result.normalIdx = i;
+		else if (result.depth > depth)
 		{
-			result.depth = penDepth;
-			if (rightMostProjIdx == 0)
-			{
-				result.vertIdxA = proj[0].left.index;
-				result.vertIdxB = proj[1].right.index;
-			}
-			else
-			{
-				result.vertIdxA = proj[0].right.index;
-				result.vertIdxB = proj[1].left.index;
-			}
-			result.normal = shapeA.normals[i];
+			result.depth = depth;
+			result.normalIdx = i;
 		}
 	}
+
 	return result;
 }
 
+static PenetrationData computePenetration(const PolygonShape& shapeA, const PolygonShape& shapeB)
+{
+	PenetrationData peneA = computePenetrationOnShapeA(shapeA, shapeB);
+	if (peneA.depth != PenetrationData::NonCollidingDepth)
+	{
+		PenetrationData peneB = computePenetrationOnShapeA(shapeB, shapeA);
+		if (peneB.depth == PenetrationData::NonCollidingDepth)
+			return PenetrationData();
 
+		if (peneA.depth > peneB.depth)
+		{
+			peneB.shapeIdx = PenetrationData::ShapeIdx::B;
+			return peneB;
+		}
+	}
+	return peneA;
+}
 
 bool PolygonShape::isColliding(const Transform & thisTransform, const PolygonShape & other, const Transform & otherTransform) const
 {
-	return(computeMinPenUsingShapeA(this->transformed(thisTransform), other.transformed(otherTransform)).depth != PenetrationData::NonCollidingDepth &&
-		computeMinPenUsingShapeA(other.transformed(otherTransform), this->transformed(thisTransform)).depth != PenetrationData::NonCollidingDepth);
+	return(computePenetration(this->transformed(thisTransform), other.transformed(otherTransform)).depth != PenetrationData::NonCollidingDepth);
 }
 
-Vec2f computeContactPoint(const Vec2f& vertA1, const Vec2f& vertA2, const Vec2f& vertB1, const Vec2f& vertB2)
+std::pair<bool, Vec2f> edgesCommonPoint(const Vec2f& vertA1, const Vec2f& vertA2, const Vec2f& vertB1, const Vec2f& vertB2)
 {
 	Vec2f A12 = (vertA2 - vertA1);
 	Vec2f B12 = (vertB2 - vertB1);
@@ -124,55 +124,45 @@ Vec2f computeContactPoint(const Vec2f& vertA1, const Vec2f& vertA2, const Vec2f&
 	if (dirCross)
 	{
 		float t = crossProduct((vertB1 - vertA1), B12) / dirCross;
-		float u = crossProduct((vertB1 - vertA1), A12) / dirCross; 
-
-		//if (u < 0 || u > 1)
-			return vertB1 + B12 * clamp(u, 0.f, 1.f);
-		//return vertA1 + A12 * clamp(t, 0.f, 1.f);
+		float u = crossProduct((vertB1 - vertA1), A12) / dirCross;
+		if (t >= 0 && t <= 1 && u >= 0 && u <= 1)
+			return { true, vertA1 + A12 * t };
 	}
-	B12.normalize();
-	return dotProduct(vertA2, B12) * B12;
+	return { false, Vec2f::ZeroVector };
 }
 
 
 Collision PolygonShape::collide(const Transform & thisTransform, const PolygonShape & other, const Transform & otherTransform) const
 {
+	PolygonShape shape[2] = { this->transformed(thisTransform) , other.transformed(otherTransform) };
+	PenetrationData pene = computePenetration(shape[0], shape[1]);
 	Collision result;
-	PolygonShape shapeA = this->transformed(thisTransform);
-	PolygonShape shapeB = other.transformed(otherTransform);
-
-	PenetrationData minPenA = computeMinPenUsingShapeA(shapeA, shapeB);
-	PenetrationData minPenB = computeMinPenUsingShapeA(shapeB, shapeA);
-
-	if (minPenA.depth < minPenB.depth)
+	if (pene.depth != PenetrationData::NonCollidingDepth)
 	{
-		result.normal = minPenA.normal;
-		result.depth = minPenA.depth;
-		std::cout << "here";
-		result.contact_points[0] = computeContactPoint(	shapeA.vertices[minPenB.vertIdxA], shapeA.vertices[(minPenB.vertIdxA + 1) % shapeA.vertCount], 
-														shapeB.vertices[minPenB.vertIdxB], shapeB.vertices[(minPenB.vertIdxB + 1) % shapeB.vertCount]);
+		PolygonShape& contactShape = shape[pene.shapeIdx];
+		PolygonShape& otherShape = shape[!pene.shapeIdx];
+		result.count = 2;
+		result.depth = pene.depth;
+		result.normal = contactShape.normals[pene.normalIdx];
+		result.contact_points[0] = contactShape.vertices[pene.normalIdx];
+		result.contact_points[1] = contactShape.vertices[(pene.normalIdx + 1) % contactShape.vertCount];
 
-		result.contact_points[0] = computeContactPoint(	shapeA.vertices[minPenB.vertIdxA], shapeA.vertices[(minPenB.vertIdxA + 1) % shapeA.vertCount], 
-														shapeB.vertices[minPenB.vertIdxB], shapeB.vertices[(minPenB.vertIdxB + shapeB.vertCount - 1) % shapeB.vertCount]);
+		for (size_t i = 0; i < otherShape.vertCount; ++i)
+		{
+			auto point = edgesCommonPoint(result.contact_points[0], result.contact_points[1], otherShape.vertices[i], otherShape.vertices[(i + 1) % otherShape.vertCount]);
+			if (point.first)
+			{
+				Vec2f commonToClipPoint = result.contact_points[0] - point.second;
+				if (dotProduct(commonToClipPoint, otherShape.normals[i]) > 0)
+				{
+					result.contact_points[0] = point.second;
+					continue;
+				}
+				commonToClipPoint = result.contact_points[1] - point.second;
+				if (dotProduct(commonToClipPoint, otherShape.normals[i]) > 0)
+					result.contact_points[1] = point.second;
+			}
+		}
 	}
-	else
-	{
-		size_t holder = minPenB.vertIdxA;
-		minPenB.vertIdxA = minPenB.vertIdxB;
-		minPenB.vertIdxB = holder;
-		result.normal = -minPenB.normal;
-		result.depth = minPenB.depth;
-
-
-		std::cout << minPenB.vertIdxB << " " << (minPenB.vertIdxB + 1) % shapeB.vertCount << std::endl;
-
-		result.contact_points[0] = computeContactPoint(	shapeB.vertices[minPenB.vertIdxB], shapeB.vertices[(minPenB.vertIdxB + 1) % shapeB.vertCount],
-														shapeA.vertices[minPenB.vertIdxA], shapeA.vertices[(minPenB.vertIdxA + 1) % shapeA.vertCount]);
-
-		result.contact_points[1] = computeContactPoint(	shapeB.vertices[minPenB.vertIdxB], shapeB.vertices[(minPenB.vertIdxB + 1) % shapeB.vertCount],
-														shapeA.vertices[minPenB.vertIdxA], shapeA.vertices[(minPenB.vertIdxA + shapeA.vertCount - 1) % shapeA.vertCount]);
-	}
-
-	result.count = 2;
 	return result;
 }

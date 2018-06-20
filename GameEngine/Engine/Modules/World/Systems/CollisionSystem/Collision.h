@@ -18,20 +18,11 @@ struct Collision
 	size_t count = 0;
 };
 
-
-struct VertexProjection
-{
-	VertexProjection() = default;
-	VertexProjection(float magnitude) : magnitude(magnitude) {}
-	size_t index = 0;
-	float magnitude = 0.f;
-};
-
 struct ShapeProjection
 {
 	ShapeProjection() : left(std::numeric_limits<float>().max()), right(-std::numeric_limits<float>().max()) {}
-	VertexProjection left;
-	VertexProjection right;
+	float left;
+	float right;
 };
 
 struct PolygonShape

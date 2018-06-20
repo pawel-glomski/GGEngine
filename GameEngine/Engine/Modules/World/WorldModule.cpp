@@ -41,14 +41,6 @@ private:
 
 void WorldModule::startUp()
 {
-	// x0*k + x1 + y0*k + y1 == x2*k + x3 + y2*k + y3
-	// x0*k + y0*k -x2*k - y2*k == -x1 - y1 + x3 + y3
-	// k(x0 - x2, y0 - y2) == (x3, y3) - (x1, y1) 
-	// k = (x3 - x1, y3 - y1) / (x0 - x2, y0 - y2)
-	// k = (x3 - x1 / x0 - x2, y3 - y1 / y0 - y2)
-	// p = (x0, y0) * k + (x1, y1)
-
-
 }
 
 void WorldModule::update()
@@ -71,26 +63,23 @@ void WorldModule::update()
 		shapesDisplays.resize(2);
 		shapesDisplays[0].copyConfiguration(polygons[0]);
 		shapesDisplays[1].copyConfiguration(polygons[1]);
-		dynamicShapeTransform.rotation = PI_F / 6.f;
+		//dynamicShapeTransform.rotation = PI_F / 6.f;
 	}
 	else
 	{
-		//dynamicShapeTransform.rotation += 0.01f;
+		dynamicShapeTransform.rotation += 0.01f;
 
 		dynamicShapeTransform.position = getDependency<ControllerModule>().getCursorWorldPosition();
 		const PolygonShape shape = polygons[0].transformed(dynamicShapeTransform);
-		if (polygons[0].isColliding(dynamicShapeTransform, polygons[1], Transform()))
+
+		auto collison = polygons[0].collide(dynamicShapeTransform, polygons[1], Transform());
+		if (collison.count)
 		{
-			//std::cout << "collision" << std::endl;
-			auto collison = polygons[0].collide(dynamicShapeTransform, polygons[1], Transform());
 			contactPoints[0].setPosition(asVec<sf::Vector2f>(collison.contact_points[0]));
 			contactPoints[1].setPosition(asVec<sf::Vector2f>(collison.contact_points[1]));
-			//std::cout << collison.contact_points[0] << collison.contact_points[1] << '\n';
 			getDependency<DisplayModule>().drawWorldObject(contactPoints[0], Transform(), DisplayLayer::Level::Bottom);
 			getDependency<DisplayModule>().drawWorldObject(contactPoints[1], Transform(), DisplayLayer::Level::Bottom);
 		}
-		else
-			std::cout << '\n';
 
 
 		//else
