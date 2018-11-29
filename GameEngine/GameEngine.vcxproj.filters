@@ -1,39 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Engine\Modules\Controller\ControllerModule.cpp" />
-    <ClCompile Include="Engine\Modules\Display\DisplayLayer.cpp" />
-    <ClCompile Include="Engine\Modules\Display\DisplayModule.cpp" />
-    <ClCompile Include="Engine\Modules\Input\InputModule.cpp" />
-    <ClCompile Include="Engine\Modules\Input\RawKey.cpp" />
-    <ClCompile Include="Engine\Modules\Window\WindowModule.cpp" />
-    <ClCompile Include="Engine\Modules\World\WorldModule.cpp" />
-    <ClCompile Include="Engine\Utilities\Math\Matrix.cpp" />
-    <ClCompile Include="Engine\Utilities\Math\Spline.cpp" />
-    <ClCompile Include="Engine\Utilities\Math\Transform.cpp" />
-    <ClCompile Include="Engine\Utilities\Time\Clock.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="src\Modules\Controller\ControllerModule.cpp" />
+    <ClCompile Include="src\Modules\Display\DisplayLayer.cpp" />
+    <ClCompile Include="src\Modules\Display\DisplayModule.cpp" />
+    <ClCompile Include="src\Modules\Input\InputModule.cpp" />
+    <ClCompile Include="src\Modules\Input\RawKey.cpp" />
+    <ClCompile Include="src\Modules\Window\WindowModule.cpp" />
+    <ClCompile Include="src\Modules\World\WorldModule.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\Utility\Math\Matrix.cpp" />
+    <ClCompile Include="src\Utility\Math\Spline.cpp" />
+    <ClCompile Include="src\Utility\Math\Transform.cpp" />
+    <ClCompile Include="src\Utility\Time\Clock.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Modules\Display\DisplayLayer.h" />
-    <ClInclude Include="Engine\Modules\Display\DisplayModule.h" />
-    <ClInclude Include="Engine\Modules\Input\InputModule.h" />
-    <ClInclude Include="Engine\Modules\Input\RawKey.h" />
-    <ClInclude Include="Engine\Modules\Window\WindowModule.h" />
-    <ClInclude Include="Engine\Modules\World\WorldModule.h" />
-    <ClInclude Include="Engine\Modules\Module.h" />
-    <ClInclude Include="Engine\Utilities\Math\MathUtilities.h" />
-    <ClInclude Include="Engine\Utilities\Math\Matrix.h" />
-    <ClInclude Include="Engine\Utilities\Math\Spline.h" />
-    <ClInclude Include="Engine\Utilities\Math\Transform.h" />
-    <ClInclude Include="Engine\Utilities\Math\Vec2.h" />
-    <ClInclude Include="Engine\Utilities\Time\Clock.h" />
-    <ClInclude Include="Engine\Utilities\Settings.h" />
-    <ClInclude Include="Engine\Engine.h" />
-    <ClInclude Include="Game.h" />
+    <ClInclude Include="include\Engine\Game.h" />
+    <ClInclude Include="include\Engine\Modules\Controller\ControllerModule.h" />
+    <ClInclude Include="include\Engine\Modules\Display\DisplayLayer.h" />
+    <ClInclude Include="include\Engine\Modules\Display\DisplayModule.h" />
+    <ClInclude Include="include\Engine\Modules\Input\InputModule.h" />
+    <ClInclude Include="include\Engine\Modules\Input\RawKey.h" />
+    <ClInclude Include="include\Engine\Modules\Window\WindowModule.h" />
+    <ClInclude Include="include\Engine\Modules\World\WorldModule.h" />
+    <ClInclude Include="include\Engine\Modules\Module.h" />
+    <ClInclude Include="include\Engine\Engine.h" />
+    <ClInclude Include="include\Engine\Utility\Math\MathUtilities.h" />
+    <ClInclude Include="include\Engine\Utility\Math\Matrix.h" />
+    <ClInclude Include="include\Engine\Utility\Math\Spline.h" />
+    <ClInclude Include="include\Engine\Utility\Math\Transform.h" />
+    <ClInclude Include="include\Engine\Utility\Math\Vec2.h" />
+    <ClInclude Include="include\Engine\Utility\Time\Clock.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Engine\Utilities\Math\Vec2.inl" />
+    <None Include="include\Engine\Utility\Math\Vec2.inl" />
   </ItemGroup>
 </Project>
