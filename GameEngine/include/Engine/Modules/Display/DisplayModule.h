@@ -23,6 +23,7 @@ public:
 	// when object's transform is in window coordinates
 	void drawWindowObject(const sf::Drawable & object, DisplayLayer::Level level);
 
+
 	void drawWorldPoint(Vec2f point, float size, sf::Color = sf::Color::White);
 
 	void drawWindowPoint(Vec2f point, float size, sf::Color = sf::Color::White);

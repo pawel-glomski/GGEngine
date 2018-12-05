@@ -1,5 +1,4 @@
 #pragma once
-#include <cstdint>
 #include "Vec2.h"
 
 // using left-hand coordinate system with forward as X and right as Y

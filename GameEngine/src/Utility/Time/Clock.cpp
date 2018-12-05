@@ -1,34 +1,33 @@
+#include "Engine/pch.h"
 #include "Engine/Utility/Time/Clock.h"
-#include "Engine/Utility/Math/MathUtilities.h"
-#include <iostream>
 #include <SFML/System/Sleep.hpp>
+
 
 const float_t SimulationClock::timestep = 1.f / 120.f;
 
-SimulationClock::Clock_t clock;
-SimulationClock::TimePoint_t last;
+static SimulationClock::Clock_t timer;
 
-float_t deltaTime = SimulationClock::timestep;
+static SimulationClock::TimePoint_t last;
 
-float_t timeOffset = 0.f;
 
-int32_t ticksToMake = 0;
+static float_t deltaTime = SimulationClock::timestep;
+
+static float_t timeOffset = 0.f;
+
+static int32_t ticksToMake = 0;
+
+
 
 void SimulationClock::update()
 {
 	if (last == TimePoint_t::Zero)
-		last = clock.getElapsedTime();
+		last = timer.getElapsedTime();
 
-
-
-	TimePoint_t sleepDuration = sf::seconds(timestep - (clock.getElapsedTime() - last).asSeconds() - timeOffset);
+	TimePoint_t sleepDuration = sf::seconds(timestep - (timer.getElapsedTime() - last).asSeconds() - timeOffset);
 	//if(sleepDuration.asMilliseconds())
 		sf::sleep(sleepDuration);
 
-
-
-
-	TimePoint_t now = clock.getElapsedTime();
+	TimePoint_t now = timer.getElapsedTime();
 
 	deltaTime = (now - last).asSeconds();
 	last = now;
@@ -46,7 +45,7 @@ int32_t SimulationClock::getTicksToMake()
 
 float_t SimulationClock::getWorldTime()
 {
-	return clock.getElapsedTime().asSeconds();
+	return timer.getElapsedTime().asSeconds();
 }
 
 

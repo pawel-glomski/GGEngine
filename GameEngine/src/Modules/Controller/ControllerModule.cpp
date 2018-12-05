@@ -1,3 +1,4 @@
+#include "Engine/pch.h"
 #include "Engine/Modules/Controller/ControllerModule.h"
 #include "Engine/Utility/Math/Transform.h"
 
@@ -35,7 +36,7 @@ void ControllerModule::updateControllerState()
 			states[found->second] = key.state;
 }
 
-const ControllerModule::RawToActionMap & ControllerModule::getBindings() const
+const ControllerModule::RawToActionMap_t & ControllerModule::getBindings() const
 {
 	return bindings;
 }

@@ -1,3 +1,4 @@
+#include "Engine/pch.h"
 #include "Engine/Utility/Math/Transform.h"
 
 bool Transform::operator==(const Transform & rhs) const

@@ -1,3 +1,4 @@
+#include "Engine/pch.h"
 #include "Engine/Modules/Window/WindowModule.h"
 
 const sf::Vector2u  Settings::windowSizes[uint8_t(WindowSize::SCount)] = { { 1280, 720 },{ 1920, 1080 } }; // "resolution" variable can be used as an index in this array

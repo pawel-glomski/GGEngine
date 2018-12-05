@@ -1,5 +1,4 @@
 #pragma once
-#include "MathUtilities.h"
 
 struct Transform
 {
@@ -19,6 +18,8 @@ struct Transform
 
 	bool operator!=(const Transform& rhs) const;
 };
+
+
 
 Matrix asRotationMatrix(float_t rotation);
 

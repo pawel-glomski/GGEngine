@@ -1,5 +1,5 @@
 #pragma once
-#include <ECSpp/Utility/ThirdParty/sparsepp/spp.h>
+#include "Engine/Utility/Math/MathUtilities.h"
 
 enum class InputDivice : uint8_t
 {
@@ -44,10 +44,10 @@ namespace std
 	template<>
 	struct hash<RawKey>
 	{
-		size_t operator()(const RawKey& key)
+		size_t operator()(const RawKey& key) const
 		{
 			size_t first = hash<size_t>()((size_t)key.code);
-			spp::hash_combine(first, hash<size_t>()((size_t)key.divice));
+			hash_combine(first, hash<size_t>()((size_t)key.divice));
 			return first;
 		}
 	};

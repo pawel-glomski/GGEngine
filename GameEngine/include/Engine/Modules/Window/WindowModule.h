@@ -1,8 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Engine/Modules/Module.h"
-#include "Engine/Utility/Math/MathUtilities.h"
 #include "Engine/Utility/Time/Clock.h"
+#include "Engine/Utility/Math/MathUtilities.h"
 
 class WindowModule : public Module<>
 {

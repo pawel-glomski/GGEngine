@@ -3,18 +3,13 @@
 #include <stdint.h>
 #include <SFML\System\Clock.hpp>
 
-class SimulationClock
+struct SimulationClock
 {
-	friend class Game;
-
-public:
 
 	using Clock_t = sf::Clock;
 
 	using TimePoint_t = sf::Time;
 
-
-public:
 
 	static int32_t getTicksToMake();
 
@@ -30,4 +25,6 @@ public:
 
 	static const float_t timestep;
 
+
+	friend class Application;
 };

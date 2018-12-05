@@ -1,7 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <vector>
-#include "Engine/Utility/Math/MathUtilities.h"
+
 
 class DisplayLayer
 {

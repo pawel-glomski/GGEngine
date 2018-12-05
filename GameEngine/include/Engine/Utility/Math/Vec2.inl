@@ -146,19 +146,46 @@ inline bool operator!=(const Vec2<T> & left, const Vec2<T> & right)
 	return !(left == right);
 }
 
-
 template<class T>
-std::ostream& operator<<(std::ostream& os, const Vec2<T>& v)
+inline T& clamp(T& value, const T& min, const T& max)
 {
-	os.precision(3);
-	os.setf(std::ios::fixed);
-	os << "x: " << v.x << "   ";
-	os << "y: " << v.y << "   ";
-	os << std::endl;
-	return os;
+	value = clamped(value, min, max);
+	return value;
 }
 
-// utilities
+template<class T>
+inline T clamped(const T & value, const T& min, const T& max)
+{
+	return minValue(maxValue(value, min), max);
+}
+
+inline size_t hash_combine(size_t lhs, size_t rhs)
+{
+	lhs ^= rhs + 0xc6a4a7935bd1e995ull + (lhs << 6) + (lhs >> 2);
+	return lhs;
+}
+
+template<class T>
+inline Vec2<T>& scaleVectorByVector(Vec2<T>& scaled, const Vec2<T> & scale)
+{
+	scaled.x *= scale.x;
+	scaled.y *= scale.y;
+	return scaled;
+}
+
+template<class T>
+inline Vec2<T> VectorScaledByVector(Vec2<T> scaled, const Vec2<T> & scale)
+{
+	return scaleVectorByVector(scaled, scale);
+}
+
+template<class T, class U>
+inline T asVec(const U& vec)
+{
+	using ComponentType = decltype(T::x);
+
+	return T(ComponentType(vec.x), ComponentType(vec.y));
+}
 
 template<class T>
 inline float_t dotProduct(const Vec2<T>& vec1, const Vec2<T>& vec2)
@@ -178,4 +205,17 @@ inline float_t angleBetweenVectors(Vec2<T> vec1, Vec2<T> vec2)
 	vec1.normalize();
 	vec2.normalize();
 	return atan2(crossProduct(vec1, vec2), dotProduct(vec1, vec2));
+}
+
+namespace std
+{
+	template<class T>
+	struct hash<Vec2<T>>
+	{
+		size_t operator()(const Vec2<T>& vec)
+		{
+			return hash_combine(hasher(vec.x), hasher(vec.y));
+		}
+		std::hash<T> hasher;
+	};
 }

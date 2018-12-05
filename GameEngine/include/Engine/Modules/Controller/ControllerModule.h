@@ -1,6 +1,5 @@
 #pragma once
 #include <unordered_map>
-#include <array>
 #include "Engine/Modules/Input/InputModule.h"
 
 struct ControllerComponent;
@@ -15,9 +14,9 @@ enum class ActionKey : uint8_t
 class ControllerModule : public Module<InputModule, WindowModule>
 {
 
-	using RawToActionMap = spp::sparse_hash_map<RawKey, ActionKey>;
+	using RawToActionMap_t = std::unordered_map<RawKey, ActionKey>;
 
-	using ActionStateMap = spp::sparse_hash_map<ActionKey, KeyState>;
+	using ActionStateMap_t = std::unordered_map<ActionKey, KeyState>;
 
 public:
 
@@ -28,7 +27,7 @@ public:
 	virtual void update() override;
 
 
-	const RawToActionMap& getBindings() const;
+	const RawToActionMap_t& getBindings() const;
 
 
 	KeyState getActionKeyState(ActionKey actionKey) const;
@@ -47,9 +46,9 @@ private:
 
 private:
 
-	RawToActionMap bindings;
+	RawToActionMap_t bindings;
 
-	ActionStateMap states;
+	ActionStateMap_t states;
 
 	Vec2f cursorWorldPos;
 

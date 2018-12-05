@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 #include <ECSpp/Utility/DebugAssert.h>
 #include <ECSpp/Utility/TuplePP.h>
 

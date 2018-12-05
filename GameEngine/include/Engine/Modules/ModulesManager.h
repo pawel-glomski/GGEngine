@@ -1,9 +1,9 @@
 #pragma once
-#include "Modules/Module.h"
+#include "Module.h"
 
 
 template<class ...MTypes>
-class Engine
+class ModulesManager
 {
 
 	using MPack_t = epp::TuplePP<StdUPtr_t<MTypes>...>;
@@ -12,7 +12,7 @@ class Engine
 public:
 	
 
-	Engine()
+	ModulesManager()
 	{
 		MDepPack_t<MTypes...> dependencies(modules.asRefTuple());
 		((modules.get<StdUPtr_t<MTypes>>() = std::make_unique<MTypes>(dependencies)), ...);

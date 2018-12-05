@@ -1,7 +1,5 @@
 #pragma once
-#include <cstdint>
 #include "Matrix.h"
-#include "Vec2.h"
 
 
 #define PI_F 3.14159265358979323846f
@@ -45,26 +43,4 @@ inline float_t toRadians(float_t degrees)
 inline float_t toDegrees(float_t radians)
 {
 	return 180.f * radians / PI_F ;
-}
-
-template<class T>
-inline Vec2<T>& scaleVectorByVector(Vec2<T>& scaled, const Vec2<T> & scale)
-{
-	scaled.x *= scale.x;
-	scaled.y *= scale.y;
-	return scaled;
-}
-
-template<class T>
-inline Vec2<T> VectorScaledByVector(Vec2<T> scaled, const Vec2<T> & scale)
-{
-	return scaleVectorByVector(scaled, scale);
-}
-
-template<class T, class U>
-inline T asVec(const U& vec)
-{
-	using ComponentType = decltype(T::x);
-
-	return T(ComponentType(vec.x), ComponentType(vec.y));
 }

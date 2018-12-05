@@ -1,3 +1,4 @@
+#include "Engine/pch.h"
 #include "Engine/Modules/Display/DisplayModule.h"
 
 void DisplayModule::update()
